@@ -1169,6 +1169,35 @@
     <string name="stats_no_listening_data_subtitle">按下播放开始构建您的听歌时间线</string>
     <string name="stats_no_category_data">暂无分类数据</string>
     <string name="stats_no_category_data_subtitle">按下播放以展示您的听歌亮点</string>
+
+    <!-- 实验功能 -->
+    <string name="experimental_player_ui_tweaks">播放器UI加载优化</string>
+    <string name="experimental_use_player_sheet_v2">使用播放器表单V2</string>
+    <string name="experimental_use_player_sheet_v2_desc">通过新的重写主机路由播放器UI。如果注意到回归，请保持禁用。</string>
+    <string name="experimental_delay_everything">全部延迟</string>
+    <string name="experimental_delay_everything_desc">保持完整播放器内容直到面板背景完全展开。</string>
+    <string name="experimental_album_carousel">专辑轮播</string>
+    <string name="experimental_album_carousel_desc">延迟专辑封面和轮播直到面板展开。</string>
+    <string name="experimental_song_metadata">歌曲元数据</string>
+    <string name="experimental_song_metadata_desc">延迟标题、艺术家和歌词/队列操作。</string>
+    <string name="experimental_progress_bar">进度条</string>
+    <string name="experimental_progress_bar_desc">延迟时间线和时间标签直到展开完成。</string>
+    <string name="experimental_playback_controls">播放控制</string>
+    <string name="experimental_playback_controls_desc">延迟播放/暂停、搜索和收藏控制。</string>
+    <string name="experimental_expand_threshold">展开阈值</string>
+    <string name="experimental_expand_threshold_desc">选择面板展开的程度使延迟的组件显示。</string>
+    <string name="experimental_expand_threshold_result">内容在展开 %d%% 时显示</string>
+    <string name="experimental_close_threshold">关闭阈值</string>
+    <string name="experimental_close_threshold_desc">选择面板在关闭时需要折叠多少使占位符接管。</string>
+    <string name="experimental_close_threshold_result">占位符在折叠 %d%% 后显示</string>
+    <string name="experimental_use_placeholders">为延迟的项目使用占位符</string>
+    <string name="experimental_use_placeholders_desc">通过渲染轻量级占位符来保持布局稳定，同时组件等待展开。</string>
+    <string name="experimental_apply_on_close">在播放器关闭时也应用</string>
+    <string name="experimental_apply_on_close_desc">当播放器开始折叠时立即显示延迟的占位符。</string>
+    <string name="experimental_transparent_placeholders">使占位符透明</string>
+    <string name="experimental_transparent_placeholders_desc">占位符保持其布局空间但变为不可见。</string>
+    <string name="experimental_visual_quality">视觉质量</string>
+    <string name="experimental_album_art_resolution">专辑封面分辨率</string>
     
     <!-- 统计时间线指标 -->
     <string name="stats_metric_listening_time">听歌时长</string>
