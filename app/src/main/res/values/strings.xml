@@ -637,6 +637,7 @@
     <string name="settings_restoring_backup">Restoring Backup</string>
     <string name="settings_backup_step_format">Step %1$d of %2$d</string>
     <string name="settings_backup_will_replace">Will replace current data</string>
+    <string name="backup_will_replace_data">Will replace current data</string>
 
     <!-- Settings Category - Developer -->
     <string name="settings_experiments_title">Experiments</string>
@@ -1208,4 +1209,33 @@
     <string name="stats_timeline_month_copy">Weekly bars show how the month is trending.</string>
     <string name="stats_timeline_year_copy">Monthly bars show seasonality across the year.</string>
     <string name="stats_timeline_all_copy">Yearly bars summarize your full history.</string>
+
+    <!-- Experimental Features -->
+    <string name="experimental_player_ui_tweaks">PlayerUI loading tweaks</string>
+    <string name="experimental_use_player_sheet_v2">Use Player Sheet V2</string>
+    <string name="experimental_use_player_sheet_v2_desc">Routes player UI through the new rewrite host. Keep disabled if you notice regressions.</string>
+    <string name="experimental_delay_everything">Delay everything</string>
+    <string name="experimental_delay_everything_desc">Hold the full player content until the sheet background is fully expanded.</string>
+    <string name="experimental_album_carousel">Album carousel</string>
+    <string name="experimental_album_carousel_desc">Delay album art and carousel until the sheet is expanded.</string>
+    <string name="experimental_song_metadata">Song metadata</string>
+    <string name="experimental_song_metadata_desc">Delay title, artist, and lyrics/queue actions.</string>
+    <string name="experimental_progress_bar">Progress bar</string>
+    <string name="experimental_progress_bar_desc">Delay the timeline and time labels until expansion completes.</string>
+    <string name="experimental_playback_controls">Playback controls</string>
+    <string name="experimental_playback_controls_desc">Delay play/pause, seek, and favorite controls.</string>
+    <string name="experimental_expand_threshold">Expand threshold</string>
+    <string name="experimental_expand_threshold_desc">Choose how expanded the sheet must be before delayed components become visible.</string>
+    <string name="experimental_expand_threshold_result">Content appears at %d%% of expansion</string>
+    <string name="experimental_close_threshold">Close threshold</string>
+    <string name="experimental_close_threshold_desc">Choose how much the sheet must collapse before placeholders take over while closing.</string>
+    <string name="experimental_close_threshold_result">Placeholders appear after %d%% collapse</string>
+    <string name="experimental_use_placeholders">Use placeholders for delayed items</string>
+    <string name="experimental_use_placeholders_desc">Keep layout stable by rendering lightweight placeholders while components wait for expansion.</string>
+    <string name="experimental_apply_on_close">Also apply on player close</string>
+    <string name="experimental_apply_on_close_desc">Show delayed placeholders immediately when the player starts collapsing.</string>
+    <string name="experimental_transparent_placeholders">Make placeholders transparent</string>
+    <string name="experimental_transparent_placeholders_desc">Placeholders keep their layout space but become invisible.</string>
+    <string name="experimental_visual_quality">Visual Quality</string>
+    <string name="experimental_album_art_resolution">Album Art Resolution</string>
 </resources>

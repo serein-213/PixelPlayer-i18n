@@ -977,4 +977,33 @@
     <string name="settings_open">打開</string>
     <string name="settings_import_backup_desc">從之前的備份檔案恢復資料。</string>
     <string name="settings_version_format">版本 %s</string>
+
+    <!-- 實驗功能 -->
+    <string name="experimental_player_ui_tweaks">播放器UI加載優化</string>
+    <string name="experimental_use_player_sheet_v2">使用播放器表單V2</string>
+    <string name="experimental_use_player_sheet_v2_desc">通過新的重寫主機路由播放器UI。如果注意到回歸，請保持禁用。</string>
+    <string name="experimental_delay_everything">全部延遲</string>
+    <string name="experimental_delay_everything_desc">保持完整播放器內容直到面板背景完全展開。</string>
+    <string name="experimental_album_carousel">專輯輪播</string>
+    <string name="experimental_album_carousel_desc">延遲專輯封面和輪播直到面板展開。</string>
+    <string name="experimental_song_metadata">歌曲元數據</string>
+    <string name="experimental_song_metadata_desc">延遲標題、藝術家和歌詞/隊列操作。</string>
+    <string name="experimental_progress_bar">進度條</string>
+    <string name="experimental_progress_bar_desc">延遲時間線和時間標籤直到展開完成。</string>
+    <string name="experimental_playback_controls">播放控制</string>
+    <string name="experimental_playback_controls_desc">延遲播放/暫停、搜尋和收藏控制。</string>
+    <string name="experimental_expand_threshold">展開閾值</string>
+    <string name="experimental_expand_threshold_desc">選擇面板展開的程度使延遲的組件顯示。</string>
+    <string name="experimental_expand_threshold_result">內容在展開 %d%% 時顯示</string>
+    <string name="experimental_close_threshold">關閉閾值</string>
+    <string name="experimental_close_threshold_desc">選擇面板在關閉時需要摺疊多少使占位符接管。</string>
+    <string name="experimental_close_threshold_result">占位符在摺疊 %d%% 後顯示</string>
+    <string name="experimental_use_placeholders">為延遲的項目使用占位符</string>
+    <string name="experimental_use_placeholders_desc">通過渲染輕量級占位符來保持佈局穩定，同時組件等待展開。</string>
+    <string name="experimental_apply_on_close">在播放器關閉時也應用</string>
+    <string name="experimental_apply_on_close_desc">當播放器開始摺疊時立即顯示延遲的占位符。</string>
+    <string name="experimental_transparent_placeholders">使占位符透明</string>
+    <string name="experimental_transparent_placeholders_desc">占位符保持其佈局空間但變為不可見。</string>
+    <string name="experimental_visual_quality">視覺質量</string>
+    <string name="experimental_album_art_resolution">專輯封面分辨率</string>
 </resources>

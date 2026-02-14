@@ -43,6 +43,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -68,6 +69,7 @@ import com.theveloper.pixelplay.presentation.components.MiniPlayerHeight
 import com.theveloper.pixelplay.presentation.viewmodel.PlayerSheetState
 import com.theveloper.pixelplay.presentation.viewmodel.PlayerViewModel
 import com.theveloper.pixelplay.presentation.viewmodel.SettingsViewModel
+import com.theveloper.pixelplay.R
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -177,7 +179,7 @@ fun ExperimentalSettingsScreen(
         ) {
             item(key = "player_ui_tweaks_section") {
                 SettingsSection(
-                    title = "PlayerUI loading tweaks",
+                    title = stringResource(R.string.experimental_player_ui_tweaks),
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.Style,
@@ -204,8 +206,8 @@ fun ExperimentalSettingsScreen(
                             }
 
                             SwitchSettingItem(
-                                title = "Use Player Sheet V2",
-                                subtitle = "Routes player UI through the new rewrite host. Keep disabled if you notice regressions.",
+                                title = stringResource(R.string.experimental_use_player_sheet_v2),
+                                subtitle = stringResource(R.string.experimental_use_player_sheet_v2_desc),
                                 checked = uiState.usePlayerSheetV2,
                                 onCheckedChange = settingsViewModel::setUsePlayerSheetV2,
                                 leadingIcon = {
@@ -218,8 +220,8 @@ fun ExperimentalSettingsScreen(
                             )
 
                             SwitchSettingItem(
-                                title = "Delay everything",
-                                subtitle = "Hold the full player content until the sheet background is fully expanded.",
+                                title = stringResource(R.string.experimental_delay_everything),
+                                subtitle = stringResource(R.string.experimental_delay_everything_desc),
                                 checked = delayAllEnabled,
                                 onCheckedChange = settingsViewModel::setDelayAllFullPlayerContent,
                                 leadingIcon = {
@@ -232,8 +234,8 @@ fun ExperimentalSettingsScreen(
                             )
 
                             SwitchSettingItem(
-                                title = "Album carousel",
-                                subtitle = "Delay album art and carousel until the sheet is expanded.",
+                                title = stringResource(R.string.experimental_album_carousel),
+                                subtitle = stringResource(R.string.experimental_album_carousel_desc),
                                 checked = uiState.fullPlayerLoadingTweaks.delayAlbumCarousel,
                                 onCheckedChange = settingsViewModel::setDelayAlbumCarousel,
                                 enabled = !delayAllEnabled,
@@ -247,8 +249,8 @@ fun ExperimentalSettingsScreen(
                             )
 
                             SwitchSettingItem(
-                                title = "Song metadata",
-                                subtitle = "Delay title, artist, and lyrics/queue actions.",
+                                title = stringResource(R.string.experimental_song_metadata),
+                                subtitle = stringResource(R.string.experimental_song_metadata_desc),
                                 checked = uiState.fullPlayerLoadingTweaks.delaySongMetadata,
                                 onCheckedChange = settingsViewModel::setDelaySongMetadata,
                                 enabled = !delayAllEnabled,
@@ -262,8 +264,8 @@ fun ExperimentalSettingsScreen(
                             )
 
                             SwitchSettingItem(
-                                title = "Progress bar",
-                                subtitle = "Delay the timeline and time labels until expansion completes.",
+                                title = stringResource(R.string.experimental_progress_bar),
+                                subtitle = stringResource(R.string.experimental_progress_bar_desc),
                                 checked = uiState.fullPlayerLoadingTweaks.delayProgressBar,
                                 onCheckedChange = settingsViewModel::setDelayProgressBar,
                                 enabled = !delayAllEnabled,
@@ -277,8 +279,8 @@ fun ExperimentalSettingsScreen(
                             )
 
                             SwitchSettingItem(
-                                title = "Playback controls",
-                                subtitle = "Delay play/pause, seek, and favorite controls.",
+                                title = stringResource(R.string.experimental_playback_controls),
+                                subtitle = stringResource(R.string.experimental_playback_controls_desc),
                                 checked = uiState.fullPlayerLoadingTweaks.delayControls,
                                 onCheckedChange = settingsViewModel::setDelayControls,
                                 enabled = !delayAllEnabled,
@@ -315,12 +317,12 @@ fun ExperimentalSettingsScreen(
 
                                         Column(modifier = Modifier.weight(1f)) {
                                             Text(
-                                                text = "Expand threshold",
+                                                text = stringResource(R.string.experimental_expand_threshold),
                                                 style = MaterialTheme.typography.titleMedium,
                                                 color = MaterialTheme.colorScheme.onSurface
                                             )
                                             Text(
-                                                text = "Choose how expanded the sheet must be before delayed components become visible.",
+                                                text = stringResource(R.string.experimental_expand_threshold_desc),
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
@@ -336,7 +338,7 @@ fun ExperimentalSettingsScreen(
                                     )
 
                                     Text(
-                                        text = "Content appears at ${appearThresholdPercent}% of expansion",
+                                        text = stringResource(R.string.experimental_expand_threshold_result, appearThresholdPercent),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -367,12 +369,12 @@ fun ExperimentalSettingsScreen(
 
                                         Column(modifier = Modifier.weight(1f)) {
                                             Text(
-                                                text = "Close threshold",
+                                                text = stringResource(R.string.experimental_close_threshold),
                                                 style = MaterialTheme.typography.titleMedium,
                                                 color = MaterialTheme.colorScheme.onSurface
                                             )
                                             Text(
-                                                text = "Choose how much the sheet must collapse before placeholders take over while closing.",
+                                                text = stringResource(R.string.experimental_close_threshold_desc),
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
@@ -388,7 +390,7 @@ fun ExperimentalSettingsScreen(
                                     )
 
                                     Text(
-                                        text = "Placeholders appear after ${closeThresholdPercent}% collapse",
+                                        text = stringResource(R.string.experimental_close_threshold_result, closeThresholdPercent),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -396,8 +398,8 @@ fun ExperimentalSettingsScreen(
                             }
 
                             SwitchSettingItem(
-                                title = "Use placeholders for delayed items",
-                                subtitle = "Keep layout stable by rendering lightweight placeholders while components wait for expansion.",
+                                title = stringResource(R.string.experimental_use_placeholders),
+                                subtitle = stringResource(R.string.experimental_use_placeholders_desc),
                                 checked = uiState.fullPlayerLoadingTweaks.showPlaceholders,
                                 onCheckedChange = settingsViewModel::setFullPlayerPlaceholders,
                                 leadingIcon = {
@@ -410,8 +412,8 @@ fun ExperimentalSettingsScreen(
                             )
 
                             SwitchSettingItem(
-                                title = "Also apply on player close",
-                                subtitle = "Show delayed placeholders immediately when the player starts collapsing.",
+                                title = stringResource(R.string.experimental_apply_on_close),
+                                subtitle = stringResource(R.string.experimental_apply_on_close_desc),
                                 checked = uiState.fullPlayerLoadingTweaks.applyPlaceholdersOnClose,
                                 onCheckedChange = settingsViewModel::setFullPlayerPlaceholdersOnClose,
                                 enabled = uiState.fullPlayerLoadingTweaks.showPlaceholders,
@@ -425,8 +427,8 @@ fun ExperimentalSettingsScreen(
                             )
 
                             SwitchSettingItem(
-                                title = "Make placeholders transparent",
-                                subtitle = "Placeholders keep their layout space but become invisible.",
+                                title = stringResource(R.string.experimental_transparent_placeholders),
+                                subtitle = stringResource(R.string.experimental_transparent_placeholders_desc),
                                 checked = uiState.fullPlayerLoadingTweaks.transparentPlaceholders,
                                 onCheckedChange = settingsViewModel::setTransparentPlaceholders,
                                 enabled = uiState.fullPlayerLoadingTweaks.showPlaceholders,
@@ -451,7 +453,7 @@ fun ExperimentalSettingsScreen(
                     modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
                 ) {
                      Text(
-                        text = "Visual Quality",
+                        text = stringResource(R.string.experimental_visual_quality),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f)
@@ -469,7 +471,7 @@ fun ExperimentalSettingsScreen(
                 val albumArtQuality = uiState.albumArtQuality
                 
                  SettingsSection(
-                    title = "Album Art Resolution",
+                    title = stringResource(R.string.experimental_album_art_resolution),
                     icon = {
                         Icon(
                             imageVector = Icons.Rounded.MusicNote, // Or Image/Photo icon
