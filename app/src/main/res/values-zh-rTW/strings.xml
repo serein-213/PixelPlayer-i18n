@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">PixelPlayer</string>
     <string name="app_name_change_title">應用名稱變更</string>
@@ -36,7 +36,7 @@
     <string name="cancel">取消</string>
     <string name="import_file">匯入</string>
 
-    <!-- Sync/Progress strings -->
+    
     <string name="sync_scanning">掃描音樂檔案…</string>
     <string name="sync_processing">處理檔案…</string>
     <string name="sync_files_progress">%1$d/%2$d 個檔案</string>
@@ -78,7 +78,7 @@
     <string name="lyrics_earlier">更早</string>
     <string name="lyrics_later">更晚</string>
 
-    <!-- AI Playlist -->
+    
     <string name="ai_error_api_key">請在設定中配置您的 Gemini API 密鑰。</string>
     <string name="ai_error_generic">AI 錯誤：%s</string>
     <string name="ai_no_songs_found">AI 找不到符合你的要求的歌曲。</string>
@@ -86,13 +86,13 @@
     <string name="ai_daily_mix_updated">每日混音已用 AI 更新</string>
     <string name="ai_no_songs_for_mix">AI 找不到此混音的歌曲</string>
 
-    <!-- Launcher Shortcuts -->
+    
     <string name="shortcut_shuffle_short">隨機播放</string>
     <string name="shortcut_shuffle_long">隨機播放所有歌曲</string>
     <string name="shortcut_playlist_short">播放列表</string>
     <string name="shortcut_playlist_long">上次播放的播放列表</string>
 
-    <!-- Errors -->
+    
     <string name="invalid_album_id">無效的專輯 ID</string>
     <string name="album_id_not_found">未找到專輯 ID</string>
     <string name="error_loading_album">加載專輯數據出錯：%s</string>
@@ -104,7 +104,7 @@
     <string name="could_not_find_artist">找不到該藝術家</string>
     <string name="no_valid_songs">找不到有效的歌曲無法播放</string>
 
-    <!-- Setup / Onboarding -->
+    
     <string name="setup_welcome_to">歡迎使用</string>
     <string name="setup_beta_label">測試版</string>
     <string name="setup_welcome_subtitle">讓我們為你完成全部設定。</string>
@@ -156,7 +156,7 @@
     <string name="setup_customize_corner_radius">自訂圓角半徑</string>
     <string name="setup_navbar_change_later">你可以稍後在 設定 &gt; 外觀 &gt; 導覽列樣式 中修改。</string>
 
-    <!-- Beta Info -->
+    
     <string name="beta_info_title">測試版 0.5.0</string>
     <string name="beta_info_welcome_title">歡迎使用首個 0.5.0 測試版！</string>
     <string name="beta_info_welcome_desc">本次重大更新帶來完整的 UI 重製、10 段等化器，以及 AI 能力。</string>
@@ -170,18 +170,18 @@
     <string name="beta_info_open_github_issues">開啟 GitHub issues</string>
     <string name="beta_info_report_bug">回報問題</string>
 
-    <!-- Core UI -->
+    
     <string name="common_back">返回</string>
     <string name="common_close">關閉</string>
     <string name="sync_preparing_library">正在準備媒體庫...</string>
     <string name="sync_scanned_songs">已掃描 %1$d/%2$d 首歌曲</string>
 
-    <!-- Home -->
+    
     <string name="home_your_mix_title">你的\n混音</string>
     <string name="home_shuffle_play_cd">隨機播放</string>
     <string name="home_album_art_cd">%1$s 的封面</string>
 
-    <!-- Daily Mix -->
+    
     <string name="daily_mix_title">每日混音</string>
     <string name="daily_mix_play_button">播放</string>
     <string name="daily_mix_shuffle_button">隨機</string>
@@ -196,7 +196,7 @@
     <string name="daily_mix_ai_supporting_text">我們使用少量樣本以保持較低的成本</string>
     <string name="daily_mix_menu_cd">開啟每日混音選單</string>
 
-    <!-- AI Playlist -->
+    
     <string name="ai_playlist_label">AI</string>
     <string name="ai_playlist_generator">歌單產生器</string>
     <string name="ai_playlist_description">描述你的氛圍、心情或活動，讓 AI 從媒體庫中產生合適的歌單。</string>
@@ -207,12 +207,12 @@
     <string name="ai_playlist_generating">產生中...</string>
     <string name="ai_playlist_generate_button">產生歌單</string>
 
-    <!-- AI 媒體資訊 -->
+    
     <string name="ai_metadata_dialog_title">使用 AI 產生媒體資訊</string>
     <string name="ai_metadata_dialog_description">選擇您想要產生的欄位：</string>
     <string name="generate">產生</string>
 
-    <!-- 投送 -->
+    
     <string name="cast_get_ready_title">準備連接</string>
     <string name="cast_permission_description">允許 PixelPlayer 查看您附近的裝置和目前的 Wi-Fi，以便我們可以保持您的投送、藍牙音訊和揚声器同步。</string>
     <string name="cast_nearby_devices_title">附近裝置</string>
@@ -249,7 +249,7 @@
     <string name="cast_on">開啟</string>
     <string name="cast_bluetooth">藍牙</string>
 
-    <!-- 崩潰報告 -->
+    
     <string name="crash_report_title">糟糕！出錯了</string>
     <string name="crash_report_desc">應用在您上次使用時崩潰了。請分享崩潰報告以幫助我們修復此問題。</string>
     <string name="crash_report_date">日期: %s</string>
@@ -263,7 +263,7 @@
 
     <string name="home_dj_mashup">DJ 串燒</string>
 
-    <!-- Selection Actions -->
+    
     <string name="selection_songs_count">%1$d 首歌曲</string>
     <string name="selection_selected_label">已選</string>
     <string name="selection_play_all">播放全部</string>
@@ -284,7 +284,7 @@
     <string name="selection_more_options_cd">更多選項</string>
     <string name="selection_options">選項</string>
 
-    <!-- Lyrics More Sheet -->
+    
     <string name="lyrics_section_title">歌詞</string>
     <string name="lyrics_reset_title">重置歌詞？</string>
     <string name="lyrics_reset_message">確定要重置這首歌的歌詞嗎？</string>
@@ -294,21 +294,21 @@
     <string name="lyrics_adjust_sync">調整同步</string>
     <string name="lyrics_disable_immersive_once">暫時關閉沉浸模式</string>
 
-    <!-- Genre Grid -->
+    
     <string name="genre_browse_title">依流派瀏覽</string>
     <string name="genre_toggle_view_cd">切換網格/列表檢視</string>
     <string name="genre_illustration_cd">流派插圖</string>
 
-    <!-- Dismiss Undo -->
+    
     <string name="dismiss_playlist_title">播放清單已隱藏</string>
     <string name="dismiss_undo">還原</string>
 
-    <!-- Library Actions -->
+    
     <string name="library_import_m3u_cd">匯入 M3U</string>
     <string name="library_locate_current_song_cd">定位目前歌曲</string>
     <string name="library_sort_options_cd">排序選項</string>
 
-    <!-- Settings Categories -->
+    
     <string name="settings_category_library_title">音樂管理</string>
     <string name="settings_category_library_subtitle">管理資料夾、重新整理媒體庫、解析選項</string>
     <string name="settings_category_appearance_title">外觀</string>
@@ -328,7 +328,7 @@
     <string name="settings_category_about_title">關於</string>
     <string name="settings_category_about_subtitle">應用資訊、版本與致謝</string>
 
-    <!-- Library Tabs -->
+    
     <string name="library_tab_songs">歌曲</string>
     <string name="library_tab_albums">專輯</string>
     <string name="library_tab_artists">藝人</string>
@@ -337,8 +337,39 @@
     <string name="library_tab_liked">已喜歡</string>
     <string name="library_tab_edit">編輯</string>
     <string name="library_tab_reorder_cd">重新排序分頁</string>
+    <string name="library_sort_title">按…排序</string>
+    <string name="library_sort_view_label">檢視</string>
+    <string name="library_sort_playlist_view_label">播放清單檢視</string>
+    <string name="library_sort_source_label">來源</string>
+    
+    
+    <string name="library_view_grid">網格</string>
+    <string name="library_view_list">清單</string>
+    <string name="library_view_toggle_cd">切換檢視</string>
+    <string name="storage_internal">內部儲存空間</string>
+    <string name="storage_sd_card">SD 卡</string>
+    <string name="storage_sd_card_unavailable">SD 卡目前不可用。</string>
+    <string name="library_generating_metadata_ai">正在使用 AI 產生中繼資料…</string>
+    <string name="library_tabs_title">音樂庫分頁</string>
+    <string name="library_tabs_subtitle">直接進入任何分頁或重新排序它們。</string>
+    
+    
+    <string name="library_save_preset_title">儲存自訂預設</string>
+    <string name="library_save_preset_desc">輸入自訂等化器預設的名稱。</string>
+    <string name="library_preset_name_label">預設名稱</string>
+    <string name="library_preset_name_empty_error">名稱不能為空</string>
+    <string name="library_save_button">儲存</string>
+    <string name="library_rename_preset_title">重新命名預設</string>
+    <string name="library_rename_preset_button">重新命名</string>
+    
+    
+    <string name="genre_sort_and_play">排序並播放</string>
+    <string name="genre_shuffle_action">隨機播放</string>
+    <string name="sort_by_artist">藝人</string>
+    <string name="sort_by_album">專輯</string>
+    <string name="sort_by_title">標題</string>
 
-    <!-- Mashup -->
+    
     <string name="mashup_screen_title">DJ 空間</string>
     <string name="mashup_loading">載入中...</string>
     <string name="mashup_deck_label">Deck %1$d</string>
@@ -354,7 +385,7 @@
     <string name="mashup_volume_label">音量</string>
     <string name="mashup_speed_label">速度</string>
 
-    <!-- Settings Dialogs -->
+    
     <string name="settings_palette_regenerated_for">已為 %1$s 重新產生配色</string>
     <string name="settings_palette_regenerate_failed_for">無法為 %1$s 重新產生配色</string>
     <string name="settings_reset_lyrics_title">重置已匯入歌詞？</string>
@@ -377,7 +408,7 @@
     <string name="settings_export_backup_message">選擇要包含在備份套件中的內容。</string>
     <string name="settings_export_backup_confirm">匯出 .pxpl</string>
 
-    <!-- Library Category Settings -->
+    
     <string name="settings_library_structure_title">音樂庫結構</string>
     <string name="settings_excluded_directories_title">排除的目錄</string>
     <string name="settings_excluded_directories_subtitle">掃描音樂庫時將跳過此處的資料夾。</string>
@@ -398,7 +429,7 @@
     <string name="settings_reset_imported_lyrics_title">重置匯入的歌詞</string>
     <string name="settings_reset_imported_lyrics_subtitle">從資料庫中刪除所有匯入的歌詞。</string>
 
-    <!-- Appearance Category Settings -->
+    
     <string name="settings_global_theme_title">全域主題</string>
     <string name="settings_app_theme_label">應用程式主題</string>
     <string name="settings_app_theme_desc">在淺色、深色或跟隨系統外觀之間切換。</string>
@@ -447,7 +478,7 @@
     <string name="settings_library_nav_tab_row">分頁列（預設）</string>
     <string name="settings_library_nav_compact_pill">緊湊膠囊與網格</string>
 
-    <!-- Playback Category Settings -->
+    
     <string name="settings_background_playback_title">背景播放</string>
     <string name="settings_keep_playing_label">關閉後繼續播放</string>
     <string name="settings_keep_playing_desc">如果關閉，從最近工作中移除應用程式將停止播放。</string>
@@ -473,7 +504,7 @@
     <string name="settings_show_queue_history_title">顯示佇列歷史</string>
     <string name="settings_show_queue_history_subtitle">在佇列中顯示先前播放的歌曲。</string>
 
-    <!-- Behavior Category Settings -->
+    
     <string name="settings_folders_title">資料夾</string>
     <string name="settings_folder_back_gesture_title">返回手勢控制資料夾</string>
     <string name="settings_folder_back_gesture_subtitle">在「資料夾」分頁中，系統返回手勢會在離開媒體庫前先進行資料夾退疊導覽。</string>
@@ -483,7 +514,7 @@
     <string name="settings_haptics_title">觸覺回饋</string>
     <string name="settings_haptics_subtitle">在整個應用程式中啟用震動回饋。</string>
 
-    <!-- Backup & Restore Category Settings -->
+    
     <string name="settings_backup_info_title">備份如何運作</string>
     <string name="settings_backup_info_desc">選擇部分內容、匯出 .pxpl 檔案，並在稍後匯入。還原只會替換您選擇的部分。</string>
     <string name="settings_create_backup_title">建立備份</string>
@@ -508,7 +539,7 @@
     <string name="settings_backup_step_format">第 %1$d / %2$d 步</string>
     <string name="settings_backup_will_replace">將替換目前的資料</string>
 
-    <!-- Developer Category Settings -->
+    
     <string name="settings_experiments_title">實驗性功能</string>
     <string name="settings_experimental_title">實驗性功能</string>
     <string name="settings_experimental_subtitle">播放器 UI 載入實驗與切換。</string>
@@ -530,7 +561,7 @@
     <string name="settings_trigger_crash_title">觸發測試性當機</string>
     <string name="settings_trigger_crash_subtitle">模擬當機以測試崩潰報告系統。</string>
 
-    <!-- Backup Dialogs -->
+    
     <string name="backup_how_it_works">備份如何運作</string>
     <string name="backup_info_notice">選擇部分內容、匯出 .pxpl 檔案並在稍後匯入。還原只會替換您選擇的部分。</string>
     <string name="backup_all_sections_selected">已選擇所有部分。</string>
@@ -548,12 +579,12 @@
     <string name="backup_transfer_in_progress">傳輸進行中…</string>
     <string name="backup_will_replace_data">將替換目前資料</string>
 
-    <!-- Dialogs - Settings actions -->
+    
     <string name="settings_dialog_select_and_export">選擇並匯出</string>
     <string name="settings_dialog_select_and_restore">選擇並還原</string>
     <string name="settings_dialog_close_notice">關閉通知</string>
 
-    <!-- Backup Sections -->
+    
     <string name="backup_section_playlists_label">播放清單</string>
     <string name="backup_section_playlists_desc">您的自訂播放清單與排序偏好。</string>
     <string name="backup_section_global_settings_label">全域設定</string>
@@ -578,7 +609,7 @@
     <string name="backup_section_equalizer_desc">自訂等化器預設與固定順序。</string>
     <string name="backup_entry_count_format">%1$d 個項目 · 將替換目前資料</string>
 
-    <!-- Edit Song Sheet -->
+    
     <string name="edit_song_info_icon_cd">資訊圖示</string>
     <string name="edit_song_info_title">歌曲資訊</string>
     <string name="edit_song_info_message">編輯此歌曲的中際資料。</string>
@@ -599,7 +630,7 @@
     <string name="edit_song_field_lyrics">歌詞</string>
     <string name="edit_song_field_lyrics_icon_cd">歌詞圖示</string>
 
-    <!-- Queue Bottom Sheet -->
+    
     <string name="queue_no_songs_match">沒有歌曲符合篩選條件</string>
     <string name="queue_added_to_queue">已新增至隊列</string>
     <string name="queue_playing_next">下一首播放</string>
@@ -609,11 +640,11 @@
     <string name="queue_clear_confirm">清空</string>
     <string name="playlist_search_songs_placeholder">搜尋要包含的歌曲...</string>
 
-    <!-- Player Overlays -->
+    
     <string name="player_overlay_connect">連線</string>
     <string name="player_overlay_disconnect">斷開連線</string>
 
-    <!-- Unified Player Sheet -->
+    
     <string name="cast_keep_app_open">保持應用程式開啟</string>
     <string name="cast_transfering_desc">正在傳輸播放…</string>
     <string name="album_art_cd">專輯封面</string>
@@ -625,17 +656,17 @@
     <string name="mini_player_play_cd">播放</string>
     <string name="mini_player_next_cd">下一首</string>
 
-    <!-- Mashup Screen -->
+    
     <string name="mashup_stem_unavailable">此歌曲的人聲提取不可用</string>
 
-    <!-- Search Screen -->
+    
     <string name="search_album_art_cd">專輯封面</string>
     <string name="search_play_album_cd">播放專輯</string>
     <string name="search_artist_cd">藝人</string>
 
     <string name="settings_could_not_open_battery_settings">無法開啟電池設定</string>
 
-    <!-- 等化器 -->
+    
     <string name="equalizer_title">等化器</string>
     <string name="equalizer_back_cd">返回</string>
     <string name="equalizer_view_mode_cd">變更檢視模式</string>
@@ -647,7 +678,7 @@
     <string name="equalizer_save">儲存</string>
     <string name="equalizer_update">更新</string>
 
-    <!-- 設定組件 -->
+    
     <string name="settings_refresh_library_title">重新整理媒體庫</string>
     <string name="settings_refresh_library_subtitle">掃描整個媒體庫以查找新檔案與修改過的檔案。</string>
     <string name="settings_full_rescan">完整重新掃描</string>
@@ -660,7 +691,7 @@
     <string name="settings_enter_system_prompt_placeholder">輸入系統提示詞...</string>
     <string name="settings_reset">重置</string>
 
-    <!-- 編輯歌曲 -->
+    
     <string name="edit_song_generating_metadata">正在產生中繼資料</string>
     <string name="edit_song_cancel">取消</string>
     <string name="edit_song_save">儲存</string>
@@ -674,7 +705,7 @@
     <string name="edit_song_adjust_cover_art">調整專輯封面</string>
     <string name="edit_song_search_lyrics_cd">在 lrclib.net 上搜尋歌詞</string>
 
-    <!-- 睡眠定時器 -->
+    
     <string name="timer_title">睡眠定時器</string>
     <string name="timer_minutes_label">分鐘</string>
     <string name="timer_custom_time">自訂時間</string>
@@ -686,13 +717,13 @@
     <string name="timer_time_label">次</string>
     <string name="timer_end_of_track">目前曲目結束</string>
 
-    <!-- 獲取歌詞 -->
+    
     <string name="fetch_lyrics_title_placeholder">標題</string>
     <string name="fetch_lyrics_artist_placeholder">藝人（可選）</string>
     <string name="lyrics_refresh_progress_format">正在處理第 %1$d 首，共 %2$d 首歌曲</string>
     <string name="lyrics_synced_tag">有時間軸</string>
 
-    <!-- 播放列表 -->
+    
     <string name="playlist_empty_title">尚未建立播放列表。</string>
     <string name="playlist_empty_subtitle">點擊「新播放列表」按鈕開始建立。</string>
     <string name="playlist_ai_generated_cd">AI 建立</string>
@@ -708,7 +739,7 @@
     <string name="playlist_created_and_added">播放列表已建立並新增歌曲</string>
     <string name="playlist_songs_added">歌曲已新增到播放列表</string>
 
-    <!-- AI 播放列表實驗室 -->
+    
     <string name="playlist_create_flow_choose">選擇建立流程。</string>
     <string name="playlist_mode_manual_title">手動</string>
     <string name="playlist_mode_manual_subtitle">設計封面、圖示、形狀並親自挑選歌曲。</string>
@@ -797,12 +828,12 @@
     <string name="edit_song_field_duration">時長</string>
     <string name="edit_song_field_path">路徑</string>
 
-    <!-- 主頁 -->
+    
     <string name="home_today_mix">今日為您推薦</string>
     <string name="home_your_mix_queue">您的混合曲目</string>
     <string name="home_recently_played">最近播放</string>
 
-    <!-- 設置子節 -->
+    
     <string name="settings_subsection_library_structure">庫結構</string>
     <string name="settings_subsection_sync_scanning">同步與掃描</string>
     <string name="settings_subsection_lyrics_management">歌詞管理</string>
@@ -821,7 +852,7 @@
     <string name="settings_subsection_model_selection">模型選擇</string>
     <string name="settings_subsection_prompt_behavior">提示詞行為</string>
 
-    <!-- 設置 - 庫 -->
+    
     <string name="settings_lyrics_source_priority_title">歌詞來源優先級</string>
     <string name="settings_lyrics_source_priority_subtitle">選擇獲取歌詞時優先嘗試的來源。</string>
     <string name="settings_lyrics_source_embedded">內嵌優先</string>
@@ -829,7 +860,7 @@
     <string name="settings_lyrics_source_local">本地 (.lrc) 優先</string>
     <string name="settings_reset_lyrics_subtitle">從數據庫中刪除所有導入的歌詞。</string>
 
-    <!-- 設置 - 外觀 -->
+    
     <string name="settings_app_theme_title">應用主題</string>
     <string name="settings_app_theme_subtitle">在淺色、深色或遵循系統外觀之間切換。</string>
     <string name="settings_app_theme_light">淺色主題</string>
@@ -857,7 +888,7 @@
     <string name="settings_library_nav_subtitle">選擇如何在媒體庫標籤頁之間移動。</string>
     <string name="settings_library_nav_compact">緊湊型藥丸和網格</string>
 
-    <!-- 設置 - 播放 -->
+    
     <string name="settings_keep_playing_title">關閉後繼續播放</string>
     <string name="settings_keep_playing_subtitle">如果關閉，從最近任務中移除應用將停止播放。</string>
     <string name="settings_cast_autoplay_title">投射連接/斷開時自動播放</string>
@@ -866,13 +897,13 @@
     <string name="settings_crossfade_subtitle">實現歌曲之間的平滑過渡。</string>
     <string name="settings_crossfade_duration_title">淡入淡出時長</string>
 
-    <!-- 設置 - 行為 -->
+    
     <string name="settings_folder_back_nav_title">返回手勢控制文件夾</string>
     <string name="settings_folder_back_nav_subtitle">在文件夾標籤頁中，系統返回將在離開媒體庫前導航文件夾堆栈。</string>
     <string name="settings_tap_close_player_title">點擊背景關閉播放器</string>
     <string name="settings_tap_close_player_subtitle">點擊模糊背景以關閉播放器頁面。</string>
 
-    <!-- 設置 - AI -->
+    
     <string name="settings_gemini_api_key_title">Gemini API 密鑰</string>
     <string name="settings_gemini_api_key_subtitle">AI 功能所需。</string>
     <string name="settings_ai_model_title">AI 模型</string>
@@ -882,7 +913,7 @@
     <string name="settings_system_prompt_title">系統提示詞</string>
     <string name="settings_system_prompt_subtitle">自定義 AI 的行為方式。</string>
 
-    <!-- 藝術家設置 -->
+    
     <string name="artist_settings_multi_parsing_title">多藝術家解析</string>
     <string name="artist_settings_delimiters_title">配置分隔符</string>
     <string name="artist_settings_delimiters_subtitle_format">當前：%s</string>
@@ -897,14 +928,14 @@
     <string name="artist_settings_about_content">PixelPlayer 會自動拆分包含多個藝術家的藝術家標籤。這對於使用 yt-dlp 或其他使用「/」等分隔符分隔藝術家的工具下載的歌曲非常有用。\n\n反斜槓 (\\) 可用於轉義分隔符。</string>
     <string name="artist_settings_examples_title">示例</string>
 
-    <!-- 提示與雜項 -->
+    
     <string name="toast_library_sync_finished">媒體庫同步完成</string>
 
-    <!-- 每日混合 -->
+    
     <string name="daily_mix_based_on_history">基於播放歷史</string>
     <string name="daily_mix_check_all">查看所有每日混合</string>
 
-    <!-- 關於界面 -->
+    
     <string name="about_title">關於</string>
     <string name="about_thanks">感謝您使用 PixelPlayer！</string>
     <string name="about_built_with_passion">這款應用傾注了我們對音樂的熱愛。希望您喜歡它。</string>
@@ -914,7 +945,7 @@
     <string name="about_open_github_cd">打開 GitHub 主頁</string>
     <string name="about_open_telegram_cd">打開 Telegram</string>
 
-    <!-- 備份與恢復 -->
+    
     <string name="settings_backup_how_works_title">備份的工作原理</string>
     <string name="settings_backup_how_works_desc">選擇部分，導出 .pxpl 文件，以後再導入。恢復只會替換您選擇的部分。</string>
     <string name="settings_backup_selection_summary_none">未選擇任何部分。</string>
@@ -925,7 +956,7 @@
     <string name="settings_select_all">全選</string>
     <string name="settings_clear_selection">清除選擇</string>
 
-    <!-- 設置選項標籤 -->
+    
     <string name="settings_on">開啟</string>
     <string name="settings_off">關閉</string>
     <string name="settings_enabled">已開啟</string>
@@ -935,7 +966,7 @@
     <string name="settings_5s">5秒</string>
     <string name="settings_6s">6秒</string>
 
-    <!-- 其他設置子部分與項目 -->
+    
     <string name="settings_subsection_create_backup">創建備份</string>
     <string name="settings_subsection_restore_backup">恢復備份</string>
     <string name="settings_backup_file_suffix_desc">這將創建一個 .pxpl 備份文件。</string>
@@ -978,7 +1009,7 @@
     <string name="settings_import_backup_desc">從之前的備份檔案恢復資料。</string>
     <string name="settings_version_format">版本 %s</string>
 
-    <!-- 實驗功能 -->
+    
     <string name="experimental_player_ui_tweaks">播放器UI加載優化</string>
     <string name="experimental_use_player_sheet_v2">使用播放器表單V2</string>
     <string name="experimental_use_player_sheet_v2_desc">通過新的重寫主機路由播放器UI。如果注意到回歸，請保持禁用。</string>
@@ -1006,4 +1037,6 @@
     <string name="experimental_transparent_placeholders_desc">占位符保持其佈局空間但變為不可見。</string>
     <string name="experimental_visual_quality">視覺質量</string>
     <string name="experimental_album_art_resolution">專輯封面分辨率</string>
-</resources>
+<string name="cd_back">返回</string><string name="changelog_cd">開啟更新日誌</string><string name="changelog_section_added">新增</string><string name="changelog_section_changed">變更</string><string name="changelog_section_fixed">修復</string><string name="changelog_section_fixes">修復</string><string name="changelog_section_highlights">重點</string><string name="changelog_section_improvements">改進</string><string name="changelog_section_whats_new">新增功能</string><string name="changelog_title">更新日誌</string><string name="changelog_view_github">在 GitHub 查看</string><string name="library_empty_no_albums">未找到專輯。</string><string name="library_empty_no_artists">未找到藝人。</string><string name="library_empty_no_folders">未找到資料夾。</string><string name="library_empty_no_liked">還沒有喜歡的歌曲。</string><string name="library_empty_no_liked_hint">在播放器中點擊愛心圖示來新增歌曲。</string><string name="library_empty_no_songs">音樂庫中未找到歌曲。</string><string name="library_empty_no_songs_hint">如果您的裝置上有音樂，請嘗試在設定中重新掃描音樂庫。</string><string name="nav_home">首頁</string><string name="nav_library">音樂庫</string><string name="nav_search">搜尋</string><string name="nav_settings">設定</string><string name="range_all_time">所有時間</string><string name="range_this_month">本月</string><string name="range_this_week">本週</string><string name="range_this_year">今年</string><string name="range_today">今天</string><string name="reorder_tabs_cancel">取消</string><string name="reorder_tabs_done">完成</string><string name="reorder_tabs_drag_handle">拖動手柄</string><string name="reorder_tabs_loading">正在重新排序分頁…</string><string name="reorder_tabs_reset_button">重置</string><string name="reorder_tabs_reset_cd">重置</string><string name="reorder_tabs_reset_message">確定要將分頁順序重置為預設值嗎？</string><string name="reorder_tabs_reset_title">重置順序</string><string name="reorder_tabs_title">重新排序音樂庫分頁</string><string name="search_no_genres_available">沒有可用的類型</string><string name="search_placeholder">搜尋歌曲、藝人……</string><string name="stats_all_time_progression">長期進度</string><string name="stats_artist_plays">藝人播放</string><string name="stats_avg_per_day">每天平均</string><string name="stats_avg_plays_per_track">每首曲目的平均播放次數</string><string name="stats_avg_session">平均會話</string><string name="stats_categories_description">選擇一個類別以查看詳細統計</string><string name="stats_change_range_prompt">選擇時間範圍</string><string name="stats_daily_rhythm">每日節奏</string><string name="stats_dimension_album">專輯</string><string name="stats_dimension_artist">藝人</string><string name="stats_dimension_genre">類型</string><string name="stats_dimension_song">歌曲</string><string name="stats_grouped_4hour">按4小時分組</string><string name="stats_grouped_by_month">按月分組</string><string name="stats_grouped_by_year">按年分組</string><string name="stats_grouped_day_of_week">按週幾分組</string><string name="stats_grouped_week_of_month">按月份週數分組</string><string name="stats_listening">聆聽</string><string name="stats_listening_by_album">按專輯聆聽</string><string name="stats_listening_by_artist">按藝人聆聽</string><string name="stats_listening_by_genre">按類型聆聽</string><string name="stats_listening_by_song">按歌曲聆聽</string><string name="stats_listening_concentration">聆聽濃度</string><string name="stats_listening_habits">聆聽習慣</string><string name="stats_listening_stats">聆聽統計</string><string name="stats_listening_timeline">聆聽時間線</string><string name="stats_longest_session">最長會話</string><string name="stats_metric_avg_session">平均會話時間</string><string name="stats_metric_avg_session_desc">每次聆聽會話的平均時間</string><string name="stats_metric_listening_time">聆聽時間</string><string name="stats_metric_listening_time_desc">您聆聽的總時間</string><string name="stats_metric_play_count">播放計數</string><string name="stats_metric_play_count_desc">播放歌曲的次數</string><string name="stats_monthly_rhythm">每月節奏</string><string name="stats_most_active_day">最活躍的一天</string><string name="stats_no_category_data">此類別沒有數據</string><string name="stats_no_category_data_subtitle">嘗試不同的時間範圍</string><string name="stats_no_concentration_data">沒有濃度數據</string><string name="stats_no_concentration_data_subtitle">嘗試不同的時間範圍</string><string name="stats_no_habits_subtitle">繼續聆聽以建立習慣</string><string name="stats_no_habits_yet">還沒有聆聽習慣</string><string name="stats_no_listening_data">沒有聆聽數據</string><string name="stats_no_listening_data_subtitle">開始聆聽以查看統計</string><string name="stats_no_playback_yet">沒有播放記錄</string><string name="stats_no_recent_plays">沒有最近的播放</string><string name="stats_no_top_albums">沒有頂級專輯</string><string name="stats_no_top_albums_subtitle">開始聆聽以查看頂級專輯</string><string name="stats_no_top_artists">沒有頂級藝人</string><string name="stats_no_top_artists_subtitle">開始聆聽以查看頂級藝人</string><string name="stats_no_top_tracks">沒有頂級曲目</string><string name="stats_no_top_tracks_subtitle">開始聆聽以查看頂級曲目</string><string name="stats_others">其他</string><string name="stats_peak_segment">尖峰時段</string><string name="stats_peak_timeline_slot">尖峰時段</string><string name="stats_plays">播放</string><string name="stats_plays_and_artists">播放次數和藝人</string><string name="stats_plays_and_tracks">播放次數和曲目</string><string name="stats_plays_format">%d 次播放</string><string name="stats_sessions_per_day">每天會話</string><string name="stats_show_all_tracks">顯示所有曲目</string><string name="stats_timeline_all_copy">複製所有時間</string><string name="stats_timeline_day_copy">複製此天</string><string name="stats_timeline_month_copy">複製此月</string><string name="stats_timeline_week_copy">複製此週</string><string name="stats_timeline_year_copy">複製此年</string><string name="stats_top_1">前1名</string><string name="stats_top_2_3">前2-3名</string><string name="stats_top_3_share">前3名的比例</string><string name="stats_top_3_share_format">%d</string><string name="stats_top_album">頂級專輯</string><string name="stats_top_albums">頂級專輯</string><string name="stats_top_artist">頂級藝人</string><string name="stats_top_artists">頂級藝人</string><string name="stats_top_categories">頂級類型</string><string name="stats_top_genre">頂級類型</string><string name="stats_top_song">頂級歌曲</string><string name="stats_top_track">頂級曲目</string><string name="stats_total_plays">總播放次數</string><string name="stats_total_sessions">總會話</string><string name="stats_track_concentration">曲目濃度</string><string name="stats_track_concentration_subtitle">此曲目的聆聽濃度</string><string name="stats_tracks_in_range">時間範圍內的曲目</string><string name="stats_tracks_in_range_subtitle">在選定的時間範圍內播放的曲目</string><string name="stats_unique_artists">獨特藝人</string><string name="stats_unique_songs">獨特歌曲</string><string name="stats_unique_tracks">獨特曲目</string><string name="stats_weekly_rhythm">每週節奏</string><string name="stats_year_glance">一年一覽</string>
+    <string name="stats_collapse_tracks">折疊曲目</string>
+    <string name="sort_option_album_artist">藝人</string><string name="sort_option_album_release_year">發行年份</string><string name="sort_option_album_size_asc">歌曲最少</string><string name="sort_option_album_size_desc">歌曲最多</string><string name="sort_option_album_title_az">標題 (A-Z)</string><string name="sort_option_album_title_za">標題 (Z-A)</string><string name="sort_option_artist_name_az">名字 (A-Z)</string><string name="sort_option_artist_name_za">名字 (Z-A)</string><string name="sort_option_folder_name_az">名字 (A-Z)</string><string name="sort_option_folder_name_za">名字 (Z-A)</string><string name="sort_option_folder_song_count_asc">歌曲最少</string><string name="sort_option_folder_song_count_desc">歌曲最多</string><string name="sort_option_folder_subdir_count_asc">子資料夾最少</string><string name="sort_option_folder_subdir_count_desc">子資料夾最多</string><string name="sort_option_liked_album">專輯</string><string name="sort_option_liked_artist">藝人</string><string name="sort_option_liked_date_liked">喜歡日期</string><string name="sort_option_liked_title_az">標題 (A-Z)</string><string name="sort_option_liked_title_za">標題 (Z-A)</string><string name="sort_option_playlist_date_created">建立日期</string><string name="sort_option_playlist_name_az">名字 (A-Z)</string><string name="sort_option_playlist_name_za">名字 (Z-A)</string><string name="sort_option_song_album">專輯</string><string name="sort_option_song_artist">藝人</string><string name="sort_option_song_date_added">新增日期</string><string name="sort_option_song_default_order">預設順序</string><string name="sort_option_song_duration">時長</string><string name="sort_option_song_title_az">標題 (A-Z)</string><string name="sort_option_song_title_za">標題 (Z-A)</string></resources>

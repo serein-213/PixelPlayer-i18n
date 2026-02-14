@@ -753,7 +753,7 @@ fun LibraryScreen(
                             val isFoldersTab = currentTabId == LibraryTabId.FOLDERS
 
                             LibrarySortBottomSheet(
-                                title = "Sort by",
+                                title = stringResource(R.string.library_sort_title),
                                 options = sanitizedSortOptions,
                                 selectedOption = selectedOptionForSheet,
                                 onDismiss = { playerViewModel.hideSortingSheet() },
@@ -788,7 +788,7 @@ fun LibraryScreen(
                                                 inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 activeCornerRadius = 32.dp,
                                                 onClick = { playerViewModel.setAlbumsListView(false) },
-                                                text = "Grid",
+                                                text = stringResource(R.string.library_view_grid),
                                                 imageVector = Icons.Rounded.ViewModule
                                             )
 
@@ -802,7 +802,7 @@ fun LibraryScreen(
                                                 inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 activeCornerRadius = 32.dp,
                                                 onClick = { playerViewModel.setAlbumsListView(true) },
-                                                text = "List",
+                                                text = stringResource(R.string.library_view_list),
                                                 imageVector = Icons.Rounded.ViewList
                                             )
                                         }
@@ -824,7 +824,7 @@ fun LibraryScreen(
                                                 inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 activeCornerRadius = 32.dp,
                                                 onClick = { playerViewModel.setFoldersSource(FolderSource.INTERNAL) },
-                                                text = "Internal"
+                                                text = stringResource(R.string.storage_internal)
                                             )
                                             ToggleSegmentButton(
                                                 modifier = Modifier
@@ -841,12 +841,12 @@ fun LibraryScreen(
                                                         playerViewModel.setFoldersSource(FolderSource.SD_CARD)
                                                     }
                                                 },
-                                                text = "SD Card"
+                                                text = stringResource(R.string.storage_sd_card)
                                             )
                                         }
                                         if (!playerUiState.isSdCardAvailable) {
                                             Text(
-                                                text = "SD card is not available right now.",
+                                                text = stringResource(R.string.storage_sd_card_unavailable),
                                                 style = MaterialTheme.typography.bodySmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 modifier = Modifier.padding(top = 8.dp, start = 2.dp)
@@ -1071,7 +1071,7 @@ fun LibraryScreen(
                                 LoadingIndicator(modifier = Modifier.size(64.dp))
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Text(
-                                    text = "Generating metadata with AI...",
+                                    text = stringResource(R.string.library_generating_metadata_ai),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
@@ -1341,8 +1341,23 @@ fun LibraryScreen(
     }
 
     if (showReorderTabsSheet) {
+        // Create a mapping of tab IDs to localized display names
+        val tabDisplayNames = mutableMapOf<String, String>()
+        tabTitles.forEach { tabId ->
+            tabDisplayNames[tabId] = when (tabId) {
+                "SONGS" -> stringResource(R.string.library_tab_songs)
+                "ALBUMS" -> stringResource(R.string.library_tab_albums)
+                "ARTIST" -> stringResource(R.string.library_tab_artists)
+                "PLAYLISTS" -> stringResource(R.string.library_tab_playlists)
+                "FOLDERS" -> stringResource(R.string.library_tab_folders)
+                "LIKED" -> stringResource(R.string.library_tab_liked)
+                else -> tabId
+            }
+        }
+        
         ReorderTabsSheet(
             tabs = tabTitles,
+            tabDisplayNames = tabDisplayNames,
             onReorder = { newOrder ->
                 playerViewModel.saveLibraryTabsOrder(newOrder)
             },
@@ -1552,12 +1567,12 @@ private fun LibraryTabSwitcherSheet(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Library tabs",
+                text = stringResource(R.string.library_tabs_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontFamily = GoogleSansRounded
             )
             Text(
-                text = "Jump directly to any tab or reorder them.",
+                text = stringResource(R.string.library_tabs_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

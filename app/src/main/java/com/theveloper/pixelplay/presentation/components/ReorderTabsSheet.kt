@@ -68,6 +68,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 @Composable
 fun ReorderTabsSheet(
     tabs: List<String>,
+    tabDisplayNames: Map<String, String> = emptyMap(),
     onReorder: (List<String>) -> Unit,
     onReset: () -> Unit,
     onDismiss: () -> Unit
@@ -205,7 +206,7 @@ fun ReorderTabsSheet(
                                             modifier = Modifier.draggableHandle()
                                         )
                                         Spacer(modifier = Modifier.width(16.dp))
-                                        Text(text = tab, style = MaterialTheme.typography.bodyLarge)
+                                        Text(text = tabDisplayNames[tab] ?: tab, style = MaterialTheme.typography.bodyLarge)
                                     }
                                 }
                             }
