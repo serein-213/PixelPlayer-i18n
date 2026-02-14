@@ -1,6 +1,7 @@
 package com.theveloper.pixelplay.presentation.screens
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.MutableTransitionState
@@ -59,7 +60,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.PrimaryScrollableTabRow
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.TabPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -87,6 +89,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign // Added
 import androidx.compose.foundation.horizontalScroll
@@ -100,9 +103,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.equalizer.EqualizerPreset
-import com.theveloper.pixelplay.presentation.components.CollapsibleCommonTopBar
 import com.theveloper.pixelplay.presentation.components.ExpressiveTopBarContent
 import com.theveloper.pixelplay.presentation.viewmodel.EqualizerViewModel
+import com.theveloper.pixelplay.presentation.viewmodel.PlayerSheetState
 import com.theveloper.pixelplay.presentation.viewmodel.PlayerViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -145,9 +148,6 @@ import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository.Equal
 import androidx.compose.material.icons.rounded.ViewQuilt
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.material.icons.automirrored.rounded.ShowChart
-import androidx.compose.material.icons.automirrored.rounded.ViewQuilt
-import androidx.compose.material.icons.automirrored.rounded.VolumeUp
 import androidx.compose.ui.platform.LocalView
 
 @androidx.annotation.OptIn(UnstableApi::class)
@@ -159,6 +159,7 @@ fun EqualizerScreen(
     equalizerViewModel: EqualizerViewModel = hiltViewModel()
 ) {
     val uiState by equalizerViewModel.uiState.collectAsState()
+    val playerSheetState by playerViewModel.sheetState.collectAsState()
     val context = LocalContext.current
     
     // Sheet States
@@ -205,6 +206,10 @@ fun EqualizerScreen(
         onReset = { equalizerViewModel.resetPinnedPresetsToDefault() },
         onDismiss = { showReorderSheet = false }
     )
+    
+    BackHandler(enabled = playerSheetState == PlayerSheetState.EXPANDED) {
+        playerViewModel.collapsePlayerSheet()
+    }
     
     // Transition animations
     val transitionState = remember { MutableTransitionState(false) }
@@ -293,7 +298,7 @@ fun EqualizerScreen(
         LazyColumn(
             state = lazyListState,
             contentPadding = PaddingValues(
-                top = currentTopBarHeightDp + 8.dp,
+                top = currentTopBarHeightDp,
                 bottom = MiniPlayerHeight + WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 20.dp
             ),
             modifier = Modifier.fillMaxSize(),
@@ -373,65 +378,109 @@ fun EqualizerScreen(
             }
         }
         
-        CollapsibleCommonTopBar(
-            title = "Equalizer",
+        EqualizerTopBar(
             collapseFraction = collapseFraction,
             headerHeight = currentTopBarHeightDp,
-            onBackClick = { navController.popBackStack() },
-            expandedTitleStartPadding = 18.dp, // Matches original 18.dp
-            collapsedTitleStartPadding = 68.dp,
-            actions = {
-                // View Mode Toggle
-                FilledIconButton(
-                    onClick = { equalizerViewModel.cycleViewMode() },
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                        contentColor = MaterialTheme.colorScheme.onSurface
-                    )
-                ) {
-                    Icon(
-                        imageVector = when(uiState.viewMode) {
-                            EqualizerViewMode.SLIDERS -> Icons.Rounded.GraphicEq
-                            EqualizerViewMode.GRAPH -> Icons.AutoMirrored.Rounded.ShowChart
-                            EqualizerViewMode.HYBRID -> Icons.AutoMirrored.Rounded.ViewQuilt
-                        },
-                        contentDescription = "Change View Mode"
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                // Power toggle
-                val isEnabled = uiState.isEnabled
-                val powerButtonCorner by animateIntAsState(
-                    targetValue = if (isEnabled) 50 else 12,
-                    label = "PowerButtonShape"
-                )
-
-                FilledIconToggleButton(
-                    checked = isEnabled,
-                    onCheckedChange = { equalizerViewModel.toggleEqualizer() },
-                    shape = RoundedCornerShape(powerButtonCorner),
-                    colors = IconButtonDefaults.filledIconToggleButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                        contentColor = MaterialTheme.colorScheme.onSurface,
-                        checkedContainerColor = MaterialTheme.colorScheme.primary,
-                        checkedContentColor = MaterialTheme.colorScheme.onPrimary
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.PowerSettingsNew,
-                        contentDescription = if (isEnabled) "Disable equalizer" else "Enable equalizer"
-                    )
-                }
-                
-                Spacer(modifier = Modifier.width(12.dp))
-            }
+            isEnabled = uiState.isEnabled,
+            onBackPressed = { navController.popBackStack() },
+            onToggleEnabled = { equalizerViewModel.toggleEqualizer() },
+            viewMode = uiState.viewMode,
+            onToggleViewMode = { equalizerViewModel.cycleViewMode() }
         )
     }
 }
 
-// EqualizerTopBar removed, replaced by CollapsibleCommonTopBar
+@Composable
+fun EqualizerTopBar(
+    collapseFraction: Float,
+    headerHeight: androidx.compose.ui.unit.Dp,
+    isEnabled: Boolean,
+    onBackPressed: () -> Unit,
+    onToggleEnabled: () -> Unit, // Added missing param
+    viewMode: EqualizerViewMode,
+    onToggleViewMode: () -> Unit
+) {
+    val surfaceColor = MaterialTheme.colorScheme.surface
+    
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(headerHeight)
+            .background(surfaceColor.copy(alpha = collapseFraction))
+    ) {
+        Box(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
+            FilledIconButton(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(start = 12.dp, top = 4.dp),
+                onClick = onBackPressed,
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                )
+            ) {
+                Icon(
+                    painterResource(R.drawable.rounded_arrow_back_24),
+                    contentDescription = stringResource(R.string.equalizer_back_cd)
+                )
+            }
+            
+            // View Mode Toggle
+            FilledIconButton(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(end = 64.dp, top = 4.dp), // Position to the left of Power toggle
+                onClick = onToggleViewMode,
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                )
+            ) {
+                Icon(
+                    imageVector = when(viewMode) {
+                        EqualizerViewMode.SLIDERS -> Icons.Rounded.GraphicEq
+                        EqualizerViewMode.GRAPH -> Icons.Rounded.ShowChart
+                        EqualizerViewMode.HYBRID -> Icons.Rounded.ViewQuilt
+                    },
+                    contentDescription = stringResource(R.string.equalizer_view_mode_cd)
+                )
+            }
+            
+            // Power toggle
+            val powerButtonCorner by animateIntAsState(
+                targetValue = if (isEnabled) 50 else 12,
+                label = "PowerButtonShape"
+            )
+            
+            FilledIconToggleButton(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(end = 12.dp, top = 4.dp),
+                checked = isEnabled,
+                onCheckedChange = { onToggleEnabled() },
+                shape = RoundedCornerShape(powerButtonCorner), // Animated shape
+                colors = IconButtonDefaults.filledIconToggleButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    checkedContainerColor = MaterialTheme.colorScheme.primary,
+                    checkedContentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.PowerSettingsNew,
+                    contentDescription = if (isEnabled) stringResource(R.string.equalizer_disable_cd) else stringResource(R.string.equalizer_enable_cd)
+                )
+            }
+            
+            ExpressiveTopBarContent(
+                title = stringResource(R.string.equalizer_title),
+                collapseFraction = collapseFraction,
+                collapsedTitleStartPadding = 68.dp,
+                expandedTitleStartPadding = 18.dp,
+                modifier = Modifier.fillMaxSize().padding(start = 0.dp, end = 0.dp)
+            )
+        }
+    }
+}
 
 @Composable
 private fun PresetTabsRow(
@@ -453,18 +502,18 @@ private fun PresetTabsRow(
     // We don't use a Pager, so we need a manual scroll state if we wanted to auto-scroll.
     // Standard ScrollableTabRow handles scrolling to selected index automatically.
     
-    PrimaryScrollableTabRow(
+    ScrollableTabRow(
         selectedTabIndex = selectedIndex,
         edgePadding = 12.dp,
         containerColor = Color.Transparent,
         divider = {},
-        indicator = {
-            if (showTabIndicator) {
+        indicator = { tabPositions ->
+            if (showTabIndicator && selectedIndex < tabPositions.size) {
                  TabRowDefaults.PrimaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(selectedTabIndex = selectedIndex),
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
                     height = 3.dp,
                     width = 20.dp, // Fixed width for expressive dot? Or default width? Library used default.
-                    // Library code: Modifier.tabIndicatorOffset(selectedTabIndex = pagerState.currentPage), height = 3.dp
+                    // Library code: Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]), height = 3.dp
                     // Let's stick to default width (match content) but custom height/color.
                     shape = RoundedCornerShape(3.dp),
                     color = MaterialTheme.colorScheme.primary
@@ -493,7 +542,7 @@ private fun PresetTabsRow(
                         Spacer(modifier = Modifier.width(4.dp))
                         Icon(
                             imageVector = Icons.Filled.Star,
-                            contentDescription = "Custom",
+                            contentDescription = stringResource(R.string.equalizer_custom_preset_cd),
                             modifier = Modifier.size(10.dp), // Slightly smaller
                             tint = if (selectedIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary 
                             // Note: TabAnimation handles content color usually, but Icon tint might need explicit handling or use LocalContentColor.
@@ -514,9 +563,9 @@ private fun PresetTabsRow(
             selectedIndex = selectedIndex,
             onClick = onEditClick 
         ) {
-             Icon(
+            Icon(
                 Icons.Rounded.Edit,
-                contentDescription = "Edit presets",
+                contentDescription = stringResource(R.string.equalizer_edit_presets_cd),
                 modifier = Modifier.size(18.dp)
             )
         }
@@ -581,7 +630,7 @@ private fun BandSlidersSection(
                             Spacer(modifier = Modifier.width(8.dp))
                             Icon(
                                 imageVector = Icons.Rounded.ExpandMore,
-                                contentDescription = "Presets",
+                                contentDescription = stringResource(R.string.equalizer_presets_cd),
                                 tint = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                         }
@@ -606,7 +655,7 @@ private fun BandSlidersSection(
                              )
                              Spacer(modifier = Modifier.width(6.dp))
                              Text(
-                                 text = "Save",
+                                 text = stringResource(R.string.equalizer_save),
                                  color = MaterialTheme.colorScheme.onTertiaryContainer,
                                  fontWeight = FontWeight.Bold
                              )
@@ -632,7 +681,7 @@ private fun BandSlidersSection(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Update",
+                                text = stringResource(R.string.equalizer_update),
                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 fontWeight = FontWeight.Bold
                             )
@@ -1201,7 +1250,7 @@ private fun EffectControlsSection(
             EffectCard(
                 title = "Loudness",
                 value = loudnessStrength,
-                valueRange = 0f..1000f,
+                valueRange = 0f..3000f,
                 isEnabled = loudnessEnabled,
                 onValueChange = { onLoudnessStrengthChange(it) },
                 onEnabledChange = onLoudnessEnabledChange
@@ -1486,7 +1535,7 @@ private fun VolumeControlCard(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.VolumeUp,
+                    imageVector = Icons.Rounded.VolumeUp,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1596,17 +1645,17 @@ private fun HybridBandSliders(
 
         Column(modifier = Modifier.padding(horizontal = 0.dp)) {
             // Tabs Row (Matching PresetTabsRow style)
-            PrimaryScrollableTabRow(
+            ScrollableTabRow(
                 selectedTabIndex = selectedTabIndex,
                 modifier = Modifier.fillMaxWidth().height(56.dp),
                 containerColor = Color.Transparent,
                 contentColor = MaterialTheme.colorScheme.primary,
                 edgePadding = 12.dp,
                 divider = {},
-                indicator = {
-                    if (showBandPageTabIndicator) {
+                indicator = { tabPositions ->
+                    if (showBandPageTabIndicator && selectedTabIndex < tabPositions.size) {
                          TabRowDefaults.PrimaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(selectedTabIndex = selectedTabIndex),
+                            modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
                             height = 3.dp,
                             width = 20.dp,
                             shape = RoundedCornerShape(3.dp),

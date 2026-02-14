@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import android.view.HapticFeedbackConstants
@@ -76,8 +77,8 @@ fun ReorderTabsSheet(
     if (showResetDialog) {
         AlertDialog(
             onDismissRequest = { showResetDialog = false },
-            title = { Text("Reset Order") },
-            text = { Text("Are you sure you want to reset the tab order to the default?") },
+            title = { Text(stringResource(R.string.reorder_tabs_reset_title)) },
+            text = { Text(stringResource(R.string.reorder_tabs_reset_message)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -85,14 +86,14 @@ fun ReorderTabsSheet(
                         showResetDialog = false
                     }
                 ) {
-                    Text("Reset")
+                    Text(stringResource(R.string.reorder_tabs_reset_button))
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showResetDialog = false }
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.reorder_tabs_cancel))
                 }
             }
         )
@@ -135,7 +136,7 @@ fun ReorderTabsSheet(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Reorder Library Tabs", style = MaterialTheme.typography.displaySmall, fontFamily = GoogleSansRounded)
+                    Text(stringResource(R.string.reorder_tabs_title), style = MaterialTheme.typography.displaySmall, fontFamily = GoogleSansRounded)
                 }
             },
             floatingActionButton = {
@@ -166,7 +167,7 @@ fun ReorderTabsSheet(
                     ) {
                         ContainedLoadingIndicator()
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Reordering tabs...")
+                        Text(stringResource(R.string.reorder_tabs_loading))
                     }
                 } else {
                     LazyColumn(
@@ -200,7 +201,7 @@ fun ReorderTabsSheet(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Rounded.DragIndicator,
-                                            contentDescription = "Drag handle",
+                                            contentDescription = stringResource(R.string.reorder_tabs_drag_handle),
                                             modifier = Modifier.draggableHandle()
                                         )
                                         Spacer(modifier = Modifier.width(16.dp))
@@ -254,7 +255,7 @@ fun FloatingToolBar(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.outline_restart_alt_24),
-                    contentDescription = "Reset",
+                    contentDescription = stringResource(R.string.reorder_tabs_reset_cd),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -264,8 +265,8 @@ fun FloatingToolBar(
                     .align(Alignment.CenterVertically),
                 shape = CircleShape,
                 onClick = onClick,
-                icon = { Icon(Icons.Rounded.Check, contentDescription = "Done") },
-                text = { Text("Done") }
+                icon = { Icon(Icons.Rounded.Check, contentDescription = stringResource(R.string.reorder_tabs_done)) },
+                text = { Text(stringResource(R.string.reorder_tabs_done)) }
             )
         }
     }

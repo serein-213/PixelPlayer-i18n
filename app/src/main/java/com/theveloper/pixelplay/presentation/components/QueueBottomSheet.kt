@@ -40,6 +40,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.ui.res.stringResource
 import androidx.compose.material3.Checkbox
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -120,6 +121,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -701,7 +703,7 @@ fun QueueBottomSheet(
                             .padding(32.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Queue is empty.", color = colors.onSurface)
+                        Text(stringResource(R.string.queue_empty), color = colors.onSurface)
                     }
                 } else {
                     Box(
@@ -1080,8 +1082,8 @@ fun QueueBottomSheet(
         if (showClearQueueDialog) {
             AlertDialog(
                 onDismissRequest = { showClearQueueDialog = false },
-                title = { Text("Clear Queue") },
-                text = { Text("Are you sure you want to clear all songs from the queue except the current one?") },
+                title = { Text(stringResource(R.string.queue_clear_title)) },
+                text = { Text(stringResource(R.string.queue_clear_message)) },
                 confirmButton = {
                     TextButton(
                         onClick = {
@@ -1089,14 +1091,14 @@ fun QueueBottomSheet(
                             showClearQueueDialog = false
                         }
                     ) {
-                        Text("Clear")
+                        Text(stringResource(R.string.queue_clear_confirm))
                     }
                 },
                 dismissButton = {
                     TextButton(
                         onClick = { showClearQueueDialog = false }
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel))
                     }
                 }
             )
@@ -1443,7 +1445,7 @@ fun SaveQueueAsPlaylistSheet(
                             OutlinedTextField(
                                 value = playlistName,
                                 onValueChange = { playlistName = it },
-                                label = { Text("Playlist Name") },
+                                label = { Text(stringResource(R.string.playlist_name_label)) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .focusRequester(focusRequester),
@@ -1461,7 +1463,7 @@ fun SaveQueueAsPlaylistSheet(
                             OutlinedTextField(
                                 value = searchQuery,
                                 onValueChange = { searchQuery = it },
-                                placeholder = { Text("Search songs to include...") },
+                                placeholder = { Text(stringResource(R.string.playlist_search_songs_placeholder)) },
                                 leadingIcon = {
                                     Icon(
                                         Icons.Rounded.Search,
@@ -1473,7 +1475,7 @@ fun SaveQueueAsPlaylistSheet(
                                         IconButton(onClick = { searchQuery = "" }) {
                                             Icon(
                                                 Icons.Filled.Clear,
-                                                contentDescription = "Clear search"
+                                                contentDescription = stringResource(R.string.edit_song_reset)
                                             )
                                         }
                                     }
@@ -1565,7 +1567,7 @@ fun SaveQueueAsPlaylistSheet(
                                         modifier = Modifier.size(18.dp)
                                     )
                                     Spacer(Modifier.width(8.dp))
-                                    Text("Save")
+                                    Text(stringResource(R.string.common_save))
                                 }
                             }
                         }
@@ -1600,7 +1602,7 @@ fun SaveQueueAsPlaylistSheet(
                                     modifier = Modifier.size(48.dp)
                                 )
                                 Text(
-                                    text = "No songs match \"$searchQuery\"",
+                                    text = stringResource(R.string.queue_no_songs_match, searchQuery),
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )

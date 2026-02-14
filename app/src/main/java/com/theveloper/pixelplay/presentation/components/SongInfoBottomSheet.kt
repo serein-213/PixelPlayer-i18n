@@ -57,6 +57,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
+import com.theveloper.pixelplay.R
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.theveloper.pixelplay.data.model.Song
@@ -179,7 +181,7 @@ fun SongInfoBottomSheet(
                     ) {
                         SmartImage(
                             model = song.albumArtUriString,
-                            contentDescription = "Album Art",
+                            contentDescription = stringResource(R.string.song_info_album_art_cd),
                             shape = albumArtShape,
                             modifier = Modifier.size(80.dp),
                             contentScale = ContentScale.Crop
@@ -209,7 +211,7 @@ fun SongInfoBottomSheet(
                             Icon(
                                 modifier = Modifier.padding(horizontal = 8.dp),
                                 imageVector = Icons.Rounded.Edit,
-                                contentDescription = "Edit song metadata"
+                                contentDescription = stringResource(R.string.song_info_edit_cd)
                             )
                         }
                     }
@@ -250,12 +252,12 @@ fun SongInfoBottomSheet(
                                             elevation = FloatingActionButtonDefaults.elevation(0.dp),
                                             shape = playButtonShape,
                                             icon = {
-                                                Icon(Icons.Rounded.PlayArrow, contentDescription = "Play song")
+                                                Icon(Icons.Rounded.PlayArrow, contentDescription = stringResource(R.string.song_info_play_cd))
                                             },
                                             text = {
                                                 Text(
                                                     modifier = Modifier.padding(end = 10.dp),
-                                                    text = "Play"
+                                                    text = stringResource(R.string.common_play)
                                                 )
                                             }
                                         )
@@ -274,7 +276,7 @@ fun SongInfoBottomSheet(
                                             Icon(
                                                 modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize),
                                                 imageVector = if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
-                                                contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites"
+                                                contentDescription = if (isFavorite) stringResource(R.string.song_info_favorite_remove_cd) else stringResource(R.string.song_info_favorite_add_cd)
                                             )
                                         }
 
@@ -289,9 +291,9 @@ fun SongInfoBottomSheet(
                                                         putExtra(Intent.EXTRA_STREAM, song.contentUriString.toUri())
                                                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                                     }
-                                                    context.startActivity(Intent.createChooser(shareIntent, "Share Song File Via"))
+                                                    context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.song_info_share_chooser_title)))
                                                 } catch (e: Exception) {
-                                                    Toast.makeText(context, "Could not share song: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                                                    Toast.makeText(context, context.getString(R.string.song_info_share_failed, e.localizedMessage), Toast.LENGTH_LONG).show()
                                                 }
                                             },
                                             shape = CircleShape
@@ -299,7 +301,7 @@ fun SongInfoBottomSheet(
                                             Icon(
                                                 modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize),
                                                 imageVector = Icons.Rounded.Share,
-                                                contentDescription = "Share song file"
+                                                contentDescription = stringResource(R.string.song_info_share_file_cd)
                                             )
                                         }
                                     }
@@ -326,10 +328,10 @@ fun SongInfoBottomSheet(
                                         ) {
                                             Icon(
                                                 Icons.AutoMirrored.Rounded.QueueMusic,
-                                                contentDescription = "Add to Queue"
+                                                contentDescription = stringResource(R.string.song_info_add_to_queue_cd)
                                             )
                                             Spacer(Modifier.width(14.dp))
-                                            Text("Add to Queue")
+                                            Text(stringResource(R.string.song_info_add_to_queue_cd))
                                         }
                                         FilledTonalButton(
                                             modifier = Modifier
@@ -345,10 +347,10 @@ fun SongInfoBottomSheet(
                                         ) {
                                             Icon(
                                                 Icons.AutoMirrored.Filled.QueueMusic,
-                                                contentDescription = "Play Next"
+                                                contentDescription = stringResource(R.string.song_info_play_next_cd)
                                             )
                                             Spacer(Modifier.width(8.dp))
-                                            Text("Next")
+                                            Text(stringResource(R.string.common_next))
                                         }
                                     }
                                 }
@@ -374,10 +376,10 @@ fun SongInfoBottomSheet(
                                         ) {
                                             Icon(
                                                 Icons.AutoMirrored.Rounded.PlaylistAdd,
-                                                contentDescription = "Add to Playlist"
+                                                contentDescription = stringResource(R.string.song_info_add_to_playlist_cd)
                                             )
                                             Spacer(Modifier.width(8.dp))
-                                            Text("Playlist")
+                                            Text(stringResource(R.string.selection_playlist_label))
                                         }
 
                                         FilledTonalButton(
@@ -402,10 +404,10 @@ fun SongInfoBottomSheet(
                                         ) {
                                             Icon(
                                                 Icons.Default.DeleteForever,
-                                                contentDescription = "Delete"
+                                                contentDescription = stringResource(R.string.common_delete)
                                             )
                                             Spacer(Modifier.width(8.dp))
-                                            Text("Delete")
+                                            Text(stringResource(R.string.common_delete))
                                         }
                                     }
                                 }
@@ -423,9 +425,9 @@ fun SongInfoBottomSheet(
                                 item {
                                     ListItem(
                                         modifier = Modifier.clip(shape = listItemShape),
-                                        headlineContent = { Text("Duration") },
+                                        headlineContent = { Text(stringResource(R.string.edit_song_field_duration)) },
                                         supportingContent = { Text(formatDuration(song.duration)) },
-                                        leadingContent = { Icon(Icons.Rounded.Schedule, contentDescription = "Duration icon") }
+                                        leadingContent = { Icon(Icons.Rounded.Schedule, contentDescription = stringResource(R.string.edit_song_field_duration)) }
                                     )
                                 }
 
@@ -433,9 +435,9 @@ fun SongInfoBottomSheet(
                                     item {
                                         ListItem(
                                             modifier = Modifier.clip(shape = listItemShape),
-                                            headlineContent = { Text("Genre") },
+                                            headlineContent = { Text(stringResource(R.string.edit_song_field_genre)) },
                                             supportingContent = { Text(song.genre) },
-                                            leadingContent = { Icon(Icons.Rounded.MusicNote, contentDescription = "Genre icon") }
+                                            leadingContent = { Icon(Icons.Rounded.MusicNote, contentDescription = stringResource(R.string.edit_song_field_genre)) }
                                         )
                                     }
                                 }
@@ -445,9 +447,9 @@ fun SongInfoBottomSheet(
                                         modifier = Modifier
                                             .clip(shape = listItemShape)
                                             .clickable(onClick = onNavigateToAlbum),
-                                        headlineContent = { Text("Album") },
+                                        headlineContent = { Text(stringResource(R.string.edit_song_field_album)) },
                                         supportingContent = { Text(song.album) },
-                                        leadingContent = { Icon(Icons.Rounded.Album, contentDescription = "Album icon") }
+                                        leadingContent = { Icon(Icons.Rounded.Album, contentDescription = stringResource(R.string.edit_song_field_album)) }
                                     )
                                 }
 
@@ -456,18 +458,18 @@ fun SongInfoBottomSheet(
                                         modifier = Modifier
                                             .clip(shape = listItemShape)
                                             .clickable(onClick = onNavigateToArtist),
-                                        headlineContent = { Text("Artist") },
+                                        headlineContent = { Text(stringResource(R.string.edit_song_field_artist)) },
                                         supportingContent = { Text(song.displayArtist) },
-                                        leadingContent = { Icon(Icons.Rounded.Person, contentDescription = "Artist icon") }
+                                        leadingContent = { Icon(Icons.Rounded.Person, contentDescription = stringResource(R.string.edit_song_field_artist)) }
                                     )
                                 }
                                 item {
                                     ListItem(
                                         modifier = Modifier
                                             .clip(shape = listItemShape),
-                                        headlineContent = { Text("Path") },
+                                        headlineContent = { Text(stringResource(R.string.edit_song_field_path)) },
                                         supportingContent = { Text(song.path) },
-                                        leadingContent = { Icon(Icons.Rounded.AudioFile, contentDescription = "File icon") }
+                                        leadingContent = { Icon(Icons.Rounded.AudioFile, contentDescription = stringResource(R.string.edit_song_field_path)) }
                                     )
                                 }
                                 item {
@@ -508,12 +510,12 @@ fun SongInfoBottomSheet(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             Icons.Rounded.Menu,
-                            contentDescription = "Options",
+                            contentDescription = stringResource(R.string.common_options),
                             modifier = Modifier.padding(horizontal = 4.dp)
                         )
                         Spacer(Modifier.width(4.dp))
                         Text(
-                            "OPTIONS",
+                            stringResource(R.string.common_options).uppercase(),
                             fontFamily = GoogleSansRounded,
                             fontWeight = FontWeight.Bold,
                         )
@@ -534,12 +536,12 @@ fun SongInfoBottomSheet(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             Icons.Rounded.Info,
-                            contentDescription = "Details",
+                            contentDescription = stringResource(R.string.common_info),
                             modifier = Modifier.padding(horizontal = 4.dp)
                         )
                         Spacer(Modifier.width(4.dp))
                         Text(
-                            "INFO",
+                            stringResource(R.string.common_info).uppercase(),
                             fontFamily = GoogleSansRounded,
                             fontWeight = FontWeight.Bold
                         )

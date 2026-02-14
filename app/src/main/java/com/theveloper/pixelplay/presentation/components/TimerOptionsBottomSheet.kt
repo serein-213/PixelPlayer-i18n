@@ -46,7 +46,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
 import kotlin.math.roundToInt
@@ -123,7 +125,7 @@ fun TimerOptionsBottomSheet(
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    text = "Sleep Timer",
+                    text = stringResource(R.string.timer_title),
                     fontFamily = GoogleSansRounded,
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary
@@ -138,7 +140,7 @@ fun TimerOptionsBottomSheet(
                 val currentIndex =
                     timerSliderPosition.roundToInt().coerceIn(0, predefinedTimes.size - 1)
                 val currentMinutes = predefinedTimes[currentIndex]
-                val timerDisplayText = if (currentMinutes == 0) "Timer" else "$currentMinutes minutes"
+                val timerDisplayText = if (currentMinutes == 0) stringResource(R.string.timer_title_short) else "$currentMinutes ${stringResource(R.string.timer_minutes_label)}"
                 Text(
                     text = timerDisplayText,
                     style = MaterialTheme.typography.labelMedium,
@@ -215,9 +217,9 @@ fun TimerOptionsBottomSheet(
 
 
                 val currentPlayCount = counterSliderPosition.toInt()
-                val counterDisplayText = "Play Count: " + when (currentPlayCount) {
-                    1 -> "1 time"
-                    else -> "$currentPlayCount times"
+                val counterDisplayText = stringResource(R.string.timer_play_count_label) + when (currentPlayCount) {
+                    1 -> "1 ${stringResource(R.string.timer_time_label)}"
+                    else -> "$currentPlayCount ${stringResource(R.string.timer_times_label)}"
                 }
                 Text(
                     text = counterDisplayText,
@@ -295,7 +297,7 @@ fun TimerOptionsBottomSheet(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "End of current track",
+                        text = stringResource(R.string.timer_end_of_track),
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp),
@@ -352,7 +354,7 @@ fun TimerOptionsBottomSheet(
                         .weight(1f) // Give buttons equal space if desired
                         .height(buttonHeight)
                 ) {
-                    Text("Custom Time")
+                    Text(stringResource(R.string.timer_custom_time))
                 }
                 Button(
                     onClick = {
@@ -375,7 +377,7 @@ fun TimerOptionsBottomSheet(
                         .weight(1f)
                         .height(buttonHeight)
                 ) {
-                    Text("Cancel Timer")
+                    Text(stringResource(R.string.timer_cancel_timer))
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -398,7 +400,7 @@ fun TimerOptionsBottomSheet(
                 // No need to call onDismiss() for the bottom sheet here,
                 // as that's handled by the confirm button or if the user specifically dismisses the bottom sheet.
             },
-            title = { Text("Set Custom Duration") },
+            title = { Text(stringResource(R.string.timer_set_custom_duration)) },
             text = {
                 TimePicker(state = timePickerState)
             },
@@ -416,7 +418,7 @@ fun TimerOptionsBottomSheet(
                         onDismiss() // Dismiss the bottom sheet after setting time, as per original logic
                     }
                 ) {
-                    Text("OK")
+                    Text(stringResource(R.string.ok))
                 }
             },
             dismissButton = {
@@ -425,7 +427,7 @@ fun TimerOptionsBottomSheet(
                         showCustomTimePicker = false // Dismiss the M3 dialog
                     }
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )

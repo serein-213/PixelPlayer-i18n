@@ -38,9 +38,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.util.UnstableApi
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.model.Genre
 import com.theveloper.pixelplay.presentation.components.MiniPlayerHeight
 import com.theveloper.pixelplay.presentation.components.NavBarContentHeight
@@ -63,7 +65,7 @@ fun GenreCategoriesGrid(
             modifier = modifier.fillMaxSize().padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text("No genres available.", style = MaterialTheme.typography.bodyLarge)
+            Text(stringResource(R.string.search_no_genres_available), style = MaterialTheme.typography.bodyLarge)
         }
         return
     }
@@ -108,7 +110,7 @@ fun GenreCategoriesGrid(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Browse by genre",
+                    text = stringResource(R.string.genre_browse_title),
                     style = MaterialTheme.typography.titleLarge
                 )
                 
@@ -130,7 +132,7 @@ fun GenreCategoriesGrid(
                 ) {
                     androidx.compose.material3.Icon(
                         imageVector = if (isGridView) Icons.Rounded.ViewList else Icons.Rounded.GridView,
-                        contentDescription = "Toggle Grid/List View"
+                        contentDescription = stringResource(R.string.genre_toggle_view_cd)
                     )
                 }
             }
@@ -212,7 +214,7 @@ private fun GenreCard(
             ) {
                 SmartImage(
                     model = GenreIconProvider.getGenreImageResource(genre.name, customIcons),
-                    contentDescription = "Genre illustration",
+                    contentDescription = stringResource(R.string.genre_illustration_cd),
                     modifier = Modifier
                         .fillMaxSize()
                         .alpha(0.55f),

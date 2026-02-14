@@ -78,6 +78,40 @@ enum class BackupSection(
         iconRes = R.drawable.rounded_surround_sound_24,
         sinceVersion = 3
     );
+    
+    fun getLabel(context: android.content.Context): String {
+        val resId = when (this) {
+            PLAYLISTS -> R.string.backup_section_playlists_label
+            GLOBAL_SETTINGS -> R.string.backup_section_global_settings_label
+            FAVORITES -> R.string.backup_section_favorites_label
+            LYRICS -> R.string.backup_section_lyrics_label
+            SEARCH_HISTORY -> R.string.backup_section_search_history_label
+            TRANSITIONS -> R.string.backup_section_transitions_label
+            ENGAGEMENT_STATS -> R.string.backup_section_engagement_stats_label
+            PLAYBACK_HISTORY -> R.string.backup_section_playback_history_label
+            QUICK_FILL -> R.string.backup_section_quick_fill_label
+            ARTIST_IMAGES -> R.string.backup_section_artist_images_label
+            EQUALIZER -> R.string.backup_section_equalizer_label
+        }
+        return context.getString(resId)
+    }
+    
+    fun getDescription(context: android.content.Context): String {
+        val resId = when (this) {
+            PLAYLISTS -> R.string.backup_section_playlists_desc
+            GLOBAL_SETTINGS -> R.string.backup_section_global_settings_desc
+            FAVORITES -> R.string.backup_section_favorites_desc
+            LYRICS -> R.string.backup_section_lyrics_desc
+            SEARCH_HISTORY -> R.string.backup_section_search_history_desc
+            TRANSITIONS -> R.string.backup_section_transitions_desc
+            ENGAGEMENT_STATS -> R.string.backup_section_engagement_stats_desc
+            PLAYBACK_HISTORY -> R.string.backup_section_playback_history_desc
+            QUICK_FILL -> R.string.backup_section_quick_fill_desc
+            ARTIST_IMAGES -> R.string.backup_section_artist_images_desc
+            EQUALIZER -> R.string.backup_section_equalizer_desc
+        }
+        return context.getString(resId)
+    }
 
     companion object {
         val defaultSelection: Set<BackupSection> = entries.toSet()

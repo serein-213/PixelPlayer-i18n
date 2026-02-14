@@ -1,7 +1,6 @@
 package com.theveloper.pixelplay.presentation.screens
 
-import com.theveloper.pixelplay.presentation.navigation.navigateSafely
-
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +21,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material3.Button
@@ -52,12 +51,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import android.os.Trace // Import Trace
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
@@ -82,6 +81,7 @@ import com.theveloper.pixelplay.presentation.components.SongInfoBottomSheet
 import com.theveloper.pixelplay.presentation.components.threeShapeSwitch
 import com.theveloper.pixelplay.presentation.navigation.Screen
 import com.theveloper.pixelplay.presentation.viewmodel.MainViewModel
+import com.theveloper.pixelplay.presentation.viewmodel.PlayerSheetState
 import com.theveloper.pixelplay.presentation.viewmodel.PlayerViewModel
 import com.theveloper.pixelplay.presentation.viewmodel.PlaylistViewModel
 import com.theveloper.pixelplay.utils.formatDuration
@@ -108,6 +108,7 @@ fun DailyMixScreen(
     val systemNavBarInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val bottomBarHeightDp = NavBarContentHeight + systemNavBarInset
     var showPlaylistBottomSheet by remember { mutableStateOf(false) }
+    val playerSheetState by playerViewModel.sheetState.collectAsState() // This is a simple enum, less critical but fine
     val stablePlayerState by playerViewModel.stablePlayerStateInfrequent.collectAsState()
     val favoriteSongIds by playerViewModel.favoriteSongIds.collectAsState()
 
@@ -115,6 +116,7 @@ fun DailyMixScreen(
     val isGeneratingAiPlaylist by playerViewModel.isGeneratingAiPlaylist.collectAsState()
     val aiError by playerViewModel.aiError.collectAsState()
     val lazyListState = rememberLazyListState()
+    val dailyMixTitle = stringResource(R.string.daily_mix_title)
 
     var showSongInfoSheet by remember { mutableStateOf(false) }
     var selectedSongForInfo by remember { mutableStateOf<Song?>(null) }
@@ -155,6 +157,10 @@ fun DailyMixScreen(
         )
     }
 
+    BackHandler(enabled = playerSheetState == PlayerSheetState.EXPANDED) {
+        playerViewModel.collapsePlayerSheet()
+    }
+
     if (showSongInfoSheet && selectedSongForInfo != null) {
         val song = selectedSongForInfo!!
         val removeFromListTrigger = remember(dailyMixSongs) {
@@ -185,7 +191,7 @@ fun DailyMixScreen(
             onDeleteFromDevice = playerViewModel::deleteFromDevice,
             onNavigateToAlbum = {
                 // Assuming Screen object has a method to create a route
-                navController.navigateSafely(Screen.AlbumDetail.createRoute(song.albumId))
+                navController.navigate(Screen.AlbumDetail.createRoute(song.albumId))
                 showSongInfoSheet = false
             },
             onNavigateToArtist = {
@@ -238,6 +244,7 @@ fun DailyMixScreen(
                     ExpressiveDailyMixHeader(
                         songs = dailyMixSongs,
                         scrollState = lazyListState,
+                        dailyMixTitle = dailyMixTitle,
                         onShowMenu = { playerViewModel.showAiPlaylistSheet() }
                     )
                 }
@@ -253,7 +260,7 @@ fun DailyMixScreen(
                         Button(
                             onClick = {
                                 if (dailyMixSongs.isNotEmpty()) {
-                                    playerViewModel.playSongs(dailyMixSongs, dailyMixSongs.first(), "Daily Mix")
+                                    playerViewModel.playSongs(dailyMixSongs, dailyMixSongs.first(), dailyMixTitle)
                                     if (isShuffleEnabled) playerViewModel.toggleShuffle() // Desactivar shuffle si estaba activo
                                 }
                             },
@@ -268,17 +275,20 @@ fun DailyMixScreen(
                                 bottomEnd = 14.dp
                             )
                         ) {
-                            Icon(Icons.Rounded.PlayArrow, contentDescription = "Play", modifier = Modifier.size(
-                                ButtonDefaults.IconSize))
+                            Icon(
+                                Icons.Rounded.PlayArrow,
+                                contentDescription = stringResource(R.string.daily_mix_play_cd),
+                                modifier = Modifier.size(ButtonDefaults.IconSize)
+                            )
                             Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                            Text("Play it")
+                            Text(stringResource(R.string.daily_mix_play_button))
                         }
                         FilledTonalButton(
                             onClick = {
                                 if (dailyMixSongs.isNotEmpty()) {
                                     playerViewModel.playSongsShuffled(
                                         songsToPlay = dailyMixSongs,
-                                        queueName = "Daily Mix"
+                                        queueName = dailyMixTitle
                                     )
                                 }
                             },
@@ -293,10 +303,13 @@ fun DailyMixScreen(
                                 bottomEnd = 60.dp
                             )
                         ) {
-                            Icon(Icons.Rounded.Shuffle, contentDescription = "Shuffle", modifier = Modifier.size(
-                                ButtonDefaults.IconSize))
+                            Icon(
+                                Icons.Rounded.Shuffle,
+                                contentDescription = stringResource(R.string.daily_mix_shuffle_cd),
+                                modifier = Modifier.size(ButtonDefaults.IconSize)
+                            )
                             Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                            Text("Shuffle")
+                            Text(stringResource(R.string.daily_mix_shuffle_button))
                         }
                     }
                 }
@@ -308,7 +321,7 @@ fun DailyMixScreen(
                         song = song,
                         isCurrentSong = stablePlayerState.currentSong?.id == song.id,
                         isPlaying = currentSongId == song.id && isPlaying,
-                        onClick = { playerViewModel.showAndPlaySong(song, dailyMixSongs, "Daily Mix", isVoluntaryPlay = false) },
+                        onClick = { playerViewModel.showAndPlaySong(song, dailyMixSongs, dailyMixTitle, isVoluntaryPlay = false) },
                         onMoreOptionsClick = {
                             selectedSongForInfo = song
                             showSongInfoSheet = true
@@ -330,8 +343,8 @@ fun DailyMixScreen(
                 .clip(CircleShape)
         ) {
             Icon(
-                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                contentDescription = "Volver"
+                imageVector = Icons.Rounded.ArrowBack,
+                contentDescription = stringResource(R.string.common_back)
             )
         }
 
@@ -381,6 +394,7 @@ fun DailyMixScreen(
 private fun ExpressiveDailyMixHeader(
     songs: List<Song>,
     scrollState: LazyListState,
+    dailyMixTitle: String,
     onShowMenu: () -> Unit
 ) {
     Trace.beginSection("ExpressiveDailyMixHeader.Composition")
@@ -502,7 +516,7 @@ private fun ExpressiveDailyMixHeader(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "Daily Mix",
+                    text = dailyMixTitle,
 //                    style = MaterialTheme.typography.headlineLarge,
                     style = titleStyle,
                     fontWeight = FontWeight.Bold,
@@ -511,7 +525,11 @@ private fun ExpressiveDailyMixHeader(
                 Spacer(Modifier.height(4.dp))
                 Text(
                     modifier = Modifier.padding(start = 3.dp),
-                    text = "${songs.size} Songs • ${formatDuration(totalDuration)}",
+                    text = stringResource(
+                        R.string.daily_mix_songs_count,
+                        songs.size,
+                        formatDuration(totalDuration)
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                 )
@@ -528,7 +546,7 @@ private fun ExpressiveDailyMixHeader(
                 Icon(
                     modifier = Modifier.size(20.dp),
                     painter = painterResource(R.drawable.gemini_ai),
-                    contentDescription = "Play"
+                    contentDescription = stringResource(R.string.daily_mix_menu_cd)
                 )
             }
         }

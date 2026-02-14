@@ -37,6 +37,14 @@ class PlaybackStatsRepository @Inject constructor(
 
     private val sessionGapThresholdMs = TimeUnit.MINUTES.toMillis(30)
 
+    private val appLocale: Locale
+        get() = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            context.resources.configuration.locales[0]
+        } else {
+            @Suppress("DEPRECATION")
+            context.resources.configuration.locale
+        }
+
     data class PlaybackEvent(
         val songId: String,
         val timestamp: Long,
@@ -384,7 +392,7 @@ class PlaybackStatsRepository @Inject constructor(
         val peakDay = durationsByDayOfWeek.maxByOrNull { entry ->
             entry.value.sumOf { it.durationMs }
         }
-        val peakDayLabel = peakDay?.key?.getDisplayName(TextStyle.FULL, Locale.US)
+        val peakDayLabel = peakDay?.key?.getDisplayName(TextStyle.FULL, appLocale)
         val peakDayDuration = peakDay?.value?.sumOf { it.durationMs } ?: 0L
         val dayListeningDistribution = computeDayListeningDistribution(
             spans = overallSpans,
@@ -836,7 +844,7 @@ class PlaybackStatsRepository @Inject constructor(
             val start = day.atStartOfDay(zoneId).toInstant()
             val end = day.plusDays(1).atStartOfDay(zoneId).toInstant()
             TimelineBucket(
-                label = day.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US),
+                label = day.dayOfWeek.getDisplayName(TextStyle.SHORT, appLocale),
                 startMillis = start.toEpochMilli(),
                 endMillis = end.toEpochMilli(),
                 inclusiveEnd = false
@@ -984,10 +992,10 @@ class PlaybackStatsRepository @Inject constructor(
     }
 }
 
-enum class StatsTimeRange(val displayName: String) {
-    DAY("Today"),
-    WEEK("This Week"),
-    MONTH("This Month"),
-    YEAR("This Year"),
-    ALL("All Time")
+enum class StatsTimeRange(val displayNameResId: Int) {
+    DAY(com.theveloper.pixelplay.R.string.range_today),
+    WEEK(com.theveloper.pixelplay.R.string.range_this_week),
+    MONTH(com.theveloper.pixelplay.R.string.range_this_month),
+    YEAR(com.theveloper.pixelplay.R.string.range_this_year),
+    ALL(com.theveloper.pixelplay.R.string.range_all_time)
 }

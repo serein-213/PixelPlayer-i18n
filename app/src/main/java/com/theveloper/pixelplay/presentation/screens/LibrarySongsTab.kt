@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -36,12 +37,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
-import com.theveloper.pixelplay.data.model.LibraryTabId
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.model.Song
-import com.theveloper.pixelplay.data.model.StorageFilter
 import com.theveloper.pixelplay.data.model.SortOption
 import com.theveloper.pixelplay.presentation.components.MiniPlayerHeight
 import com.theveloper.pixelplay.presentation.viewmodel.PlayerViewModel
@@ -72,8 +75,7 @@ fun LibrarySongsTab(
     onSongLongPress: (Song) -> Unit = {},
     onSongSelectionToggle: (Song) -> Unit = {},
     onLocateCurrentSongVisibilityChanged: (Boolean) -> Unit = {},
-    onRegisterLocateCurrentSongAction: ((() -> Unit)?) -> Unit = {},
-    storageFilter: StorageFilter = StorageFilter.ALL
+    onRegisterLocateCurrentSongAction: ((() -> Unit)?) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     val pullToRefreshState = rememberPullToRefreshState()
@@ -86,38 +88,25 @@ fun LibrarySongsTab(
     // Check if list is effectively empty (based on Paging state)
     // val isListEmpty = songs.itemCount == 0 && songs.loadState.refresh is LoadState.NotLoading
     
-    // Calculate current song index for button visibility
-    val currentSongListIndex = remember(songs.itemSnapshotList, currentSongId) {
+    // Calculate current song index for auto-scroll
+    val currentSongListIndex = remember(songs.itemSnapshotList.items.size, currentSongId) {
         if (currentSongId == null) -1
         else {
-            val snapshot = songs.itemSnapshotList
-            val indexInSnapshot = snapshot.items.indexOfFirst { it.id == currentSongId }
-            if (indexInSnapshot != -1) {
-                indexInSnapshot + snapshot.placeholdersBefore
-            } else {
-                -1
-            }
+            val snapshot = songs.itemSnapshotList.items
+             snapshot.indexOfFirst { it.id == currentSongId }
         }
     }
 
-    // Scroll Handler from ViewModel
-    LaunchedEffect(Unit) {
-        playerViewModel.scrollToIndexEvent.collect { index ->
-            if (index >= 0) {
-                 launch {
-                     listState.animateScrollToItem(index)
-                 }
-            }
-        }
-    }
+    // Auto-scroll logic is adapted below with locateCurrentSongAction
 
-    // New action just triggers the ViewModel request
-    val locateCurrentSongAction: (() -> Unit)? = remember(stablePlayerState.currentSong) {
-        if (stablePlayerState.currentSong == null) {
+    val locateCurrentSongAction: (() -> Unit)? = remember(currentSongListIndex, listState) {
+        if (currentSongListIndex < 0) {
             null
         } else {
             {
-                playerViewModel.requestLocateCurrentSong()
+                coroutineScope.launch {
+                    listState.animateScrollToItem(currentSongListIndex)
+                }
             }
         }
     }
@@ -130,29 +119,13 @@ fun LibrarySongsTab(
     LaunchedEffect(sortOption) {
         listState.scrollToItem(0)
     }
-    
-    // Visibility Logic:
-    // If the song is NOT in the current snapshot (index == -1), we assume it's unloaded, so SHOW the button.
-    // If the song IS in the snapshot (index != -1), we check if it's visible on screen.
-    // - If visible -> Hide button
-    // - If not visible -> Show button
 
     LaunchedEffect(currentSongListIndex, songs, isLoading, listState) {
-        // If list is empty or loading, hide button
-        if (songs.itemCount == 0 || isLoading) {
+        if (currentSongListIndex < 0 || songs.itemCount == 0 || isLoading) {
             visibilityCallback(false)
             return@LaunchedEffect
         }
-        
-        // If song is not loaded in current Paging snapshot, we ALWAYS show the button
-        // because we don't know if it's visible or not, so we assume it's reachable via the button (which triggers DB lookup)
-        if (currentSongListIndex == -1) {
-             // Only show if we actually have a current song
-             visibilityCallback(currentSongId != null)
-             return@LaunchedEffect
-        }
 
-        // If song IS loaded, check visibility using layout info
         snapshotFlow {
             val visibleItems = listState.layoutInfo.visibleItemsInfo
             if (visibleItems.isEmpty()) {
@@ -237,11 +210,28 @@ fun LibrarySongsTab(
             }
         }
         songs.itemCount == 0 && refreshState is LoadState.NotLoading && reachedEndOfPagination -> {
-            LibraryExpressiveEmptyState(
-                tabId = LibraryTabId.SONGS,
-                storageFilter = storageFilter,
-                bottomBarHeight = bottomBarHeight
-            )
+            // Empty state
+            Box(
+                modifier = Modifier.fillMaxSize().padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_music_off_24),
+                        contentDescription = stringResource(R.string.library_empty_no_songs),
+                        modifier = Modifier.size(48.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(stringResource(R.string.library_empty_no_songs), style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        stringResource(R.string.library_empty_no_songs_hint),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         }
         else -> {
             // Songs loaded
