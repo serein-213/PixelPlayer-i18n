@@ -53,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -156,8 +157,8 @@ fun LibraryActionRow(
                         modifier = Modifier.height(genHeight)
                     ) {
                         val icon = if (isPlaylistTab) Icons.Rounded.PlaylistAdd else Icons.Rounded.Shuffle
-                        val text = if (isPlaylistTab) "Create" else if (isShuffleEnabled) "Shuffle On" else "Shuffle"
-                        val contentDesc = if (isPlaylistTab) "Create New Playlist" else "Shuffle Play"
+                        val text = if (isPlaylistTab) stringResource(R.string.create) else if (isShuffleEnabled) stringResource(R.string.library_shuffle_on) else stringResource(R.string.library_shuffle)
+                        val contentDesc = if (isPlaylistTab) stringResource(R.string.library_create_new_playlist_cd) else stringResource(R.string.library_shuffle_play_cd)
 
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -228,11 +229,11 @@ fun LibraryActionRow(
                                 ) {
                                     Icon(
                                         painter = painterResource(R.drawable.rounded_upload_file_24),
-                                        contentDescription = "Import M3U",
+                                        contentDescription = stringResource(R.string.library_import_m3u_cd),
                                         modifier = Modifier.size(20.dp)
                                     )
                                     Text(
-                                        text = "Import",
+                                        text = stringResource(R.string.import_file),
                                         overflow = TextOverflow.Ellipsis,
                                         style = MaterialTheme.typography.labelLarge,
                                         fontWeight = FontWeight.Medium
@@ -277,7 +278,7 @@ fun LibraryActionRow(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.MyLocation,
-                            contentDescription = "Locate Current Song"
+                            contentDescription = stringResource(R.string.library_locate_current_song_cd)
                         )
                     }
                 }
@@ -296,7 +297,7 @@ fun LibraryActionRow(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.Sort,
-                        contentDescription = "Sort Options",
+                        contentDescription = stringResource(R.string.library_sort_options_cd),
                     )
                 }
             }
@@ -353,7 +354,7 @@ fun Breadcrumbs(
             modifier = Modifier.size(36.dp),
             enabled = currentFolder != null
         ) {
-            Icon(Icons.Rounded.ArrowBack, contentDescription = "Back")
+            Icon(Icons.Rounded.ArrowBack, contentDescription = stringResource(R.string.common_back))
         }
         Spacer(Modifier.width(8.dp))
 

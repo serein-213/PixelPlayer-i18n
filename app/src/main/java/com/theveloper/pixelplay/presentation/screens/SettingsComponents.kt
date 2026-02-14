@@ -71,6 +71,7 @@ import com.theveloper.pixelplay.data.worker.SyncProgress
 import com.theveloper.pixelplay.presentation.viewmodel.LyricsRefreshProgress
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun SettingsSection(title: String, icon: @Composable () -> Unit, content: @Composable () -> Unit) {
@@ -409,12 +410,12 @@ fun RefreshLibraryItem(
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                            text = "Refresh Library",
+                            text = stringResource(R.string.settings_refresh_library_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                            text = "Scan entire library for new and modified files.",
+                            text = stringResource(R.string.settings_refresh_library_subtitle),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -435,7 +436,7 @@ fun RefreshLibraryItem(
                         modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Full Rescan")
+                Text(stringResource(R.string.settings_full_rescan))
             }
              
             Spacer(modifier = Modifier.height(8.dp))
@@ -456,7 +457,7 @@ fun RefreshLibraryItem(
                         modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Rebuild Database")
+                Text(stringResource(R.string.settings_rebuild_database))
             }
 
             if (isSyncing) {
@@ -488,14 +489,15 @@ fun RefreshLibraryItem(
     }
 }
 
+@Composable
 private fun syncPhaseLabel(phase: SyncProgress.SyncPhase): String =
         when (phase) {
-            SyncProgress.SyncPhase.IDLE -> "Preparing sync"
-            SyncProgress.SyncPhase.FETCHING_MEDIASTORE -> "Reading MediaStore"
-            SyncProgress.SyncPhase.PROCESSING_FILES -> "Processing tracks"
-            SyncProgress.SyncPhase.SAVING_TO_DATABASE -> "Saving to database"
-            SyncProgress.SyncPhase.SCANNING_LRC -> "Scanning lyrics files"
-            SyncProgress.SyncPhase.COMPLETING -> "Completing sync"
+            SyncProgress.SyncPhase.IDLE -> stringResource(R.string.sync_phase_idle)
+            SyncProgress.SyncPhase.FETCHING_MEDIASTORE -> stringResource(R.string.sync_phase_fetching_mediastore)
+            SyncProgress.SyncPhase.PROCESSING_FILES -> stringResource(R.string.sync_phase_processing_files)
+            SyncProgress.SyncPhase.SAVING_TO_DATABASE -> stringResource(R.string.sync_phase_saving_to_database)
+            SyncProgress.SyncPhase.SCANNING_LRC -> stringResource(R.string.sync_phase_scanning_lrc)
+            SyncProgress.SyncPhase.COMPLETING -> stringResource(R.string.sync_phase_completing)
         }
 
 @Composable
@@ -529,12 +531,12 @@ fun RefreshLyricsItem(
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                            text = "Refresh Lyrics",
+                            text = stringResource(R.string.settings_refresh_lyrics_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                            text = "Automatically fetch lyrics for all songs using lrclib.",
+                            text = stringResource(R.string.settings_refresh_lyrics_subtitle),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -565,7 +567,7 @@ fun RefreshLyricsItem(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                         text =
-                                "Processing ${progress.currentCount} of ${progress.totalSongs} songs",
+                                stringResource(R.string.lyrics_refresh_progress_format, progress.currentCount, progress.totalSongs),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -682,7 +684,7 @@ fun GeminiApiKeyItem(
                 value = localApiKey,
                 onValueChange = { localApiKey = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Enter API Key") },
+                placeholder = { Text(stringResource(R.string.settings_enter_api_key_placeholder)) },
                 singleLine = true
             )
             Spacer(modifier = Modifier.height(12.dp))
@@ -698,11 +700,11 @@ fun GeminiApiKeyItem(
                     },
                     enabled = hasChanges
                 ) {
-                    Text("Save")
+                    Text(stringResource(R.string.settings_save))
                 }
                 if (showSaved) {
                     Text(
-                        text = "Saved!",
+                        text = stringResource(R.string.settings_saved),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
@@ -754,7 +756,7 @@ fun GeminiSystemPromptItem(
                 value = localPrompt,
                 onValueChange = { localPrompt = it },
                 modifier = Modifier.fillMaxWidth().heightIn(min = 100.dp, max = 200.dp),
-                placeholder = { Text("Enter system prompt...") },
+                placeholder = { Text(stringResource(R.string.settings_enter_system_prompt_placeholder)) },
                 minLines = 3,
                 maxLines = 6
             )
@@ -771,16 +773,16 @@ fun GeminiSystemPromptItem(
                     },
                     enabled = hasChanges
                 ) {
-                    Text("Save")
+                    Text(stringResource(R.string.settings_save))
                 }
                 if (!isDefault) {
                     OutlinedButton(onClick = onReset) {
-                        Text("Reset")
+                        Text(stringResource(R.string.settings_reset))
                     }
                 }
                 if (showSaved) {
                     Text(
-                        text = "Saved!",
+                        text = stringResource(R.string.settings_saved),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold

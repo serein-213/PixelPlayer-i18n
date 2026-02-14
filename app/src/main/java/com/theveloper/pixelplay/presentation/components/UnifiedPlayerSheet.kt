@@ -72,6 +72,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -700,13 +701,13 @@ private fun CastConnectingDialog() {
                 CircularProgressIndicator()
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "Mantén la app abierta",
+                        text = stringResource(R.string.cast_keep_app_open),
                         style = MaterialTheme.typography.titleMedium,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "Estamos transfiriendo la reproducción. Puede tardar unos segundos en desconectarse o reconectarse.",
+                        text = stringResource(R.string.cast_transfering_desc),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -750,7 +751,7 @@ internal fun MiniPlayerContentInternal(
         Box(contentAlignment = Alignment.Center) {
             SmartImage(
                 model = song.albumArtUriString,
-                contentDescription = "Carátula de ${song.title}",
+                contentDescription = stringResource(R.string.album_art_cd, song.title),
                 shape = CircleShape,
                 targetSize = Size(150, 150),
                 modifier = Modifier.size(44.dp)
@@ -786,15 +787,19 @@ internal fun MiniPlayerContentInternal(
 
             AutoScrollingText(
                 text = when {
-                    isCastConnecting -> "Connecting to device…"
-                    isPreparingPlayback -> "Preparing playback…"
+                    isCastConnecting -> stringResource(R.string.mini_player_connecting)
+                    isPreparingPlayback -> stringResource(R.string.mini_player_preparing)
                     else -> song.title
                 },
                 style = titleStyle,
                 gradientEdgeColor = LocalMaterialTheme.current.primaryContainer
             )
             AutoScrollingText(
-                text = if (isPreparingPlayback) "Loading audio…" else song.displayArtist,
+                text = if (isPreparingPlayback) {
+                    stringResource(R.string.mini_player_loading_audio)
+                } else {
+                    song.displayArtist
+                },
                 style = artistStyle,
                 gradientEdgeColor = LocalMaterialTheme.current.primaryContainer
             )
@@ -818,7 +823,7 @@ internal fun MiniPlayerContentInternal(
         ) {
             Icon(
                 painter = painterResource(R.drawable.rounded_skip_previous_24),
-                contentDescription = "Anterior",
+                contentDescription = stringResource(R.string.mini_player_previous_cd),
                 tint = LocalMaterialTheme.current.primary,
                 modifier = Modifier.size(22.dp)
             )
@@ -843,7 +848,11 @@ internal fun MiniPlayerContentInternal(
         ) {
             Icon(
                 painter = if (isPlaying) painterResource(R.drawable.rounded_pause_24) else painterResource(R.drawable.rounded_play_arrow_24),
-                contentDescription = if (isPlaying) "Pausar" else "Reproducir",
+                contentDescription = if (isPlaying) {
+                    stringResource(R.string.mini_player_pause_cd)
+                } else {
+                    stringResource(R.string.mini_player_play_cd)
+                },
                 tint = LocalMaterialTheme.current.onPrimary,
                 modifier = Modifier.size(22.dp)
             )
@@ -865,7 +874,7 @@ internal fun MiniPlayerContentInternal(
         ) {
             Icon(
                 painter = painterResource(R.drawable.rounded_skip_next_24),
-                contentDescription = "Siguiente",
+                contentDescription = stringResource(R.string.mini_player_next_cd),
                 tint = LocalMaterialTheme.current.primary,
                 modifier = Modifier.size(22.dp)
             )

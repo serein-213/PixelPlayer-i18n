@@ -49,6 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -114,7 +115,7 @@ private fun AboutTopBar(
                 onClick = onBackPressed,
                 colors = IconButtonDefaults.filledIconButtonColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
             ) {
-                Icon(painterResource(R.drawable.rounded_arrow_back_24), contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurface)
+                Icon(painterResource(R.drawable.rounded_arrow_back_24), contentDescription = stringResource(R.string.dismiss), tint = MaterialTheme.colorScheme.onSurface)
             }
 
             Box(
@@ -125,7 +126,7 @@ private fun AboutTopBar(
                     .padding(start = titlePaddingStart, end = 24.dp)
             ) {
                 Text(
-                    text = "About",
+                    text = stringResource(R.string.about_title),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -153,7 +154,7 @@ fun AboutScreen(
     // ... existing version name logic ...
     val versionName = try {
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-        packageInfo.versionName
+        packageInfo.versionName ?: "N/A"
     } catch (e: Exception) {
         "N/A"
     }
@@ -303,7 +304,7 @@ fun AboutScreen(
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.pixelplay_base_monochrome),
-                        contentDescription = "App Icon",
+                        contentDescription = stringResource(R.string.about_app_icon_cd),
                         colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.primary),
                         modifier = Modifier
                             .size(108.dp)
@@ -315,7 +316,7 @@ fun AboutScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "PixelPlayer",
+                            text = stringResource(R.string.app_name),
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold
                         )
@@ -337,7 +338,7 @@ fun AboutScreen(
                         ) {
                             Text(
                                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp),
-                                text = "Version $versionName",
+                                text = stringResource(R.string.settings_version_format, versionName),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onTertiaryContainer
                             )
@@ -361,14 +362,14 @@ fun AboutScreen(
                             .padding(horizontal = 24.dp, vertical = 20.dp)
                     ) {
                         Text(
-                            text = "Thanks for using PixelPlayer!",
+                            text = stringResource(R.string.about_thanks),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         Text(
-                            text = "This app was built with passion and a love for music. We hope you enjoy the experience.",
+                            text = stringResource(R.string.about_built_with_passion),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center
                         )
@@ -384,7 +385,7 @@ fun AboutScreen(
                         .padding(horizontal = 16.dp)
                 ) {
                     Text(
-                        text = "Author",
+                        text = stringResource(R.string.about_author),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -408,7 +409,7 @@ fun AboutScreen(
                         .padding(horizontal = 16.dp)
                 ) {
                     Text(
-                        text = "Contributors",
+                        text = stringResource(R.string.about_contributors),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -538,12 +539,12 @@ fun ContributorCard(
             ) {
                 SocialIconButton(
                     painterRes = R.drawable.github,
-                    contentDescription = "Abrir perfil de GitHub",
+                    contentDescription = stringResource(R.string.about_open_github_cd),
                     url = contributor.githubUrl
                 )
                 SocialIconButton(
                     painterRes = R.drawable.telegram,
-                    contentDescription = "Abrir Telegram",
+                    contentDescription = stringResource(R.string.about_open_telegram_cd),
                     url = contributor.telegramUrl
                 )
             }
@@ -575,7 +576,7 @@ private fun ContributorAvatar(
             cachedBitmap != null -> {
                 Image(
                     bitmap = cachedBitmap!!,
-                    contentDescription = "Avatar de $name",
+                    contentDescription = stringResource(R.string.home_album_art_cd, name ?: ""),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
@@ -586,7 +587,7 @@ private fun ContributorAvatar(
                         .data(avatarUrl)
                         .crossfade(true)
                         .build(),
-                    contentDescription = "Avatar de $name",
+                    contentDescription = stringResource(R.string.home_album_art_cd, name ?: ""),
                     modifier = Modifier.fillMaxSize(),
                     shape = CircleShape,
                     contentScale = ContentScale.Crop,
@@ -613,7 +614,7 @@ private fun ContributorAvatar(
                 ) {
                     Icon(
                         painter = painterResource(iconRes),
-                        contentDescription = "Icono de $name",
+                        contentDescription = stringResource(R.string.home_album_art_cd, name ?: ""),
                         tint = iconTint,
                         modifier = Modifier.size(28.dp)
                     )

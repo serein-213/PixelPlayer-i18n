@@ -39,12 +39,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.util.UnstableApi
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.presentation.components.subcomps.LibraryActionRow
 import com.theveloper.pixelplay.presentation.viewmodel.PlayerViewModel
 import com.theveloper.pixelplay.presentation.viewmodel.PlaylistUiState
 import com.theveloper.pixelplay.presentation.viewmodel.PlaylistViewModel
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -58,6 +61,7 @@ fun PlaylistBottomSheet(
     playlistViewModel: PlaylistViewModel = hiltViewModel(),
     currentPlaylistId: String? = null
 ) {
+    val context = LocalContext.current
     var showCreatePlaylistDialog by remember { mutableStateOf(false) }
 
     val sheetState = rememberModalBottomSheetState(
@@ -106,7 +110,7 @@ fun PlaylistBottomSheet(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        if (songs.size > 1) "Add ${songs.size} Songs to..." else "Select Playlists",
+                        if (songs.size > 1) stringResource(R.string.playlist_add_songs_to_format, songs.size) else stringResource(R.string.playlist_select_playlists),
                         style = MaterialTheme.typography.displaySmall,
                         fontFamily = GoogleSansRounded
                     )
@@ -124,7 +128,7 @@ fun PlaylistBottomSheet(
                         focusedSupportingTextColor = Color.Transparent,
                     ),
                     onValueChange = { searchQuery = it },
-                    label = { Text("Search for playlists...") },
+                    label = { Text(stringResource(R.string.playlist_search_placeholder)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -157,7 +161,7 @@ fun PlaylistBottomSheet(
                     isFoldersTab = false,
                     currentFolder = null,
                     folderRootPath = "",
-                    folderRootLabel = "Internal Storage",
+                    folderRootLabel = stringResource(R.string.library_internal_storage),
                     onFolderClick = { },
                     onNavigateBack = { }
                 )
@@ -185,14 +189,14 @@ fun PlaylistBottomSheet(
                             playlistViewModel.createPlaylist(name, songIds = songs.map { it.id })
                             showCreatePlaylistDialog = false
                             onDismiss() // Close sheet after creation + add
-                            playerViewModel.sendToast("Playlist created and songs added")
+                            playerViewModel.sendToast(context.getString(R.string.playlist_created_and_added))
                         },
                         onGenerateClick = {
                             showCreatePlaylistDialog = false
                             if (hasGeminiApiKey) {
                                 playerViewModel.showAiPlaylistSheet()
                             } else {
-                                playerViewModel.sendToast("Set your Gemini API key first")
+                                playerViewModel.sendToast(context.getString(R.string.playlist_api_key_required))
                             }
                         }
                     )
@@ -222,10 +226,11 @@ fun PlaylistBottomSheet(
                          }
                     }
                     onDismiss()
-                    playerViewModel.sendToast(if (songs.size > 1) "Songs added to playlists" else "Saved")
+                    val toastMessage = if (songs.size > 1) context.getString(R.string.playlist_songs_added) else context.getString(R.string.common_saved)
+                    playerViewModel.sendToast(toastMessage)
                 },
-                icon = { Icon(Icons.Rounded.Save, "Save") },
-                text = { Text(if (songs.size > 1) "Add" else "Save") },
+                icon = { Icon(Icons.Rounded.Save, stringResource(R.string.common_save)) },
+                text = { Text(if (songs.size > 1) stringResource(R.string.common_add) else stringResource(R.string.common_save)) },
             )
         }
     }

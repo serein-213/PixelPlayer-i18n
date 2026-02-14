@@ -89,6 +89,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign // Added
 import androidx.compose.foundation.horizontalScroll
@@ -419,7 +420,7 @@ fun EqualizerTopBar(
             ) {
                 Icon(
                     painterResource(R.drawable.rounded_arrow_back_24),
-                    contentDescription = "Back"
+                    contentDescription = stringResource(R.string.equalizer_back_cd)
                 )
             }
             
@@ -440,7 +441,7 @@ fun EqualizerTopBar(
                         EqualizerViewMode.GRAPH -> Icons.Rounded.ShowChart
                         EqualizerViewMode.HYBRID -> Icons.Rounded.ViewQuilt
                     },
-                    contentDescription = "Change View Mode"
+                    contentDescription = stringResource(R.string.equalizer_view_mode_cd)
                 )
             }
             
@@ -466,12 +467,12 @@ fun EqualizerTopBar(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.PowerSettingsNew,
-                    contentDescription = if (isEnabled) "Disable equalizer" else "Enable equalizer"
+                    contentDescription = if (isEnabled) stringResource(R.string.equalizer_disable_cd) else stringResource(R.string.equalizer_enable_cd)
                 )
             }
             
             ExpressiveTopBarContent(
-                title = "Equalizer",
+                title = stringResource(R.string.equalizer_title),
                 collapseFraction = collapseFraction,
                 collapsedTitleStartPadding = 68.dp,
                 expandedTitleStartPadding = 18.dp,
@@ -541,7 +542,7 @@ private fun PresetTabsRow(
                         Spacer(modifier = Modifier.width(4.dp))
                         Icon(
                             imageVector = Icons.Filled.Star,
-                            contentDescription = "Custom",
+                            contentDescription = stringResource(R.string.equalizer_custom_preset_cd),
                             modifier = Modifier.size(10.dp), // Slightly smaller
                             tint = if (selectedIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary 
                             // Note: TabAnimation handles content color usually, but Icon tint might need explicit handling or use LocalContentColor.
@@ -562,9 +563,9 @@ private fun PresetTabsRow(
             selectedIndex = selectedIndex,
             onClick = onEditClick 
         ) {
-             Icon(
+            Icon(
                 Icons.Rounded.Edit,
-                contentDescription = "Edit presets",
+                contentDescription = stringResource(R.string.equalizer_edit_presets_cd),
                 modifier = Modifier.size(18.dp)
             )
         }
@@ -629,7 +630,7 @@ private fun BandSlidersSection(
                             Spacer(modifier = Modifier.width(8.dp))
                             Icon(
                                 imageVector = Icons.Rounded.ExpandMore,
-                                contentDescription = "Presets",
+                                contentDescription = stringResource(R.string.equalizer_presets_cd),
                                 tint = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                         }
@@ -654,7 +655,7 @@ private fun BandSlidersSection(
                              )
                              Spacer(modifier = Modifier.width(6.dp))
                              Text(
-                                 text = "Save",
+                                 text = stringResource(R.string.equalizer_save),
                                  color = MaterialTheme.colorScheme.onTertiaryContainer,
                                  fontWeight = FontWeight.Bold
                              )
@@ -680,7 +681,7 @@ private fun BandSlidersSection(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Update",
+                                text = stringResource(R.string.equalizer_update),
                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 fontWeight = FontWeight.Bold
                             )

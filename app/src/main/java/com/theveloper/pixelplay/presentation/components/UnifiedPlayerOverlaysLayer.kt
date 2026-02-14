@@ -22,8 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.zIndex
 import androidx.media3.common.util.UnstableApi
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.presentation.viewmodel.PlayerViewModel
 import com.theveloper.pixelplay.presentation.viewmodel.StablePlayerState
@@ -158,6 +160,8 @@ internal fun UnifiedPlayerSongInfoLayer(
 ) {
     selectedSongForInfo?.let { staticSong ->
         val context = LocalContext.current
+        val addedToQueueMessage = stringResource(R.string.queue_added_to_queue)
+        val playingNextMessage = stringResource(R.string.queue_playing_next)
         val liveSongState by remember(playerViewModel, staticSong.id) {
             playerViewModel.observeSong(staticSong.id).map { it ?: staticSong }
         }.collectAsState(initial = staticSong)
@@ -185,12 +189,12 @@ internal fun UnifiedPlayerSongInfoLayer(
                 onAddToQueue = {
                     playerViewModel.addSongToQueue(liveSong)
                     onDismissSongInfo()
-                    Toast.makeText(context, "Added to queue", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, addedToQueueMessage, Toast.LENGTH_SHORT).show()
                 },
                 onAddNextToQueue = {
                     playerViewModel.addSongNextToQueue(liveSong)
                     onDismissSongInfo()
-                    Toast.makeText(context, "Playing next", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, playingNextMessage, Toast.LENGTH_SHORT).show()
                 },
                 onAddToPlayList = {
                     Log.d("UnifiedPlayerSheet", "Add to playlist clicked for ${liveSong.title}")

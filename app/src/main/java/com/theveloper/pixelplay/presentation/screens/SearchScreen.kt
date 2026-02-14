@@ -89,6 +89,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavHostController
 import com.theveloper.pixelplay.R
@@ -248,7 +249,7 @@ fun SearchScreen(
                         .clip(RoundedCornerShape(searchbarCornerRadius)),
                     placeholder = {
                         Text(
-                            "Search...",
+                            stringResource(R.string.search_placeholder),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -868,7 +869,7 @@ fun SearchResultAlbumItem(
         ) {
             SmartImage(
                 model = album.albumArtUriString,
-                contentDescription = "Album Art: ${album.title}",
+                contentDescription = stringResource(R.string.search_album_art_cd, album.title),
                 modifier = Modifier
                     .size(56.dp)
                     .clip(itemShape)
@@ -902,7 +903,11 @@ fun SearchResultAlbumItem(
                     contentColor = MaterialTheme.colorScheme.onSecondary
                 )
             ) {
-                Icon(Icons.Rounded.PlayArrow, contentDescription = "Play Album", modifier = Modifier.size(24.dp))
+                Icon(
+                    Icons.Rounded.PlayArrow,
+                    contentDescription = stringResource(R.string.search_play_album_cd),
+                    modifier = Modifier.size(24.dp)
+                )
             }
         }
     }
@@ -944,7 +949,7 @@ fun SearchResultArtistItem(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.rounded_artist_24),
-                contentDescription = "Artist",
+                contentDescription = stringResource(R.string.search_artist_cd),
                 modifier = Modifier
                     .size(56.dp)
                     .background(MaterialTheme.colorScheme.tertiaryContainer, CircleShape)

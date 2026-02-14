@@ -64,6 +64,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -309,7 +310,8 @@ fun SettingsScreen(
         SettingsTopBar(
                 collapseFraction = collapseFraction,
                 headerHeight = currentTopBarHeightDp,
-                onBackPressed = onNavigationIconClick
+                onBackPressed = onNavigationIconClick,
+                title = stringResource(R.string.nav_settings)
         )
 
         // Block interaction during transition
@@ -380,7 +382,7 @@ fun ExpressiveCategoryItem(
             
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = category.title,
+                    text = stringResource(category.titleResId),
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
@@ -388,7 +390,7 @@ fun ExpressiveCategoryItem(
                     maxLines = 1
                 )
                 Text(
-                    text = category.subtitle,
+                    text = stringResource(category.subtitleResId),
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

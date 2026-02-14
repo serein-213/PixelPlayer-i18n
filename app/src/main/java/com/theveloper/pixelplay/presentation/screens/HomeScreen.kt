@@ -56,6 +56,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -143,6 +144,7 @@ fun HomeScreen(
     }
 
     val yourMixSong: String = "Today's Mix for you"
+    val yourMixQueueName = stringResource(R.string.home_your_mix_queue)
 
     // 2) Observar sólo el currentSong (o null) para saber si mostrar padding
     val currentSong by remember(playerViewModel.stablePlayerState) {
@@ -215,7 +217,7 @@ fun HomeScreen(
                             if (yourMixSongs.isNotEmpty()) {
                                 playerViewModel.playSongsShuffled(
                                     songsToPlay = yourMixSongs,
-                                    queueName = "Your Mix"
+                                    queueName = yourMixQueueName
                                 )
                             }
                         }
@@ -231,7 +233,7 @@ fun HomeScreen(
                             padding = 14.dp,
                             height = 400.dp,
                             onSongClick = { song ->
-                                playerViewModel.showAndPlaySong(song, yourMixSongs, "Your Mix")
+                                playerViewModel.showAndPlaySong(song, yourMixSongs, yourMixQueueName)
                             }
                         )
                     }
@@ -362,7 +364,7 @@ fun YourMixHeader(
         ) {
             // Your Mix Title
             Text(
-                text = "Your\nMix",
+                text = stringResource(R.string.home_your_mix_title),
                 style = titleStyle,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
@@ -397,7 +399,7 @@ fun YourMixHeader(
         ) {
             Icon(
                 painter = painterResource(R.drawable.rounded_shuffle_24),
-                contentDescription = "Shuffle Play",
+                contentDescription = stringResource(R.string.home_shuffle_play_cd),
                 modifier = Modifier.size(36.dp)
             )
         }
@@ -443,7 +445,7 @@ fun SongListItemFavs(
             ) {
                 SmartImage(
                     model = albumArtUrl,
-                    contentDescription = "Carátula de $title",
+                    contentDescription = stringResource(R.string.home_album_art_cd, title),
                     contentScale = ContentScale.Crop,
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.size(48.dp)
