@@ -62,7 +62,6 @@
     <string name="next_track">Next track</string>
     <string name="pause_playback">Pause playback</string>
     <string name="play_playback">Play</string>
-    <string name="playlist_not_found">Playlist not found.</string>
     <string name="save_lyrics_as_lrc">Save lyrics as .lrc</string>
     <string name="save_lyrics_dialog_title">Save Lyrics</string>
     <string name="save_lyrics_dialog_message">Choose which version to save:</string>
@@ -391,8 +390,19 @@
     <string name="selection_delete_all">Delete All</string>
     <string name="selection_all">All</string>
     <string name="selection_deselect">Deselect</string>
+    <string name="selection_select_all">Select All</string>
+    <string name="selection_deselect_all">Deselect All</string>
     <string name="selection_more_options_cd">More options</string>
     <string name="selection_options">Options</string>
+    <string name="selection_playlists_count">%1$d PLAYLISTS</string>
+    <string name="playlist_selection_delete">Delete</string>
+    <string name="playlist_selection_delete_all_cd">Delete all</string>
+    <string name="playlist_selection_export">Export</string>
+    <string name="playlist_selection_export_all_cd">Export all</string>
+    <string name="playlist_selection_merge">Merge</string>
+    <string name="playlist_selection_merge_all_cd">Merge all</string>
+    <string name="playlist_selection_share">Share</string>
+    <string name="playlist_selection_share_all_cd">Share all</string>
 
     
     <string name="lyrics_section_title">Lyrics</string>
@@ -769,6 +779,13 @@
     <string name="queue_clear_title">Clear Queue</string>
     <string name="queue_clear_message">Are you sure you want to clear all songs from the queue except the current one?</string>
     <string name="queue_clear_confirm">Clear</string>
+    <string name="playlist_not_found">Playlist not found.</string>
+    <string name="playlist_created_successfully">Playlist created successfully</string>
+    <string name="playlist_merge_title">Merge playlists</string>
+    <string name="playlist_merge_prompt">Enter a name for the merged playlist:</string>
+    <string name="playlist_merge_placeholder">Merged playlist</string>
+    <string name="playlist_merge_summary">This will merge %1$d selected playlists into one.</string>
+    <string name="playlist_merge_action">Merge</string>
     <string name="playlist_search_songs_placeholder">Search songs to include...</string>
 
     
@@ -1495,6 +1512,8 @@
     <string name="artist_shuffle">Shuffle play album</string>
     <string name="artist_edit_image_cd">Edit artist image</string>
     <string name="telegram_channel_options_cd">Channel options</string>
+
+    <string name="quick_fill_input_placeholder">Search by song or artist</string>
     <string name="netease_cloud_music">Netease Cloud Music</string>
     <string name="sync_status_playlists">Sync Playlists</string>
     <string name="sync_notification_playlists">Syncing your Playlists…</string>
