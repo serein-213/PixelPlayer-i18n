@@ -81,6 +81,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
@@ -190,7 +191,7 @@ fun ArtistSettingsScreen(
             // Multi-Artist Parsing Section
             item {
                 SettingsSection(
-                    title = "Multi-Artist Parsing",
+                    title = stringResource(R.string.artist_settings_multi_parsing_title),
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.Person,
@@ -202,8 +203,8 @@ fun ArtistSettingsScreen(
                     Column(modifier = Modifier.clip(shape = RoundedCornerShape(24.dp))) {
                         // Configure Delimiters
                         SettingsItem(
-                            title = "Configure Delimiters",
-                            subtitle = "Current: ${uiState.artistDelimiters.joinToString(", ")}",
+                            title = stringResource(R.string.artist_settings_delimiters_title),
+                            subtitle = stringResource(R.string.artist_settings_delimiters_subtitle_format, uiState.artistDelimiters.joinToString(", ")),
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Outlined.Settings,
@@ -229,7 +230,7 @@ fun ArtistSettingsScreen(
             // Library Organization Section
             item {
                 SettingsSection(
-                    title = "Library Organization",
+                    title = stringResource(R.string.artist_settings_org_title),
                     icon = {
                         Icon(
                             imageVector = Icons.Rounded.LibraryMusic,
@@ -240,8 +241,8 @@ fun ArtistSettingsScreen(
                 ) {
                     Column(modifier = Modifier.clip(shape = RoundedCornerShape(24.dp))) {
                         SwitchSettingItem(
-                            title = "Group by Album Artist",
-                            subtitle = "Show collaboration albums under main artist",
+                            title = stringResource(R.string.artist_settings_group_album_artist_title),
+                            subtitle = stringResource(R.string.artist_settings_group_album_artist_subtitle),
                             checked = uiState.groupByAlbumArtist,
                             onCheckedChange = { viewModel.setGroupByAlbumArtist(it) },
                             leadingIcon = {
@@ -259,14 +260,15 @@ fun ArtistSettingsScreen(
             // Info Card
             item {
                 InfoCard(
-                    title = "About Multi-Artist Parsing",
-                    content = "PixelPlayer automatically splits artist tags containing multiple artists. This is useful for songs downloaded with yt-dlp or other tools that use delimiters like '/' to separate artists.\n\nBackslash (\\) can be used to escape delimiters."
+                    title = stringResource(R.string.artist_settings_about_title),
+                    content = stringResource(R.string.artist_settings_about_content)
                 )
             }
 
             // Examples Card
             item {
                 ExamplesCard(
+                    title = stringResource(R.string.artist_settings_examples_title),
                     examples = listOf(
                         "\"Artist1/Artist2\"" to "Artist1, Artist2",
                         "\"A + B + C\"" to "A, B, C",
@@ -276,7 +278,7 @@ fun ArtistSettingsScreen(
             }
         }
         CollapsibleCommonTopBar(
-            title = "Artists",
+            title = stringResource(R.string.settings_category_artist_title),
             collapseFraction = collapseFraction,
             headerHeight = currentTopBarHeightDp,
             onBackClick = { navController.popBackStack() },
@@ -314,13 +316,13 @@ private fun RescanRequiredBanner(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Rescan Required",
+                    text = stringResource(R.string.artist_settings_rescan_required_title),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onTertiaryContainer
                 )
                 Text(
-                    text = "Artist settings have changed. Rescan your library to apply.",
+                    text = stringResource(R.string.artist_settings_rescan_required_subtitle),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
                 )
@@ -352,7 +354,7 @@ private fun RescanRequiredBanner(
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = if (isResyncing) "Scanning..." else "Rescan",
+                    text = if (isResyncing) stringResource(R.string.artist_settings_scanning_button) else stringResource(R.string.artist_settings_rescan_button),
                     style = MaterialTheme.typography.labelMedium
                 )
             }
@@ -404,6 +406,7 @@ private fun InfoCard(
 
 @Composable
 private fun ExamplesCard(
+    title: String = "Examples",
     examples: List<Pair<String, String>>
 ) {
     Surface(
@@ -427,7 +430,7 @@ private fun ExamplesCard(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "Examples",
+                    text = title,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface

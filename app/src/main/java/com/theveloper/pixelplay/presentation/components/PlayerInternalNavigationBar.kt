@@ -1,30 +1,36 @@
 package com.theveloper.pixelplay.presentation.components
 
-import com.theveloper.pixelplay.presentation.navigation.navigateSafely
-
 import android.os.SystemClock
 import androidx.compose.foundation.background
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.theveloper.pixelplay.BottomNavItem
@@ -72,30 +78,31 @@ private fun PlayerInternalNavigationItemsRow(
             val selectedColor = MaterialTheme.colorScheme.primary
             val unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
             val indicatorColorFromTheme = MaterialTheme.colorScheme.secondaryContainer
+            val itemLabel = stringResource(item.labelResId)
 
             val iconPainterResId = if (isSelected && item.selectedIconResId != null && item.selectedIconResId != 0) {
                 item.selectedIconResId
             } else {
                 item.iconResId
             }
-            val iconLambda: @Composable () -> Unit = remember(iconPainterResId, item.label) {
+            val iconLambda: @Composable () -> Unit = remember(iconPainterResId, item.labelResId) {
                 {
                     Icon(
                         painter = painterResource(id = iconPainterResId),
-                        contentDescription = item.label
+                        contentDescription = itemLabel
                     )
                 }
             }
-            val selectedIconLambda: @Composable () -> Unit = remember(iconPainterResId, item.label) {
+            val selectedIconLambda: @Composable () -> Unit = remember(iconPainterResId, item.labelResId) {
                 {
                     Icon(
                         painter = painterResource(id = iconPainterResId),
-                        contentDescription = item.label
+                        contentDescription = itemLabel
                     )
                 }
             }
-            val labelLambda: @Composable () -> Unit = remember(item.label) {
-                { Text(item.label) }
+            val labelLambda: @Composable () -> Unit = remember(item.labelResId) {
+                { Text(itemLabel) }
             }
             val onClickLambda: () -> Unit = remember(item.screen.route, navController, scope) {
                 {
@@ -109,7 +116,7 @@ private fun PlayerInternalNavigationItemsRow(
                         lastSearchTapTimestamp = now
 
                         if (!isAlreadySelected) {
-                            navController.navigateSafely(itemRoute) {
+                            navController.navigate(itemRoute) {
                                 popUpTo(navController.graph.id) { inclusive = true; saveState = false }
                                 launchSingleTop = true
                                 restoreState = false
@@ -129,7 +136,7 @@ private fun PlayerInternalNavigationItemsRow(
                         }
                     } else if (!isAlreadySelected) {
                         lastSearchTapTimestamp = 0L
-                        navController.navigateSafely(itemRoute) {
+                        navController.navigate(itemRoute) {
                             popUpTo(navController.graph.id) { inclusive = true; saveState = false }
                             launchSingleTop = true
                             restoreState = false
@@ -146,7 +153,7 @@ private fun PlayerInternalNavigationItemsRow(
                 icon = iconLambda,
                 selectedIcon = selectedIconLambda,
                 label = labelLambda,
-                contentDescription = item.label,
+                contentDescription = itemLabel,
                 alwaysShowLabel = true,
                 selectedIconColor = selectedColor,
                 unselectedIconColor = unselectedColor,

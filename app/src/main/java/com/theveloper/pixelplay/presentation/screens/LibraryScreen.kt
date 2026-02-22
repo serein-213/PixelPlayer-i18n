@@ -2,8 +2,6 @@
 
 package com.theveloper.pixelplay.presentation.screens
 
-import com.theveloper.pixelplay.presentation.navigation.navigateSafely
-
 import android.os.Trace
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -42,7 +40,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ViewList
 import androidx.compose.material.icons.filled.Album
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -56,16 +53,19 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material.icons.rounded.ViewModule
+import androidx.compose.material.icons.rounded.ViewList
+import com.theveloper.pixelplay.data.model.StorageFilter
 import com.theveloper.pixelplay.presentation.components.ToggleSegmentButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -117,7 +117,6 @@ import com.theveloper.pixelplay.data.model.MusicFolder
 import com.theveloper.pixelplay.data.model.FolderSource
 import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.data.model.SortOption
-import com.theveloper.pixelplay.data.model.StorageFilter
 import com.theveloper.pixelplay.presentation.components.MiniPlayerHeight
 import com.theveloper.pixelplay.presentation.components.NavBarContentHeight
 import com.theveloper.pixelplay.presentation.components.SmartImage
@@ -218,8 +217,6 @@ import kotlin.math.abs
 
 val ListExtraBottomGap = 30.dp
 val PlayerSheetCollapsedCornerRadius = 32.dp
-private const val ENABLE_FOLDERS_SOURCE_TOGGLE = false
-private const val ENABLE_FOLDERS_STORAGE_FILTER = false
 
 private data class LibraryScreenPlayerProjection(
     val currentFolder: MusicFolder? = null,
@@ -539,7 +536,7 @@ fun LibraryScreen(
                     } else {
                         Text(
                             modifier = Modifier.padding(start = 8.dp),
-                            text = "Library",
+                            text = stringResource(R.string.nav_library),
                             fontFamily = GoogleSansRounded,
                             //style = ExpTitleTypography.titleMedium,
                             fontWeight = FontWeight.ExtraBold,
@@ -557,7 +554,7 @@ fun LibraryScreen(
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                         ),
                         onClick = {
-                            navController.navigateSafely(Screen.Settings.route)
+                            navController.navigate(Screen.Settings.route)
                         }
                     ) {
                         Icon(
@@ -613,14 +610,14 @@ fun LibraryScreen(
             ) {
                 if (!isCompactNavigation) {
                     val showTabIndicator = false
-                    PrimaryScrollableTabRow(
+                    ScrollableTabRow(
                         selectedTabIndex = currentTabIndex,
                         containerColor = Color.Transparent,
                         edgePadding = 12.dp,
-                        indicator = {
-                            if (showTabIndicator) {
+                        indicator = { tabPositions ->
+                            if (showTabIndicator && currentTabIndex < tabPositions.size) {
                                 TabRowDefaults.PrimaryIndicator(
-                                    modifier = Modifier.tabIndicatorOffset(selectedTabIndex = currentTabIndex),
+                                    modifier = Modifier.tabIndicatorOffset(tabPositions[currentTabIndex]),
                                     height = 3.dp,
                                     color = MaterialTheme.colorScheme.primary
                                 )
@@ -648,7 +645,7 @@ fun LibraryScreen(
                                 }
                             ) {
                                 Text(
-                                    text = tabId.title,
+                                    text = stringResource(tabId.titleResId),
                                     style = MaterialTheme.typography.labelLarge,
                                     fontWeight = if (currentTabIndex == index) FontWeight.Bold else FontWeight.Medium
                                 )
@@ -657,13 +654,13 @@ fun LibraryScreen(
                         TabAnimation(
 //                        modifier = Modifier.aspectRatio(1f),
                             index = -1, // A non-matching index to keep it unselected
-                            title = "Edit",
+                            title = stringResource(R.string.library_tab_edit),
                             selectedIndex = currentTabIndex,
                             onClick = { showReorderTabsSheet = true }
                         ) {
                             Icon(
                                 Icons.Default.Edit,
-                                contentDescription = "Reorder tabs",
+                                contentDescription = stringResource(R.string.library_tab_reorder_cd),
                                 tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f)
                             )
                         }
@@ -815,7 +812,7 @@ fun LibraryScreen(
                                                 )
                                                 Spacer(modifier = Modifier.width(6.dp))
                                                 Text(
-                                                    text = "All",
+                                                    text = stringResource(id = R.string.selection_all),
                                                     style = MaterialTheme.typography.labelLarge,
                                                     fontWeight = FontWeight.Medium,
                                                     fontFamily = GoogleSansRounded
@@ -848,7 +845,7 @@ fun LibraryScreen(
                                                 )
                                                 Spacer(modifier = Modifier.width(6.dp))
                                                 Text(
-                                                    text = "Deselect",
+                                                    text = stringResource(id = R.string.selection_deselect),
                                                     style = MaterialTheme.typography.labelLarge,
                                                     fontWeight = FontWeight.Medium,
                                                     fontFamily = GoogleSansRounded
@@ -878,12 +875,12 @@ fun LibraryScreen(
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Rounded.MoreHoriz,
-                                                contentDescription = "More options",
+                                                contentDescription = stringResource(id = R.string.selection_more_options_cd),
                                                 modifier = Modifier.size(20.dp)
                                             )
                                             Spacer(modifier = Modifier.width(6.dp))
                                             Text(
-                                                text = "Options",
+                                                text = stringResource(id = R.string.selection_options),
                                                 style = MaterialTheme.typography.labelLarge,
                                                 fontWeight = FontWeight.Medium,
                                                 fontFamily = GoogleSansRounded
@@ -944,14 +941,7 @@ fun LibraryScreen(
                                     folderRootLabel = playerUiState.folderSource.displayName,
                                     onFolderClick = { playerViewModel.navigateToFolder(it) },
                                     onNavigateBack = { playerViewModel.navigateBackFolder() },
-                                    isShuffleEnabled = stablePlayerState.isShuffleEnabled,
-                                    showStorageFilterButton = currentTabId == LibraryTabId.SONGS ||
-                                        currentTabId == LibraryTabId.ALBUMS ||
-                                        currentTabId == LibraryTabId.ARTISTS ||
-                                        currentTabId == LibraryTabId.LIKED ||
-                                        (ENABLE_FOLDERS_STORAGE_FILTER && currentTabId == LibraryTabId.FOLDERS),
-                                    currentStorageFilter = playerUiState.currentStorageFilter,
-                                    onStorageFilterClick = { playerViewModel.toggleStorageFilter() }
+                                    isShuffleEnabled = stablePlayerState.isShuffleEnabled
                                 )
                             }
                         }
@@ -971,7 +961,7 @@ fun LibraryScreen(
                             val isFoldersTab = currentTabId == LibraryTabId.FOLDERS
 
                             LibrarySortBottomSheet(
-                                title = "Sort by",
+                                title = stringResource(R.string.library_sort_title),
                                 options = sanitizedSortOptions,
                                 selectedOption = selectedOptionForSheet,
                                 onDismiss = { playerViewModel.hideSortingSheet() },
@@ -1006,7 +996,7 @@ fun LibraryScreen(
                                                 inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 activeCornerRadius = 32.dp,
                                                 onClick = { playerViewModel.setAlbumsListView(false) },
-                                                text = "Grid",
+                                                text = stringResource(R.string.library_view_grid),
                                                 imageVector = Icons.Rounded.ViewModule
                                             )
 
@@ -1020,13 +1010,13 @@ fun LibraryScreen(
                                                 inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 activeCornerRadius = 32.dp,
                                                 onClick = { playerViewModel.setAlbumsListView(true) },
-                                                text = "List",
-                                                imageVector = Icons.AutoMirrored.Rounded.ViewList
+                                                text = stringResource(R.string.library_view_list),
+                                                imageVector = Icons.Rounded.ViewList
                                             )
                                         }
                                     }
                                 } else null,
-                                sourceToggleContent = if (isFoldersTab && ENABLE_FOLDERS_SOURCE_TOGGLE) {
+                                sourceToggleContent = if (isFoldersTab) {
                                     {
                                         Row(
                                             modifier = Modifier.fillMaxWidth().height(48.dp),
@@ -1042,7 +1032,7 @@ fun LibraryScreen(
                                                 inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 activeCornerRadius = 32.dp,
                                                 onClick = { playerViewModel.setFoldersSource(FolderSource.INTERNAL) },
-                                                text = "Internal"
+                                                text = stringResource(R.string.storage_internal)
                                             )
                                             ToggleSegmentButton(
                                                 modifier = Modifier
@@ -1059,12 +1049,12 @@ fun LibraryScreen(
                                                         playerViewModel.setFoldersSource(FolderSource.SD_CARD)
                                                     }
                                                 },
-                                                text = "SD Card"
+                                                text = stringResource(R.string.storage_sd_card)
                                             )
                                         }
                                         if (!playerUiState.isSdCardAvailable) {
                                             Text(
-                                                text = "SD card is not available right now.",
+                                                text = stringResource(R.string.storage_sd_card_unavailable),
                                                 style = MaterialTheme.typography.bodySmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 modifier = Modifier.padding(top = 8.dp, start = 2.dp)
@@ -1115,9 +1105,7 @@ fun LibraryScreen(
                                             onSongLongPress = onSongLongPress,
                                             onSongSelectionToggle = onSongSelectionToggle,
                                             onLocateCurrentSongVisibilityChanged = { songsShowLocateButton = it },
-                                            onRegisterLocateCurrentSongAction = { songsLocateAction = it },
-                                            sortOption = playerUiState.currentSongSortOption,
-                                            storageFilter = playerUiState.currentStorageFilter
+                                            onRegisterLocateCurrentSongAction = { songsLocateAction = it }
                                         )
                                     }
                                     LibraryTabId.ALBUMS -> {
@@ -1126,7 +1114,7 @@ fun LibraryScreen(
 
                                         val stableOnAlbumClick: (Long) -> Unit = remember(navController) {
                                             { albumId: Long ->
-                                                navController.navigateSafely(Screen.AlbumDetail.createRoute(albumId))
+                                                navController.navigate(Screen.AlbumDetail.createRoute(albumId))
                                             }
                                         }
                                         LibraryAlbumsTab(
@@ -1136,8 +1124,7 @@ fun LibraryScreen(
                                             bottomBarHeight = bottomBarHeightDp,
                                             onAlbumClick = stableOnAlbumClick,
                                             isRefreshing = isRefreshing,
-                                            onRefresh = onRefresh,
-                                            storageFilter = playerUiState.currentStorageFilter
+                                            onRefresh = onRefresh
                                         )
                                     }
 
@@ -1151,15 +1138,14 @@ fun LibraryScreen(
                                             playerViewModel = playerViewModel,
                                             bottomBarHeight = bottomBarHeightDp,
                                             onArtistClick = { artistId ->
-                                                navController.navigateSafely(
+                                                navController.navigate(
                                                     Screen.ArtistDetail.createRoute(
                                                         artistId
                                                     )
                                                 )
                                             },
                                             isRefreshing = isRefreshing,
-                                            onRefresh = onRefresh,
-                                            storageFilter = playerUiState.currentStorageFilter
+                                            onRefresh = onRefresh
                                         )
                                     }
 
@@ -1198,8 +1184,7 @@ fun LibraryScreen(
                                             onSongSelectionToggle = onSongSelectionToggle,
                                             getSelectionIndex = playerViewModel.multiSelectionStateHolder::getSelectionIndex,
                                             onLocateCurrentSongVisibilityChanged = { likedShowLocateButton = it },
-                                            onRegisterLocateCurrentSongAction = { likedLocateAction = it },
-                                            storageFilter = playerUiState.currentStorageFilter
+                                            onRegisterLocateCurrentSongAction = { likedLocateAction = it }
                                         )
                                     }
 
@@ -1227,7 +1212,7 @@ fun LibraryScreen(
                                                 onFolderClick = { folderPath -> playerViewModel.navigateToFolder(folderPath) },
                                                 onFolderAsPlaylistClick = { folder ->
                                                     val encodedPath = Uri.encode(folder.path)
-                                                    navController.navigateSafely(
+                                                    navController.navigate(
                                                         Screen.PlaylistDetail.createRoute(
                                                             "${PlaylistViewModel.FOLDER_PLAYLIST_PREFIX}$encodedPath"
                                                         )
@@ -1294,7 +1279,7 @@ fun LibraryScreen(
                                 LoadingIndicator(modifier = Modifier.size(64.dp))
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Text(
-                                    text = "Generating metadata with AI...",
+                                    text = stringResource(R.string.library_generating_metadata_ai),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
@@ -1380,7 +1365,7 @@ fun LibraryScreen(
         },
         isAiEnabled = hasGeminiApiKey,
         onSetupAiClick = {
-            navController.navigateSafely(Screen.SettingsCategory.createRoute("ai"))
+            navController.navigate(Screen.SettingsCategory.createRoute("ai"))
         }
     )
 
@@ -1390,13 +1375,7 @@ fun LibraryScreen(
         allSongs = allSongsForPlaylistDialog,
         onDismiss = { showCreatePlaylistDialog = false },
         onGenerateClick = {
-            showCreatePlaylistDialog = false
-            if (hasGeminiApiKey) {
-                playerViewModel.clearAiPlaylistError()
-                showCreateAiPlaylistDialog = true
-            } else {
-                Toast.makeText(context, "Set your Gemini API key first", Toast.LENGTH_SHORT).show()
-            }
+            // AI-generated playlists would be handled here
         },
         onCreate = { name, imageUri, color, icon, songIds, cropScale, cropPanX, cropPanY, shapeType, d1, d2, d3, d4 ->
             playlistViewModel.createPlaylist(
@@ -1476,11 +1455,11 @@ fun LibraryScreen(
                 },
                 onDeleteFromDevice = playerViewModel::deleteFromDevice,
                 onNavigateToAlbum = {
-                    navController.navigateSafely(Screen.AlbumDetail.createRoute(currentSong.albumId))
+                    navController.navigate(Screen.AlbumDetail.createRoute(currentSong.albumId))
                     showSongInfoBottomSheet = false
                 },
                 onNavigateToArtist = {
-                    navController.navigateSafely(Screen.ArtistDetail.createRoute(currentSong.artistId))
+                    navController.navigate(Screen.ArtistDetail.createRoute(currentSong.artistId))
                     showSongInfoBottomSheet = false
                 },
                 onEditSong = { newTitle, newArtist, newAlbum, newGenre, newLyrics, newTrackNumber, coverArtUpdate ->
@@ -1615,8 +1594,23 @@ fun LibraryScreen(
     }
 
     if (showReorderTabsSheet) {
+        // Create a mapping of tab IDs to localized display names
+        val tabDisplayNames = mutableMapOf<String, String>()
+        tabTitles.forEach { tabId ->
+            tabDisplayNames[tabId] = when (tabId) {
+                "SONGS" -> stringResource(R.string.library_tab_songs)
+                "ALBUMS" -> stringResource(R.string.library_tab_albums)
+                "ARTIST" -> stringResource(R.string.library_tab_artists)
+                "PLAYLISTS" -> stringResource(R.string.library_tab_playlists)
+                "FOLDERS" -> stringResource(R.string.library_tab_folders)
+                "LIKED" -> stringResource(R.string.library_tab_liked)
+                else -> tabId
+            }
+        }
+        
         ReorderTabsSheet(
             tabs = tabTitles,
+            tabDisplayNames = tabDisplayNames,
             onReorder = { newOrder ->
                 playerViewModel.saveLibraryTabsOrder(newOrder)
             },
@@ -1886,12 +1880,12 @@ private fun LibraryTabSwitcherSheet(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Library tabs",
+                text = stringResource(R.string.library_tabs_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontFamily = GoogleSansRounded
             )
             Text(
-                text = "Jump directly to any tab or reorder them.",
+                text = stringResource(R.string.library_tabs_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -1980,7 +1974,7 @@ private fun LibraryTabGridItem(
             ) {
                 Icon(
                     painter = painterResource(id = tabId.iconRes()),
-                    contentDescription = tabId.title,
+                    contentDescription = stringResource(tabId.titleResId),
                     tint = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
@@ -2041,10 +2035,8 @@ private fun LibraryTabId.iconRes(): Int = when (this) {
     LibraryTabId.LIKED -> R.drawable.rounded_favorite_24
 }
 
-private fun LibraryTabId.displayTitle(): String =
-    title.lowercase().replaceFirstChar { char ->
-        if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
-    }
+@Composable
+private fun LibraryTabId.displayTitle(): String = stringResource(titleResId)
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -2168,11 +2160,29 @@ fun LibraryFoldersTab(
                 }
 
                 itemsToShow.isEmpty() && songsToShow.isEmpty() -> {
-                    LibraryExpressiveEmptyState(
-                        tabId = LibraryTabId.FOLDERS,
-                        storageFilter = StorageFilter.OFFLINE,
-                        bottomBarHeight = bottomBarHeight
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_folder),
+                                contentDescription = null,
+                                Modifier.size(48.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                            )
+                            Text(
+                                stringResource(R.string.library_empty_no_folders),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
                 }
 
                 else -> {
@@ -2395,8 +2405,7 @@ fun LibraryFavoritesTab(
     onSongSelectionToggle: (Song) -> Unit = {},
     getSelectionIndex: (String) -> Int? = { null },
     onLocateCurrentSongVisibilityChanged: (Boolean) -> Unit = {},
-    onRegisterLocateCurrentSongAction: ((() -> Unit)?) -> Unit = {},
-    storageFilter: StorageFilter = StorageFilter.ALL
+    onRegisterLocateCurrentSongAction: ((() -> Unit)?) -> Unit = {}
 ) {
     val stablePlayerState by playerViewModel.stablePlayerState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
@@ -2457,11 +2466,19 @@ fun LibraryFavoritesTab(
     }
 
     if (favoriteSongs.itemCount == 0 && favoriteSongs.loadState.refresh !is androidx.paging.LoadState.Loading) {
-        LibraryExpressiveEmptyState(
-            tabId = LibraryTabId.LIKED,
-            storageFilter = storageFilter,
-            bottomBarHeight = bottomBarHeight
-        )
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp), contentAlignment = Alignment.Center) {
+            Column(
+                modifier = Modifier.align(Alignment.TopCenter),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(Icons.Filled.FavoriteBorder, contentDescription = null, modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                Spacer(Modifier.height(8.dp))
+                Text(stringResource(R.string.library_empty_no_liked), style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.library_empty_no_liked_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
+            }
+        }
     } else {
         Box(modifier = Modifier
             .fillMaxSize(),
@@ -2641,14 +2658,14 @@ fun LibrarySongsTabPaginated(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_music_off_24),
-                        contentDescription = "No songs found",
+                        contentDescription = stringResource(R.string.library_empty_no_songs),
                         modifier = Modifier.size(48.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(Modifier.height(8.dp))
-                    Text("No songs found in your library.", style = MaterialTheme.typography.titleMedium)
+                    Text(stringResource(R.string.library_empty_no_songs), style = MaterialTheme.typography.titleMedium)
                     Text(
-                        "Try rescanning your library in settings if you have music on your device.",
+                        stringResource(R.string.library_empty_no_songs_hint),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -2784,8 +2801,7 @@ fun LibraryAlbumsTab(
     bottomBarHeight: Dp,
     onAlbumClick: (Long) -> Unit,
     isRefreshing: Boolean,
-    onRefresh: () -> Unit,
-    storageFilter: StorageFilter = StorageFilter.ALL
+    onRefresh: () -> Unit
 ) {
     val gridState = rememberLazyGridState()
     val listState = rememberLazyListState() // New state for list view
@@ -2926,11 +2942,14 @@ fun LibraryAlbumsTab(
             }
         }
     } else if (albums.isEmpty() && !isLoading) { // canLoadMore removed
-        LibraryExpressiveEmptyState(
-            tabId = LibraryTabId.ALBUMS,
-            storageFilter = storageFilter,
-            bottomBarHeight = bottomBarHeight
-        )
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp), contentAlignment = Alignment.Center) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Icon(Icons.Filled.Album, null, Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
+                Text(stringResource(R.string.library_empty_no_albums), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
     } else {
         // Songs loaded
         Box(modifier = Modifier.fillMaxSize()) {
@@ -3194,8 +3213,7 @@ fun LibraryArtistsTab(
     bottomBarHeight: Dp,
     onArtistClick: (Long) -> Unit,
     isRefreshing: Boolean,
-    onRefresh: () -> Unit,
-    storageFilter: StorageFilter = StorageFilter.ALL
+    onRefresh: () -> Unit
 ) {
     val listState = rememberLazyListState()
     val playerUiState by playerViewModel.playerUiState.collectAsStateWithLifecycle()
@@ -3233,13 +3251,7 @@ fun LibraryArtistsTab(
             }
         }
     }
-    else if (artists.isEmpty() && !isLoading) {
-        LibraryExpressiveEmptyState(
-            tabId = LibraryTabId.ARTISTS,
-            storageFilter = storageFilter,
-            bottomBarHeight = bottomBarHeight
-        )
-    }
+    else if (artists.isEmpty() && !isLoading) { /* ... No artists ... */ } // canLoadMore removed
     else {
         Box(
             modifier = Modifier.fillMaxSize()

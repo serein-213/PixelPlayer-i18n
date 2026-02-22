@@ -61,11 +61,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
 import com.theveloper.pixelplay.presentation.components.CollapsibleCommonTopBar
 import com.theveloper.pixelplay.presentation.components.MiniPlayerHeight
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.presentation.viewmodel.CodecInfo
 import com.theveloper.pixelplay.presentation.viewmodel.DeviceCapabilitiesViewModel
 import com.theveloper.pixelplay.presentation.viewmodel.PlayerViewModel
@@ -164,7 +166,7 @@ fun DeviceCapabilitiesScreen(
                  // Audio Capabilities
                  item {
                      state.audioCapabilities?.let { audio ->
-                         CapabilitySection(title = "Audio Output", icon = Icons.Rounded.Speaker) {
+                         CapabilitySection(title = stringResource(R.string.device_capabilities_audio_output), icon = Icons.Rounded.Speaker) {
                              InfoRow("Sample Rate", "${audio.outputSampleRate} Hz")
                              InfoRow("Frames Per Buffer", "${audio.outputFramesPerBuffer}")
                              InfoRow("Low Latency Support", if (audio.isLowLatencySupported) "Yes" else "No")
@@ -176,7 +178,7 @@ fun DeviceCapabilitiesScreen(
                  // ExoPlayer Info
                  item {
                      state.exoPlayerInfo?.let { exo ->
-                         CapabilitySection(title = "ExoPlayer Engine", icon = Icons.Rounded.Memory) {
+                         CapabilitySection(title = stringResource(R.string.device_capabilities_exoplayer), icon = Icons.Rounded.Memory) {
                              InfoRow("Version", exo.version)
                              InfoRow("Active Renderers", exo.renderers)
                              InfoRow("Decoder Counters", exo.decoderCounters)
@@ -187,7 +189,7 @@ fun DeviceCapabilitiesScreen(
                  // Codecs Header
                  item {
                      Text(
-                         text = "Supported Audio Codecs",
+                         text = stringResource(R.string.device_capabilities_supported_codecs),
                          style = MaterialTheme.typography.titleLarge,
                          color = MaterialTheme.colorScheme.onSurface,
                          fontWeight = FontWeight.Bold,
@@ -206,7 +208,7 @@ fun DeviceCapabilitiesScreen(
         
         // Top Bar
         CollapsibleCommonTopBar(
-            title = "Device Capabilities",
+            title = stringResource(R.string.device_capabilities_title),
             collapseFraction = collapseFraction,
             headerHeight = currentTopBarHeightDp,
             onBackClick = { navController.popBackStack() },
@@ -352,7 +354,7 @@ fun DeviceInfoExpressiveSection(deviceInfo: Map<String, String>) {
                     }
                     Spacer(Modifier.width(12.dp))
                     Text(
-                        text = "Device Info",
+                        text = stringResource(R.string.device_info_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface

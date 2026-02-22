@@ -1,5 +1,7 @@
 package com.theveloper.pixelplay.presentation.components
 
+import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -25,15 +27,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.theveloper.pixelplay.R
 
-sealed class DrawerDestination(val route: String, val title: String) {
-    object Home : DrawerDestination("home", "Home")
-    object Equalizer : DrawerDestination("equalizer", "Equalizer")
-    object Settings : DrawerDestination("settings", "Settings")
-    object Telegram : DrawerDestination("telegram", "Telegram")
+sealed class DrawerDestination(val route: String, @StringRes val titleResId: Int) {
+    object Home : DrawerDestination("home", R.string.nav_home)
+    object Equalizer : DrawerDestination("equalizer", R.string.equalizer_title)
+    object Settings : DrawerDestination("settings", R.string.nav_settings)
+    object Telegram : DrawerDestination("telegram", R.string.nav_telegram)
 }
 
 @Composable
@@ -105,12 +108,12 @@ private fun DrawerContent(
             icon = {
                 Icon(
                     imageVector = Icons.Rounded.Home,
-                    contentDescription = "Home"
+                    contentDescription = stringResource(R.string.nav_home)
                 )
             },
             label = {
                 Text(
-                    text = "Home",
+                    text = stringResource(R.string.nav_home),
                     style = MaterialTheme.typography.labelLarge
                 )
             },
@@ -132,12 +135,12 @@ private fun DrawerContent(
             icon = {
                 Icon(
                     imageVector = Icons.Rounded.GraphicEq,
-                    contentDescription = "Equalizer"
+                    contentDescription = stringResource(R.string.equalizer_title)
                 )
             },
             label = {
                 Text(
-                    text = "Equalizer",
+                    text = stringResource(R.string.equalizer_title),
                     style = MaterialTheme.typography.labelLarge
                 )
             },
@@ -166,12 +169,12 @@ private fun DrawerContent(
             icon = {
                 Icon(
                     imageVector = Icons.Rounded.Cloud,
-                    contentDescription = "Telegram"
+                    contentDescription = stringResource(R.string.nav_telegram)
                 )
             },
             label = {
                 Text(
-                    text = "Telegram",
+                    text = stringResource(R.string.nav_telegram),
                     style = MaterialTheme.typography.labelLarge
                 )
             },
@@ -194,12 +197,12 @@ private fun DrawerContent(
             icon = {
                 Icon(
                     painter = painterResource(R.drawable.rounded_settings_24),
-                    contentDescription = "Settings"
+                    contentDescription = stringResource(R.string.nav_settings)
                 )
             },
             label = {
                 Text(
-                    text = "Settings",
+                    text = stringResource(R.string.nav_settings),
                     style = MaterialTheme.typography.labelLarge
                 )
             },

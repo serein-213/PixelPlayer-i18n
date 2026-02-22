@@ -351,11 +351,11 @@ fun PlaylistDetailScreen(
                     ) {
                         Icon(
                             Icons.Rounded.PlayArrow,
-                            contentDescription = "Play",
+                            contentDescription = stringResource(R.string.playlist_detail_play_cd),
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                        Text("Play it")
+                        Text(stringResource(R.string.playlist_detail_play_label))
                     }
                     FilledTonalButton(
                         onClick = {
@@ -384,11 +384,11 @@ fun PlaylistDetailScreen(
                     ) {
                         Icon(
                             Icons.Rounded.Shuffle,
-                            contentDescription = "Shuffle",
+                            contentDescription = stringResource(R.string.playlist_detail_shuffle_cd),
                             modifier = Modifier.size(ButtonDefaults.IconSize)
                         )
                         Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                        Text("Shuffle")
+                        Text(stringResource(R.string.playlist_detail_shuffle_label))
                     }
                 }
 
@@ -441,12 +441,12 @@ fun PlaylistDetailScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.Add,
-                                contentDescription = "Add songs",
+                                contentDescription = stringResource(R.string.playlist_detail_add_songs_cd),
                                 modifier = Modifier.size(20.dp)
                             )
                             Spacer(Modifier.width(4.dp))
                             Text(
-                                text = "Add",
+                                text = stringResource(R.string.playlist_detail_add_label),
                                 style = MaterialTheme.typography.labelLarge
                             )
                         }
@@ -468,13 +468,13 @@ fun PlaylistDetailScreen(
                             Icon(
                                 modifier = Modifier.size(18.dp),
                                 imageVector = Icons.Default.RemoveCircleOutline,
-                                contentDescription = "Remove songs",
+                                contentDescription = stringResource(R.string.playlist_detail_remove_songs_cd),
                                 tint = removeIconColor
                             )
                             Spacer(Modifier.width(6.dp))
                             Text(
                                 modifier = Modifier.padding(end = 4.dp),
-                                text = "Remove",
+                                text = stringResource(R.string.playlist_detail_remove_label),
                                 color = removeIconColor,
                                 style = MaterialTheme.typography.labelMedium
                             )
@@ -497,13 +497,13 @@ fun PlaylistDetailScreen(
                             Icon(
                                 modifier = Modifier.size(22.dp),
                                 painter = painterResource(R.drawable.drag_order_icon),
-                                contentDescription = "Reorder songs",
+                                contentDescription = stringResource(R.string.playlist_detail_reorder_songs_cd),
                                 tint = reorderIconColor
                             )
                             Spacer(Modifier.width(6.dp))
                             Text(
                                 modifier = Modifier.padding(end = 4.dp),
-                                text = "Reorder",
+                                text = stringResource(R.string.playlist_detail_reorder_label),
                                 color = reorderIconColor,
                                 style = MaterialTheme.typography.labelMedium
                             )
@@ -518,11 +518,11 @@ fun PlaylistDetailScreen(
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Icon(Icons.Filled.MusicOff, null, Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
                             Spacer(Modifier.height(8.dp))
-                            Text("This playlist is empty.", style = MaterialTheme.typography.titleMedium)
+                            Text(stringResource(R.string.playlist_detail_empty_title), style = MaterialTheme.typography.titleMedium)
                             val emptyMessage = if (isFolderPlaylist) {
-                                "This folder doesn't contain songs."
+                                stringResource(R.string.playlist_detail_empty_folder)
                             } else {
-                                "Tap on 'Add Songs' to begin."
+                                stringResource(R.string.playlist_detail_empty_add_prompt)
                             }
                             Text(emptyMessage, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
@@ -629,7 +629,7 @@ fun PlaylistDetailScreen(
                                             ) {
                                                 Icon(
                                                     imageVector = Icons.Rounded.DragIndicator,
-                                                    contentDescription = "Reorder song",
+                                                    contentDescription = stringResource(R.string.playlist_detail_reorder_song_cd),
                                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                                                 )
                                             }
@@ -693,7 +693,7 @@ fun PlaylistDetailScreen(
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
-                        text = "Playlist options",
+                        text = stringResource(R.string.playlist_detail_options_title),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -707,7 +707,7 @@ fun PlaylistDetailScreen(
                 }
                 PlaylistActionItem(
                     icon = painterResource(R.drawable.rounded_edit_24),
-                    label = "Edit playlist",
+                    label = stringResource(R.string.playlist_detail_edit),
                     onClick = {
                         showPlaylistOptionsSheet = false
                         showEditPlaylistDialog = true
@@ -715,7 +715,7 @@ fun PlaylistDetailScreen(
                 )
                 PlaylistActionItem(
                     icon = painterResource(R.drawable.rounded_delete_24),
-                    label = "Delete playlist",
+                    label = stringResource(R.string.playlist_detail_delete),
                     onClick = {
                         showPlaylistOptionsSheet = false
                         showDeleteConfirmation = true
@@ -723,7 +723,7 @@ fun PlaylistDetailScreen(
                 )
                 PlaylistActionItem(
                     icon = painterResource(R.drawable.outline_graph_1_24),
-                    label = "Set default transition",
+                    label = stringResource(R.string.playlist_detail_set_default_transition),
                     onClick = {
                         showPlaylistOptionsSheet = false
                         navController.navigateSafely(Screen.EditTransition.createRoute(playlistId))
@@ -731,7 +731,7 @@ fun PlaylistDetailScreen(
                 )
                 PlaylistActionItem(
                     icon = painterResource(R.drawable.rounded_attach_file_24),
-                    label = "Export M3U",
+                    label = stringResource(R.string.playlist_detail_export_m3u),
                     onClick = {
                         showPlaylistOptionsSheet = false
                         m3uExportLauncher.launch("${currentPlaylist?.name ?: "playlist"}.m3u")
@@ -783,9 +783,9 @@ fun PlaylistDetailScreen(
     if (showDeleteConfirmation && currentPlaylist != null) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
-            title = { Text("Delete playlist?") },
+            title = { Text(stringResource(R.string.playlist_detail_delete_title)) },
             text = {
-                Text("Are you sure you want to delete this playlist?")
+                Text(stringResource(R.string.playlist_detail_delete_message))
             },
             confirmButton = {
                 TextButton(
@@ -795,12 +795,12 @@ fun PlaylistDetailScreen(
                         showDeleteConfirmation = false
                     }
                 ) {
-                    Text("Delete")
+                    Text(stringResource(R.string.playlist_detail_delete_confirm))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteConfirmation = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.playlist_detail_delete_cancel))
                 }
             }
         )
@@ -834,12 +834,12 @@ fun PlaylistDetailScreen(
                 onAddToQueue = {
                     playerViewModel.addSongToQueue(currentSong) // Assumes such a method exists or will be added
                     showSongInfoBottomSheet = false
-                    playerViewModel.sendToast("Added to the queue")
+                    playerViewModel.sendToast(context.getString(R.string.playlist_detail_toast_added_to_queue))
                 },
                 onAddNextToQueue = {
                     playerViewModel.addSongNextToQueue(currentSong)
                     showSongInfoBottomSheet = false
-                    playerViewModel.sendToast("Will play next")
+                    playerViewModel.sendToast(context.getString(R.string.playlist_detail_toast_play_next))
                 },
                 onAddToPlayList = {
                     showPlaylistBottomSheet = true;
@@ -916,7 +916,7 @@ fun PlaylistDetailScreen(
         )
 
         LibrarySortBottomSheet(
-            title = "Sort Songs",
+            title = stringResource(R.string.sort_songs_title),
             options = songSortOptions,
             selectedOption = currentSortOption,
             onDismiss = { playerViewModel.hideSortingSheet() },

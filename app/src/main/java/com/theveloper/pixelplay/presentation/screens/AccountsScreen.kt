@@ -64,10 +64,12 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.presentation.components.CollapsibleCommonTopBar
 import com.theveloper.pixelplay.presentation.components.MiniPlayerHeight
 import com.theveloper.pixelplay.presentation.netease.auth.NeteaseLoginActivity
@@ -219,7 +221,7 @@ fun AccountsScreen(
         }
 
         CollapsibleCommonTopBar(
-            title = "Accounts",
+            title = stringResource(R.string.accounts_title),
             collapseFraction = collapseFraction,
             headerHeight = currentTopBarHeightDp,
             onBackClick = onBackClick,
@@ -261,12 +263,12 @@ private fun AccountsHeroSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 HeroStatTile(
-                    title = "Active",
+                    title = stringResource(R.string.accounts_active_title),
                     value = connectedCount.toString(),
                     modifier = Modifier.weight(1f)
                 )
                 HeroStatTile(
-                    title = "Available",
+                    title = stringResource(R.string.accounts_available_title),
                     value = (connectedCount + disconnectedCount).toString(),
                     modifier = Modifier.weight(1f)
                 )

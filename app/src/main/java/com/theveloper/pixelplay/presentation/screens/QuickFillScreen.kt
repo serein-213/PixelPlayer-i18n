@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextGeometricTransform
@@ -93,7 +94,7 @@ fun QuickFillContent(
                 title = {
                     AnimatedContent(targetState = step, label = "Title") { s ->
                         Text(
-                            if (s == 0) "Select Songs" else "Choose Genre",
+                            if (s == 0) stringResource(com.theveloper.pixelplay.R.string.quick_fill_select_songs) else stringResource(com.theveloper.pixelplay.R.string.quick_fill_choose_genre),
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = GoogleSansRounded,
@@ -112,7 +113,7 @@ fun QuickFillContent(
                     ) {
                         Icon(
                             if (step > 0) Icons.AutoMirrored.Rounded.ArrowBack else Icons.Rounded.Close,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(id = com.theveloper.pixelplay.R.string.common_back)
                         )
                     }
                 },
@@ -140,7 +141,7 @@ fun QuickFillContent(
                                modifier = Modifier
                                    .fillMaxWidth()
                                    .padding(16.dp),
-                               label = { Text("Search songs") },
+                               label = { Text(stringResource(com.theveloper.pixelplay.R.string.quick_fill_search_songs)) },
                                leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
                                trailingIcon = if (searchQuery.isNotEmpty()) {
                                    { IconButton(onClick = { searchQuery = "" }) { Icon(Icons.Rounded.Clear, null) } }
@@ -219,7 +220,7 @@ fun QuickFillContent(
                             contentPadding = PaddingValues(horizontal = 16.dp),
                             modifier = Modifier.fillMaxHeight()
                         ) {
-                            Text("Select All", style = MaterialTheme.typography.labelLarge)
+                            Text(stringResource(com.theveloper.pixelplay.R.string.quick_fill_select_all), style = MaterialTheme.typography.labelLarge)
                         }
                         
                         // Divider/Spacer
@@ -235,14 +236,14 @@ fun QuickFillContent(
                             contentPadding = PaddingValues(horizontal = 16.dp),
                             modifier = Modifier.fillMaxHeight()
                         ) {
-                            Text("Clear", style = MaterialTheme.typography.labelLarge)
+                            Text(stringResource(com.theveloper.pixelplay.R.string.quick_fill_clear), style = MaterialTheme.typography.labelLarge)
                         }
                     }
                     Spacer(modifier = Modifier.weight(1f))
                 } else {
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = if (selectedGenre != null) "Genre: $selectedGenre" else "Select a genre",
+                        text = if (selectedGenre != null) stringResource(com.theveloper.pixelplay.R.string.quick_fill_selected_genre, selectedGenre!!) else stringResource(com.theveloper.pixelplay.R.string.quick_fill_select_a_genre),
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -274,7 +275,7 @@ fun QuickFillContent(
                         .height(44.dp) // Removed padding(end=8.dp) for symmetry
                 ) {
                     Text(
-                        text = if (step == 0) "Next" else "Quick Fill",
+                        text = if (step == 0) stringResource(com.theveloper.pixelplay.R.string.quick_fill_next) else stringResource(com.theveloper.pixelplay.R.string.quick_fill_button),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -330,8 +331,8 @@ fun GenreValidatorContent(
             ) {
                  Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                      Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                         Icon(Icons.Rounded.Add, "Add Custom", tint = MaterialTheme.colorScheme.primary)
-                         Text("New Genre", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                         Icon(Icons.Rounded.Add, stringResource(com.theveloper.pixelplay.R.string.quick_fill_add_custom), tint = MaterialTheme.colorScheme.primary)
+                         Text(stringResource(com.theveloper.pixelplay.R.string.quick_fill_new_genre), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                      }
                  }
             }
@@ -387,19 +388,19 @@ fun GenreValidatorContent(
         
         AlertDialog(
             onDismissRequest = { showCustomDialog = false },
-            title = { Text("Add Custom Genre") },
+            title = { Text(stringResource(com.theveloper.pixelplay.R.string.quick_fill_add_custom_genre)) },
             text = {
                 Column {
                     OutlinedTextField(
                         value = newGenreName,
                         onValueChange = { newGenreName = it },
-                        label = { Text("Genre Name") },
+                        label = { Text(stringResource(com.theveloper.pixelplay.R.string.quick_fill_genre_name)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        "Select Icon", 
+                        stringResource(com.theveloper.pixelplay.R.string.quick_fill_select_icon), 
                         style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
@@ -441,10 +442,10 @@ fun GenreValidatorContent(
                             showCustomDialog = false
                         }
                     }
-                ) { Text("Add") }
+                ) { Text(stringResource(com.theveloper.pixelplay.R.string.quick_fill_add)) }
             },
             dismissButton = {
-                TextButton(onClick = { showCustomDialog = false }) { Text("Cancel") }
+                TextButton(onClick = { showCustomDialog = false }) { Text(stringResource(com.theveloper.pixelplay.R.string.quick_fill_cancel)) }
             }
         )
     }

@@ -29,12 +29,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.theveloper.pixelplay.presentation.screens.SortOption
+import com.theveloper.pixelplay.R
 import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +72,7 @@ fun GenreSortBottomSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Sort & Play",
+                    text = stringResource(R.string.genre_sort_and_play),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -94,7 +96,7 @@ fun GenreSortBottomSheet(
                     Icon(Icons.Rounded.Shuffle, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Shuffle",
+                        text = stringResource(R.string.genre_shuffle_action),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -109,7 +111,7 @@ fun GenreSortBottomSheet(
             Spacer(modifier = Modifier.height(32.dp))
             
             Text(
-                text = "Sort By",
+                text = stringResource(R.string.library_sort_title),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Bold,
@@ -119,19 +121,19 @@ fun GenreSortBottomSheet(
             // Expressive Sort Options (Cards instead of simple rows)
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 SortOptionCard(
-                    text = "Artist",
+                    text = stringResource(R.string.sort_by_artist),
                     icon = Icons.Rounded.Person,
                     isSelected = currentSort == SortOption.ARTIST,
                     onClick = { onSortSelected(SortOption.ARTIST) }
                 )
                 SortOptionCard(
-                    text = "Album",
+                    text = stringResource(R.string.sort_by_album),
                     icon = Icons.Rounded.Album,
                     isSelected = currentSort == SortOption.ALBUM,
                     onClick = { onSortSelected(SortOption.ALBUM) }
                 )
                 SortOptionCard(
-                    text = "Title",
+                    text = stringResource(R.string.sort_by_title),
                     icon = Icons.Rounded.SortByAlpha,
                     isSelected = currentSort == SortOption.TITLE,
                     onClick = { onSortSelected(SortOption.TITLE) }
