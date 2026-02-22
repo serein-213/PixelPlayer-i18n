@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.devtools.ksp") version "2.1.0-1.0.29"
@@ -11,6 +14,22 @@ plugins {
 }
 
 android {
+    val signingProps = Properties().apply {
+        val propFile = rootProject.file("local.properties")
+        if (propFile.exists()) {
+            load(FileInputStream(propFile))
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = signingProps.getProperty("signing.storeFile")?.let { file(it) }
+            storePassword = signingProps.getProperty("signing.storePassword")
+            keyAlias = signingProps.getProperty("signing.keyAlias")
+            keyPassword = signingProps.getProperty("signing.keyPassword")
+        }
+    }
+
     namespace = "com.theveloper.pixelplay"
     compileSdk = 35
 
@@ -48,7 +67,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
 
         // AGREGA ESTE BLOQUE:
