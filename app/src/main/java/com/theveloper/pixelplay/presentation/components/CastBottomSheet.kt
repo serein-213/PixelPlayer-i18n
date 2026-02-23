@@ -258,9 +258,10 @@ fun CastBottomSheet(
         }
     }
 
-    val activeDevice = if (isRemoteSession && activeRoute != null) {
+    val activeDevice = if (isRemoteSession) {
+        // activeRoute is non-null when isRemoteSession is true according to compiler warning
         ActiveDeviceUi(
-            id = activeRoute.id,
+            id = activeRoute!!.id,
             title = activeRoute.name,
             subtitle = stringResource(R.string.cast_session_subtitle),
             isRemote = true,

@@ -66,7 +66,6 @@ import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.SecondaryScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -576,18 +575,16 @@ fun LibraryScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                ScrollableTabRow(
+                SecondaryScrollableTabRow(
                     selectedTabIndex = currentTabIndex,
                     containerColor = Color.Transparent,
                     edgePadding = 12.dp,
-                    indicator = { tabPositions ->
-                        if (currentTabIndex < tabPositions.size) {
-                            TabRowDefaults.SecondaryIndicator(
-                                modifier = Modifier.tabIndicatorOffset(tabPositions[currentTabIndex]),
-                                height = 3.dp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
+                    indicator = {
+                        TabRowDefaults.SecondaryIndicator(
+                            modifier = Modifier.tabIndicatorOffset(currentTabIndex),
+                            height = 3.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     },
                     divider = {}
                 ) {

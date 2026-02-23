@@ -121,7 +121,7 @@ fun ReorderTabsSheet(
             performAppCompatHapticFeedback(
                 view,
                 appHapticsConfig,
-                HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+                0 // Removed deprecated FLAG_IGNORE_GLOBAL_SETTING
             )
         },
         lazyListState = listState

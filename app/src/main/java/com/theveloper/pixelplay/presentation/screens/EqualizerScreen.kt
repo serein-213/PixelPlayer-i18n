@@ -60,8 +60,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.SecondaryScrollableTabRow
 import androidx.compose.material3.TabPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -112,7 +111,7 @@ import kotlin.math.roundToInt
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
-import androidx.compose.material.icons.rounded.VolumeUp
+import androidx.compose.material.icons.automirrored.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Speed
 import androidx.compose.material.icons.rounded.SurroundSound
@@ -127,7 +126,7 @@ import com.theveloper.pixelplay.presentation.components.MiniPlayerHeight
 import androidx.compose.material.icons.rounded.BarChart
 import androidx.compose.material.icons.rounded.Block
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.ShowChart
+import androidx.compose.material.icons.automirrored.rounded.ShowChart
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -145,7 +144,7 @@ import com.theveloper.pixelplay.presentation.components.ReorderPresetsSheet
 import com.theveloper.pixelplay.presentation.components.SavePresetDialog
 import com.theveloper.pixelplay.presentation.components.RenamePresetDialog
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository.EqualizerViewMode
-import androidx.compose.material.icons.rounded.ViewQuilt
+import androidx.compose.material.icons.automirrored.rounded.ViewQuilt
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.ui.platform.LocalView
@@ -438,8 +437,8 @@ fun EqualizerTopBar(
                 Icon(
                     imageVector = when(viewMode) {
                         EqualizerViewMode.SLIDERS -> Icons.Rounded.GraphicEq
-                        EqualizerViewMode.GRAPH -> Icons.Rounded.ShowChart
-                        EqualizerViewMode.HYBRID -> Icons.Rounded.ViewQuilt
+                        EqualizerViewMode.GRAPH -> Icons.AutoMirrored.Rounded.ShowChart
+                        EqualizerViewMode.HYBRID -> Icons.AutoMirrored.Rounded.ViewQuilt
                     },
                     contentDescription = stringResource(R.string.equalizer_view_mode_cd)
                 )
@@ -502,25 +501,19 @@ private fun PresetTabsRow(
     // We don't use a Pager, so we need a manual scroll state if we wanted to auto-scroll.
     // Standard ScrollableTabRow handles scrolling to selected index automatically.
     
-    ScrollableTabRow(
+    SecondaryScrollableTabRow(
         selectedTabIndex = selectedIndex,
         edgePadding = 12.dp,
         containerColor = Color.Transparent,
         divider = {},
-        indicator = { tabPositions ->
-            if (showTabIndicator && selectedIndex < tabPositions.size) {
-                 TabRowDefaults.PrimaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
-                    height = 3.dp,
-                    width = 20.dp, // Fixed width for expressive dot? Or default width? Library used default.
-                    // Library code: Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]), height = 3.dp
-                    // Let's stick to default width (match content) but custom height/color.
-                    shape = RoundedCornerShape(3.dp),
-                    color = MaterialTheme.colorScheme.primary
-                 )
-            }
+        indicator = {
+             TabRowDefaults.SecondaryIndicator(
+                modifier = Modifier.tabIndicatorOffset(selectedIndex),
+                height = 3.dp,
+                color = MaterialTheme.colorScheme.primary
+             )
         },
-        modifier = Modifier.fillMaxWidth().height(56.dp) // Reduced height? Standard is often 48-64. 56 is good.
+        modifier = Modifier.fillMaxWidth().height(56.dp)
     ) {
         presets.forEachIndexed { index, preset ->
             val isPinnedCustom = preset.isCustom
@@ -1535,7 +1528,7 @@ private fun VolumeControlCard(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.VolumeUp,
+                    imageVector = Icons.AutoMirrored.Rounded.VolumeUp,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1645,23 +1638,19 @@ private fun HybridBandSliders(
 
         Column(modifier = Modifier.padding(horizontal = 0.dp)) {
             // Tabs Row (Matching PresetTabsRow style)
-            ScrollableTabRow(
+            SecondaryScrollableTabRow(
                 selectedTabIndex = selectedTabIndex,
                 modifier = Modifier.fillMaxWidth().height(56.dp),
                 containerColor = Color.Transparent,
                 contentColor = MaterialTheme.colorScheme.primary,
                 edgePadding = 12.dp,
                 divider = {},
-                indicator = { tabPositions ->
-                    if (showBandPageTabIndicator && selectedTabIndex < tabPositions.size) {
-                         TabRowDefaults.PrimaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                            height = 3.dp,
-                            width = 20.dp,
-                            shape = RoundedCornerShape(3.dp),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                indicator = {
+                     TabRowDefaults.SecondaryIndicator(
+                        modifier = Modifier.tabIndicatorOffset(selectedTabIndex),
+                        height = 3.dp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
             ) {
                 tabs.forEachIndexed { index, title ->

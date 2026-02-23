@@ -21,7 +21,7 @@ import androidx.compose.material.icons.rounded.FormatListNumbered
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.MusicNote
-import androidx.compose.material.icons.rounded.Notes
+import androidx.compose.material.icons.automirrored.rounded.Notes
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.*
 import androidx.compose.material3.BasicAlertDialog
@@ -522,7 +522,7 @@ private fun EditSongContent(
                             placeholder = { Text(stringResource(R.string.edit_song_field_lyrics)) },
                             leadingIcon = {
                                 Icon(
-                                    Icons.Rounded.Notes,
+                                    Icons.AutoMirrored.Rounded.Notes,
                                     tint = MaterialTheme.colorScheme.primary,
                                     contentDescription = stringResource(R.string.edit_song_field_lyrics_icon_cd)
                                 )
@@ -920,22 +920,19 @@ private fun CoverArtCropperDialog(
                             dialogScope.launch {
                                 isSaving = true
                                 val captured = captureController.captureAsync().await()
-                                if (captured != null) {
-                                    val bytes = withContext(Dispatchers.IO) {
-                                        imageBitmapToJpeg(captured)
-                                    }
-                                    if (bytes != null) {
-                                        onConfirm(
-                                            CoverArtCropResult(
-                                                preview = captured,
-                                                update = CoverArtUpdate(bytes, COVER_ART_MIME_TYPE)
-                                            )
+                                // Captured is guaranteed non-null here by Capturable library in this version
+                                val bytes = withContext(Dispatchers.IO) {
+                                    imageBitmapToJpeg(captured)
+                                }
+                                if (bytes != null) {
+                                    onConfirm(
+                                        CoverArtCropResult(
+                                            preview = captured,
+                                            update = CoverArtUpdate(bytes, COVER_ART_MIME_TYPE)
                                         )
-                                    } else {
-                                        Timber.w("Failed to convert captured cover art to JPEG")
-                                    }
+                                    )
                                 } else {
-                                    Timber.w("CaptureController returned null bitmap")
+                                    Timber.w("Failed to convert captured cover art to JPEG")
                                 }
                                 isSaving = false
                             }

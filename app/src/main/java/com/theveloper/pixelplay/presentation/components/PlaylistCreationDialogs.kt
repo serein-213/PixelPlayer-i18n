@@ -39,7 +39,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Key
-import androidx.compose.material.icons.rounded.PlaylistAdd
+import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.BottomAppBar
@@ -169,7 +169,7 @@ fun PlaylistCreationTypeDialog(
                     subtitle = stringResource(R.string.playlist_mode_manual_subtitle),
                     icon = {
                         Icon(
-                            imageVector = Icons.Rounded.PlaylistAdd,
+                            imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
