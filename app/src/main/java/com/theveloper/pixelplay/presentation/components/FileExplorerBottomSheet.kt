@@ -85,6 +85,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.presentation.screens.TabAnimation
 import com.theveloper.pixelplay.presentation.viewmodel.DirectoryEntry
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
@@ -180,7 +183,7 @@ fun FileExplorerContent(
     onStorageSelected: (Int) -> Unit,
     onDone: () -> Unit,
     onDismiss: () -> Unit,
-    title: String = "Excluded folders",
+    title: String? = null,
     leadingContent: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
@@ -193,7 +196,7 @@ fun FileExplorerContent(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = title,
+                        text = title ?: stringResource(R.string.file_explorer_excluded_folders),
                         fontFamily = GoogleSansRounded,
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontSize = 22.sp,
@@ -213,7 +216,7 @@ fun FileExplorerContent(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Close,
-                            contentDescription = "Close"
+                            contentDescription = stringResource(R.string.file_explorer_close_button)
                         )
                     }
                 },
@@ -228,7 +231,7 @@ fun FileExplorerContent(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Refresh,
-                            contentDescription = "Refresh"
+                            contentDescription = stringResource(R.string.file_explorer_refresh_button)
                         )
                     }
                 }
@@ -245,11 +248,11 @@ fun FileExplorerContent(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Done,
-                    contentDescription = "Done",
+                    contentDescription = stringResource(R.string.file_explorer_done_button),
                     tint = MaterialTheme.colorScheme.onTertiaryContainer
                 )
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(text = "Done")
+                Text(text = stringResource(R.string.file_explorer_done_button))
             }
         }
     ) { innerPadding ->
@@ -310,7 +313,7 @@ fun FileExplorerContent(
             }
 
             Text(
-                text = "Everything is allowed by default. Tap a folder to mark it as excluded from scans.",
+                text = stringResource(R.string.file_explorer_help_text),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier
@@ -344,7 +347,7 @@ fun FileExplorerContent(
                     when {
                         loading -> ExplorerLoadingState()
 
-                        children.isEmpty() -> ExplorerEmptyState(text = "No subfolders here")
+                        children.isEmpty() -> ExplorerEmptyState(text = stringResource(R.string.file_explorer_no_subfolders))
 
                         else -> {
                             LazyColumn(

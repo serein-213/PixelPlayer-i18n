@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
@@ -42,6 +43,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.theveloper.pixelplay.data.model.SortOption
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
 
@@ -150,7 +152,7 @@ fun LibrarySortBottomSheet(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = option.displayName,
+                                text = stringResource(option.displayNameStringResId),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface
                             )
@@ -167,7 +169,7 @@ fun LibrarySortBottomSheet(
                 if (viewToggleContent != null) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "View",
+                        text = stringResource(R.string.library_sort_view_label),
                         style = MaterialTheme.typography.headlineSmall,
                         fontFamily = GoogleSansRounded,
                         fontWeight = FontWeight.Bold,
@@ -178,7 +180,7 @@ fun LibrarySortBottomSheet(
                 } else {
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "View",
+                        text = stringResource(R.string.library_sort_view_label),
                         style = MaterialTheme.typography.headlineSmall,
                         fontFamily = GoogleSansRounded,
                         fontWeight = FontWeight.Bold,
@@ -219,7 +221,7 @@ fun LibrarySortBottomSheet(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Playlist View",
+                                text = stringResource(R.string.library_sort_playlist_view_label),
                                 modifier = Modifier
                                     .weight(1f)
                                     .padding(start = 6.dp, end = 8.dp),
@@ -258,7 +260,7 @@ fun LibrarySortBottomSheet(
             if (sourceToggleContent != null) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "Source",
+                    text = stringResource(R.string.library_sort_source_label),
                     style = MaterialTheme.typography.headlineSmall,
                     fontFamily = GoogleSansRounded,
                     fontWeight = FontWeight.Bold,

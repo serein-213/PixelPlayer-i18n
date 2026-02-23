@@ -63,6 +63,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.unit.dp
@@ -92,8 +93,8 @@ fun ReorderPresetsSheet(
     if (showResetDialog) {
         AlertDialog(
             onDismissRequest = { showResetDialog = false },
-            title = { Text("Reset Presets") },
-            text = { Text("This will restore the default preset order and visibility. Continue?") },
+            title = { Text(stringResource(R.string.manage_presets_reset_title)) },
+            text = { Text(stringResource(R.string.manage_presets_reset_message)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -102,11 +103,11 @@ fun ReorderPresetsSheet(
                         onDismiss()
                     }
                 ) {
-                    Text("Reset")
+                    Text(stringResource(R.string.manage_presets_reset_button))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showResetDialog = false }) { Text("Cancel") }
+                TextButton(onClick = { showResetDialog = false }) { Text(stringResource(R.string.manage_presets_cancel_button)) }
             }
         )
     }
@@ -178,7 +179,7 @@ fun ReorderPresetsSheet(
                             ),
                             title = {
                                 Text(
-                                    text = "Manage Presets",
+                                    text = stringResource(R.string.manage_presets_title),
                                     fontFamily = GoogleSansRounded,
                                     style = MaterialTheme.typography.titleMedium.copy(
                                         fontSize = 22.sp,
@@ -198,7 +199,7 @@ fun ReorderPresetsSheet(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Rounded.Close,
-                                        contentDescription = "Close"
+                                        contentDescription = stringResource(R.string.manage_presets_close_button)
                                     )
                                 }
                             },
@@ -213,7 +214,7 @@ fun ReorderPresetsSheet(
                                 ) {
                                     Icon(
                                         painter = painterResource(R.drawable.outline_restart_alt_24),
-                                        contentDescription = "Reset to default"
+                                        contentDescription = stringResource(R.string.manage_presets_reset_to_default)
                                     )
                                 }
                             }
@@ -236,11 +237,11 @@ fun ReorderPresetsSheet(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.Check,
-                                contentDescription = "Done",
+                                contentDescription = stringResource(R.string.manage_presets_done_button),
                                 tint = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                             Spacer(modifier = Modifier.width(10.dp))
-                            Text(text = "Done")
+                            Text(text = stringResource(R.string.manage_presets_done_button))
                         }
                     },
                     containerColor = MaterialTheme.colorScheme.surfaceContainerLow
@@ -254,7 +255,7 @@ fun ReorderPresetsSheet(
                         ) {
                             // Description
                             Text(
-                                text = "Drag to reorder • Tap eye to show/hide",
+                                text = stringResource(R.string.manage_presets_help_text),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(horizontal = 18.dp)

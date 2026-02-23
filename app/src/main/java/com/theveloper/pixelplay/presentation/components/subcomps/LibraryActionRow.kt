@@ -36,23 +36,16 @@ import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.MyLocation
 import androidx.compose.material.icons.rounded.Shuffle
-import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.Cloud
 import androidx.compose.material.icons.rounded.Dataset
 import androidx.compose.material.icons.rounded.PhoneAndroid
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
-import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults
-import androidx.compose.material3.TooltipAnchorPosition
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -63,6 +56,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -74,6 +68,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.model.MusicFolder
+import com.theveloper.pixelplay.data.model.StorageFilter
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import java.io.File
 
@@ -101,7 +96,7 @@ fun LibraryActionRow(
     isShuffleEnabled: Boolean = false,
     // Storage Filter
     showStorageFilterButton: Boolean = false,
-    currentStorageFilter: com.theveloper.pixelplay.data.model.StorageFilter = com.theveloper.pixelplay.data.model.StorageFilter.ALL,
+    currentStorageFilter: StorageFilter = StorageFilter.ALL,
     onStorageFilterClick: () -> Unit = {}
 ) {
     Row(
@@ -170,8 +165,8 @@ fun LibraryActionRow(
                         modifier = Modifier.height(genHeight)
                     ) {
                         val icon = if (isPlaylistTab) Icons.AutoMirrored.Rounded.PlaylistAdd else Icons.Rounded.Shuffle
-                        val text = if (isPlaylistTab) "New" else if (isShuffleEnabled) "Shuffle On" else "Shuffle"
-                        val contentDesc = if (isPlaylistTab) "Create New Playlist" else "Shuffle Play"
+                        val text = if (isPlaylistTab) stringResource(R.string.create) else if (isShuffleEnabled) stringResource(R.string.library_shuffle_on) else stringResource(R.string.library_shuffle)
+                        val contentDesc = if (isPlaylistTab) stringResource(R.string.library_create_new_playlist_cd) else stringResource(R.string.library_shuffle_play_cd)
 
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -242,11 +237,11 @@ fun LibraryActionRow(
                                 ) {
                                     Icon(
                                         painter = painterResource(R.drawable.rounded_upload_file_24),
-                                        contentDescription = "Import M3U",
+                                        contentDescription = stringResource(R.string.library_import_m3u_cd),
                                         modifier = Modifier.size(20.dp)
                                     )
                                     Text(
-                                        text = "Import",
+                                        text = stringResource(R.string.import_file),
                                         overflow = TextOverflow.Ellipsis,
                                         style = MaterialTheme.typography.labelLarge,
                                         fontWeight = FontWeight.Medium
@@ -271,24 +266,15 @@ fun LibraryActionRow(
                 label = "SortStartCorner"
             )
 
-            // Logic for Filter Button (Middle or Left if Locate hidden)
-            // Filter is visible if showStorageFilterButton is true
-            val filterEndCorner = 8.dp // Connected to Sort
+            // Logic for Filter Button
+            val filterEndCorner = 8.dp
             val filterStartCorner by animateDpAsState(
                 targetValue = if (showLocateButton) 8.dp else outerCorner,
                 label = "FilterStartCorner"
             )
             
-            // Logic for Locate Button (Leftmost)
-            val locateEndCorner = 8.dp // Connected to Filer or Sort
+            val locateEndCorner = 8.dp
 
-            // Gaps
-            // If Filter is shown, gap is between Filter and Sort? OR if we use connected buttons, gap is 4dp between groups or 0dp between connected?
-            // Existing code used 4dp gap and 8dp corner. 
-            // "SortButtonsGap" was 4dp if showLocateButton else 0dp.
-            // If we want "connected" look (segmented), gap should be small (1dp or 2dp) or 0.
-            // But existing code uses `4.dp`.
-            
             val gapBetweenLocateAndNext by animateDpAsState(
                 targetValue = if (showLocateButton) 4.dp else 0.dp,
                 label = "GapLocate"
@@ -297,7 +283,6 @@ fun LibraryActionRow(
                 targetValue = if (showStorageFilterButton) 4.dp else 0.dp,
                 label = "GapFilter"
             )
-
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // Locate Button
@@ -318,11 +303,11 @@ fun LibraryActionRow(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.MyLocation,
-                            contentDescription = "Locate Current Song"
+                            contentDescription = stringResource(R.string.library_locate_current_song_cd)
                         )
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.width(gapBetweenLocateAndNext))
 
                 // Storage Filter Button
@@ -331,43 +316,30 @@ fun LibraryActionRow(
                     enter = slideInHorizontally(initialOffsetX = { it / 2 }) + fadeIn(),
                     exit = slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut()
                 ) {
-                     val finalIcon = when(currentStorageFilter) {
-                         com.theveloper.pixelplay.data.model.StorageFilter.ALL -> Icons.Rounded.Dataset
-                         com.theveloper.pixelplay.data.model.StorageFilter.ONLINE -> Icons.Rounded.Cloud
-                         com.theveloper.pixelplay.data.model.StorageFilter.OFFLINE -> Icons.Rounded.PhoneAndroid
-                     }
-                     val tooltipText = when(currentStorageFilter) {
-                         com.theveloper.pixelplay.data.model.StorageFilter.ALL -> "All Songs"
-                         com.theveloper.pixelplay.data.model.StorageFilter.ONLINE -> "Online"
-                         com.theveloper.pixelplay.data.model.StorageFilter.OFFLINE -> "Offline"
-                     }
-                     val tooltipState = rememberTooltipState()
-
-                    @OptIn(ExperimentalMaterial3Api::class)
-                    TooltipBox(
-                        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
-                        tooltip = {
-                            PlainTooltip {
-                                Text(tooltipText)
-                            }
-                        },
-                        state = tooltipState
+                    val filterIcon = when (currentStorageFilter) {
+                        StorageFilter.ALL -> Icons.Rounded.Dataset
+                        StorageFilter.OFFLINE -> Icons.Rounded.PhoneAndroid
+                        StorageFilter.ONLINE -> Icons.Rounded.Cloud
+                    }
+                    
+                    FilledTonalIconButton(
+                        onClick = onStorageFilterClick,
+                        shape = RoundedCornerShape(
+                            topStart = filterStartCorner,
+                            bottomStart = filterStartCorner,
+                            topEnd = filterEndCorner,
+                            bottomEnd = filterEndCorner
+                        ),
+                        modifier = Modifier.size(genHeight)
                     ) {
-                        FilledTonalIconButton(
-                            onClick = onStorageFilterClick,
-                            shape = RoundedCornerShape(
-                                topStart = filterStartCorner,
-                                bottomStart = filterStartCorner,
-                                topEnd = filterEndCorner,
-                                bottomEnd = filterEndCorner
-                            ),
-                            modifier = Modifier.size(genHeight)
-                        ) {
-                             Icon(
-                                imageVector = finalIcon,
-                                contentDescription = tooltipText
-                            )
-                        }
+                        Icon(
+                            imageVector = filterIcon,
+                            contentDescription = when(currentStorageFilter) {
+                                StorageFilter.ALL -> stringResource(R.string.storage_filter_all)
+                                StorageFilter.ONLINE -> stringResource(R.string.storage_filter_online)
+                                StorageFilter.OFFLINE -> stringResource(R.string.storage_filter_offline)
+                            }
+                        )
                     }
                 }
 
@@ -386,7 +358,7 @@ fun LibraryActionRow(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.Sort,
-                        contentDescription = "Sort Options",
+                        contentDescription = stringResource(R.string.library_sort_options_cd),
                     )
                 }
             }
@@ -443,7 +415,7 @@ fun Breadcrumbs(
             modifier = Modifier.size(36.dp),
             enabled = currentFolder != null
         ) {
-            Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+            Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(R.string.common_back))
         }
         Spacer(Modifier.width(8.dp))
 
