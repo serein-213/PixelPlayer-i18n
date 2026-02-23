@@ -69,6 +69,8 @@ import androidx.paging.map
 import androidx.paging.filter
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
@@ -95,6 +97,7 @@ class MusicRepositoryImpl @Inject constructor(
     }
 
     private val directoryScanMutex = Mutex()
+    private val repositoryScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private fun normalizePath(path: String): String =
         runCatching { File(path).canonicalPath }.getOrElse { File(path).absolutePath }
@@ -222,14 +225,16 @@ class MusicRepositoryImpl @Inject constructor(
             )
                 .map { entities ->
                     val artists = entities.map { it.toArtist() }
-                    // Trigger prefetch for missing images (fire-and-forget on existing scope)
+                    // Trigger prefetch for missing images (non-blocking)
                     val missingImages = artists.asSequence()
                         .filter { it.imageUrl.isNullOrEmpty() && it.name.isNotBlank() }
                         .map { it.id to it.name }
                         .distinctBy { (_, name) -> name.trim().lowercase() }
                         .toList()
                     if (missingImages.isNotEmpty()) {
-                        artistImageRepository.prefetchArtistImages(missingImages)
+                        repositoryScope.launch {
+                            artistImageRepository.prefetchArtistImages(missingImages)
+                        }
                     }
                     artists
                 }

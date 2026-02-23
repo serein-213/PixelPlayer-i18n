@@ -239,9 +239,15 @@ interface MusicDao {
         applyDirectoryFilter: Boolean
     ): Flow<List<SongEntity>>
 
+    @Query("SELECT * FROM songs WHERE id IN (:songIds)")
+    suspend fun getSongsByIdsListSimple(songIds: List<Long>): List<SongEntity>
+
     @Query("SELECT * FROM songs WHERE id = :songId")
     fun getSongById(songId: Long): Flow<SongEntity?>
 
+    @Query("SELECT * FROM songs WHERE id = :songId")
+    suspend fun getSongByIdOnce(songId: Long): SongEntity?
+    
     @Query("SELECT * FROM songs WHERE file_path = :path LIMIT 1")
     suspend fun getSongByPath(path: String): SongEntity?
 
@@ -668,16 +674,14 @@ interface MusicDao {
     suspend fun getAllArtistsListRaw(): List<ArtistEntity>
 
     @Query("""
-        SELECT DISTINCT artists.id, artists.name, artists.image_url, artists.custom_image_uri,
-               (SELECT COUNT(*) FROM song_artist_cross_ref 
-                INNER JOIN songs ON song_artist_cross_ref.song_id = songs.id
-                WHERE song_artist_cross_ref.artist_id = artists.id
-                AND (:applyDirectoryFilter = 0 OR songs.id < 0 OR songs.parent_directory_path IN (:allowedParentDirs))) AS track_count
+        SELECT artists.id, artists.name, artists.image_url, artists.custom_image_uri,
+               COUNT(DISTINCT songs.id) AS track_count
         FROM artists
         INNER JOIN song_artist_cross_ref ON artists.id = song_artist_cross_ref.artist_id
         INNER JOIN songs ON song_artist_cross_ref.song_id = songs.id
         WHERE (:applyDirectoryFilter = 0 OR songs.id < 0 OR songs.parent_directory_path IN (:allowedParentDirs))
         AND artists.name LIKE '%' || :query || '%'
+        GROUP BY artists.id
         ORDER BY artists.name ASC
     """)
     fun searchArtists(
@@ -924,8 +928,10 @@ interface MusicDao {
      */
     @Query("""
         SELECT artists.id, artists.name, artists.image_url, artists.custom_image_uri,
-               (SELECT COUNT(*) FROM song_artist_cross_ref WHERE song_artist_cross_ref.artist_id = artists.id) AS track_count
+               COUNT(DISTINCT song_artist_cross_ref.song_id) AS track_count
         FROM artists
+        LEFT JOIN song_artist_cross_ref ON artists.id = song_artist_cross_ref.artist_id
+        GROUP BY artists.id
         ORDER BY artists.name ASC
     """)
     fun getArtistsWithSongCounts(): Flow<List<ArtistEntity>>
@@ -934,26 +940,8 @@ interface MusicDao {
      * Get all artists with song counts, filtered by allowed directories.
      */
     @Query("""
-        SELECT DISTINCT artists.id, artists.name, artists.image_url, artists.custom_image_uri,
-               (SELECT COUNT(*) FROM song_artist_cross_ref 
-                INNER JOIN songs ON song_artist_cross_ref.song_id = songs.id
-                WHERE song_artist_cross_ref.artist_id = artists.id
-                AND (:applyDirectoryFilter = 0 OR songs.id < 0 OR songs.parent_directory_path IN (:allowedParentDirs))
-                AND (
-                    :filterMode = 0
-                    OR (
-                        :filterMode = 1
-                        AND songs.content_uri_string NOT LIKE 'telegram://%'
-                        AND songs.content_uri_string NOT LIKE 'netease://%'
-                    )
-                    OR (
-                        :filterMode = 2
-                        AND (
-                            songs.content_uri_string LIKE 'telegram://%'
-                            OR songs.content_uri_string LIKE 'netease://%'
-                        )
-                    )
-                )) AS track_count
+        SELECT artists.id, artists.name, artists.image_url, artists.custom_image_uri,
+               COUNT(DISTINCT songs.id) AS track_count
         FROM artists
         INNER JOIN song_artist_cross_ref ON artists.id = song_artist_cross_ref.artist_id
         INNER JOIN songs ON song_artist_cross_ref.song_id = songs.id
@@ -973,6 +961,7 @@ interface MusicDao {
                 )
             )
         )
+        GROUP BY artists.id
         ORDER BY artists.name ASC
     """)
     fun getArtistsWithSongCountsFiltered(

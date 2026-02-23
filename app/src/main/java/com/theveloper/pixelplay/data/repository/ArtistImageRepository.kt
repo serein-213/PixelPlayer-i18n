@@ -8,7 +8,10 @@ import android.util.Log
 import android.util.LruCache
 import com.theveloper.pixelplay.data.database.MusicDao
 import com.theveloper.pixelplay.data.network.deezer.DeezerApiService
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -18,7 +21,8 @@ import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 
 /**
  * Repository for fetching and caching artist images from Deezer API.
@@ -32,6 +36,7 @@ class ArtistImageRepository @Inject constructor(
     companion object {
         private const val TAG = "ArtistImageRepository"
         private const val CACHE_SIZE = 100 // Number of artist images to cache in memory
+        private const val PREFETCH_CONCURRENCY = 3 // Limit parallel API calls
         private val deezerSizeRegex = Regex("/\\d{2,4}x\\d{2,4}([\\-.])")
         private const val NETWORK_RETRY_ATTEMPTS = 3
         private const val NETWORK_RETRY_INITIAL_DELAY_MS = 500L
@@ -43,6 +48,9 @@ class ArtistImageRepository @Inject constructor(
     // Mutex to prevent duplicate API calls for the same artist
     private val fetchMutex = Mutex()
     private val pendingFetches = mutableSetOf<String>()
+    
+    // Semaphore to limit concurrent API calls during prefetch
+    private val prefetchSemaphore = Semaphore(PREFETCH_CONCURRENCY)
     
     // Set to track artists for whom image fetching failed (e.g. not found), to avoid retrying in the same session
     private val failedFetches = mutableSetOf<String>()
@@ -94,20 +102,22 @@ class ArtistImageRepository @Inject constructor(
      * Prefetch artist images for a list of artists in background.
      * Useful for batch loading when displaying artist lists.
      */
-    suspend fun prefetchArtistImages(artists: List<Pair<Long, String>>) {
-        withContext(Dispatchers.IO) {
-            artists.forEach { (artistId, artistName) ->
+    suspend fun prefetchArtistImages(artists: List<Pair<Long, String>>) = withContext(Dispatchers.IO) {
+        artists.map { (artistId, artistName) ->
+            async {
                 try {
-                     val normalizedName = artistName.trim().lowercase()
-                     // Only fetch if not in memory, not failed, and not pending
-                     if(memoryCache.get(normalizedName) == null && !failedFetches.contains(normalizedName)) {
-                         getArtistImageUrl(artistName, artistId)
-                     }
+                    val normalizedName = artistName.trim().lowercase()
+                    // Only fetch if not in memory, not failed, and not pending
+                    if (memoryCache.get(normalizedName) == null && !failedFetches.contains(normalizedName)) {
+                        prefetchSemaphore.withPermit {
+                            getArtistImageUrl(artistName, artistId)
+                        }
+                    }
                 } catch (e: Exception) {
                     Log.w(TAG, "Failed to prefetch image for $artistName: ${e.message}")
                 }
             }
-        }
+        }.awaitAll()
     }
     
     // ... fetchAndCacheArtistImage method ...
