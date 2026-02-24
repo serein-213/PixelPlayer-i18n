@@ -424,7 +424,6 @@ class MusicService : MediaLibraryService() {
 
         mediaSession = MediaLibrarySession.Builder(this, engine.masterPlayer, callback)
             .setSessionActivity(getOpenAppPendingIntent())
-            .setCallback(callback)
             .setBitmapLoader(CoilBitmapLoader(this, serviceScope))
             .build()
 
