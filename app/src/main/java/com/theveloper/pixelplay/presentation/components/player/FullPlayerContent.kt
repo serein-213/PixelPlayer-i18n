@@ -492,7 +492,20 @@ fun FullPlayerContent(
             }
         },
         topBar = {
-            if (!isLandscape) {
+            // MD3: TopAppBar 在竖屏时滑入，横屏时向上滑出淡出
+            AnimatedVisibility(
+                visible = !isLandscape,
+                enter = fadeIn(animationSpec = tween(350, easing = FastOutSlowInEasing)) +
+                        slideInVertically(
+                            initialOffsetY = { -it / 2 },
+                            animationSpec = tween(350, easing = FastOutSlowInEasing)
+                        ),
+                exit = fadeOut(animationSpec = tween(220, easing = FastOutSlowInEasing)) +
+                       slideOutVertically(
+                           targetOffsetY = { -it / 2 },
+                           animationSpec = tween(220, easing = FastOutSlowInEasing)
+                       )
+            ) {
                 TopAppBar(
                     modifier = Modifier.graphicsLayer {
                         val fraction = expansionFractionProvider()
@@ -715,22 +728,36 @@ fun FullPlayerContent(
             }
         }
     ) { paddingValues ->
-        if (isLandscape) {
-            FullPlayerLandscapeContent(
-                paddingValues = paddingValues,
-                albumCoverSection = albumCoverSection,
-                songMetadataSection = landscapeSongMetadataSection,
-                playerProgressSection = playerProgressSection,
-                controlsSection = controlsSection
-            )
-        } else {
-            FullPlayerPortraitContent(
-                paddingValues = paddingValues,
-                albumCoverSection = albumCoverSection,
-                songMetadataSection = portraitSongMetadataSection,
-                playerProgressSection = playerProgressSection,
-                controlsSection = controlsSection
-            )
+        // MD3: 方向变化时先 alpha=0 再淡入新布局，避免双布局同时测量导致错位
+        var contentVisible by remember(isLandscape) { mutableStateOf(false) }
+        LaunchedEffect(isLandscape) { contentVisible = true }
+        val contentAlpha by animateFloatAsState(
+            targetValue = if (contentVisible) 1f else 0f,
+            animationSpec = tween(durationMillis = 380, easing = FastOutSlowInEasing),
+            label = "orientationAlpha"
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer { alpha = contentAlpha }
+        ) {
+            if (isLandscape) {
+                FullPlayerLandscapeContent(
+                    paddingValues = paddingValues,
+                    albumCoverSection = albumCoverSection,
+                    songMetadataSection = landscapeSongMetadataSection,
+                    playerProgressSection = playerProgressSection,
+                    controlsSection = controlsSection
+                )
+            } else {
+                FullPlayerPortraitContent(
+                    paddingValues = paddingValues,
+                    albumCoverSection = albumCoverSection,
+                    songMetadataSection = portraitSongMetadataSection,
+                    playerProgressSection = playerProgressSection,
+                    controlsSection = controlsSection
+                )
+            }
         }
     }
     AnimatedVisibility(
