@@ -33,9 +33,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.equalizer.EqualizerPreset
+import com.theveloper.pixelplay.data.equalizer.getLocalizedDisplayName
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,7 +66,7 @@ fun CustomPresetsSheet(
                 .padding(bottom = 24.dp)
         ) {
             Text(
-                text = "Saved Presets",
+                text = stringResource(R.string.equalizer_saved_presets),
                 style = MaterialTheme.typography.titleLarge,
                 fontFamily = GoogleSansRounded,
                 fontWeight = FontWeight.Bold,
@@ -77,7 +81,7 @@ fun CustomPresetsSheet(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "No custom presets saved yet.",
+                        text = stringResource(R.string.equalizer_no_presets),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -117,6 +121,7 @@ private fun CustomPresetItem(
     onRenameClick: () -> Unit,
     onDeleteClick: () -> Unit
 ) {
+    val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -136,7 +141,7 @@ private fun CustomPresetItem(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = preset.displayName.firstOrNull()?.toString()?.uppercase() ?: "C",
+                    text = preset.getLocalizedDisplayName(context).firstOrNull()?.toString()?.uppercase() ?: "C",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSecondaryContainer,
                     fontFamily = GoogleSansRounded
@@ -145,7 +150,7 @@ private fun CustomPresetItem(
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(
-                    text = preset.displayName,
+                    text = preset.getLocalizedDisplayName(context),
                     style = MaterialTheme.typography.bodyLarge,
                     fontFamily = GoogleSansRounded,
                     fontWeight = FontWeight.Medium
@@ -157,21 +162,21 @@ private fun CustomPresetItem(
              IconButton(onClick = onPinClick) {
                 Icon(
                     imageVector = if (isPinned) Icons.Default.Star else Icons.Default.StarBorder,
-                    contentDescription = if (isPinned) "Unpin" else "Pin",
+                    contentDescription = if (isPinned) stringResource(R.string.action_unpin) else stringResource(R.string.action_pin),
                     tint = if (isPinned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             IconButton(onClick = onRenameClick) {
                 Icon(
                     imageVector = Icons.Outlined.Edit,
-                    contentDescription = "Rename",
+                    contentDescription = stringResource(R.string.action_rename),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             IconButton(onClick = onDeleteClick) {
                 Icon(
                     imageVector = Icons.Outlined.Delete,
-                    contentDescription = "Delete",
+                    contentDescription = stringResource(R.string.common_delete),
                     tint = MaterialTheme.colorScheme.error
                 )
             }

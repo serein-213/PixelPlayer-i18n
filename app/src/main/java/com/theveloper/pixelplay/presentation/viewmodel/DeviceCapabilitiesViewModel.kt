@@ -135,7 +135,10 @@ class DeviceCapabilitiesViewModel @Inject constructor(
                 )
             )
         }
-        return codecs.sortedBy { it.name }
+        return codecs.sortedWith(
+            compareByDescending<CodecInfo> { it.isHardwareAccelerated }
+                .thenBy { it.name }
+        )
     }
 
     @androidx.annotation.OptIn(UnstableApi::class)
@@ -147,7 +150,8 @@ class DeviceCapabilitiesViewModel @Inject constructor(
         
         val version = androidx.media3.common.MediaLibraryInfo.VERSION
         val exoPlayer = player as? androidx.media3.exoplayer.ExoPlayer
-        val renderers = "${exoPlayer?.rendererCount ?: 0} Active Renderers"
+        val rendererCount = exoPlayer?.rendererCount ?: 0
+        val renderers = context.getString(com.theveloper.pixelplay.R.string.device_capabilities_active_renderers_format, rendererCount)
         
         // We can't easily get internal decoder counters without a listener, 
         // but we can show what we know.
@@ -155,7 +159,7 @@ class DeviceCapabilitiesViewModel @Inject constructor(
         return ExoPlayerInfo(
             version = version,
             renderers = renderers,
-            decoderCounters = "N/A (Requires Debug Listener)"
+            decoderCounters = context.getString(com.theveloper.pixelplay.R.string.device_capabilities_exo_decoders_na)
         )
     }
 }

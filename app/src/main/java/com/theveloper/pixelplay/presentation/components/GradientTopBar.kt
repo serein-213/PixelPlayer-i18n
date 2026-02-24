@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.theveloper.pixelplay.R
@@ -196,7 +197,7 @@ fun HomeGradientTopBar(
                     Icon(
                         //modifier = Modifier.size(18.dp),
                         painter = painterResource(R.drawable.round_newspaper_24),
-                        contentDescription = "Changelog"
+                        contentDescription = stringResource(R.string.changelog_cd)
                     )
                 }
                 //Spacer(Modifier.size(8.dp))
@@ -209,7 +210,7 @@ fun HomeGradientTopBar(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.rounded_settings_24),
-                        contentDescription = "Settings"
+                        contentDescription = stringResource(R.string.nav_settings)
                     )
                 }
             }
