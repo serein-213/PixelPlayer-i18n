@@ -1,5 +1,8 @@
 package com.theveloper.pixelplay.presentation.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,9 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,7 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
-import kotlinx.coroutines.delay
 import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
 
 @Composable
@@ -48,16 +48,17 @@ fun DismissUndoBar(
     onClose: () -> Unit,
     durationMillis: Long
 ) {
-    var progress by remember { mutableFloatStateOf(1f) }
+    val progress = remember { Animatable(1f) }
 
     LaunchedEffect(key1 = onUndo) {
-        progress = 1f // Reset progress when the bar appears
-        val startTime = System.currentTimeMillis()
-        while (System.currentTimeMillis() < startTime + durationMillis && progress > 0f) {
-            progress = 1f - (System.currentTimeMillis() - startTime).toFloat() / durationMillis
-            delay(16)
-        }
-        progress = 0f
+        progress.snapTo(1f)
+        progress.animateTo(
+            targetValue = 0f,
+            animationSpec = tween(
+                durationMillis = durationMillis.toInt(),
+                easing = LinearEasing
+            )
+        )
     }
 
     Surface(
@@ -111,7 +112,7 @@ fun DismissUndoBar(
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .fillMaxWidth(fraction = progress.coerceIn(0f, 1f))
+                    .fillMaxWidth(fraction = progress.value.coerceIn(0f, 1f))
                     .fillMaxHeight()
                     .background(
                         color = MaterialTheme.colorScheme.primary.copy(alpha = 0.22f),

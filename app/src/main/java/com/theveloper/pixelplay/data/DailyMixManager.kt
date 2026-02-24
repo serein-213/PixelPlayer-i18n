@@ -86,17 +86,15 @@ class DailyMixManager @Inject constructor(
     }
 
     /**
-     * Reads engagements from Room database (blocking version for compatibility).
+     * Reads engagements from Room database.
      */
-    private fun readEngagements(): Map<String, SongEngagementStats> {
-        return runBlocking {
-            engagementDao.getAllEngagements().associate { entity ->
-                entity.songId to SongEngagementStats(
-                    playCount = entity.playCount,
-                    totalPlayDurationMs = entity.totalPlayDurationMs,
-                    lastPlayedTimestamp = entity.lastPlayedTimestamp
-                )
-            }
+    private suspend fun readEngagements(): Map<String, SongEngagementStats> {
+        return engagementDao.getAllEngagements().associate { entity ->
+            entity.songId to SongEngagementStats(
+                playCount = entity.playCount,
+                totalPlayDurationMs = entity.totalPlayDurationMs,
+                lastPlayedTimestamp = entity.lastPlayedTimestamp
+            )
         }
     }
 
@@ -222,47 +220,41 @@ class DailyMixManager @Inject constructor(
      * Records a song play using Room's atomic upsert operation.
      * More efficient than JSON read-modify-write.
      */
-    fun recordPlay(
+    suspend fun recordPlay(
         songId: String,
         songDurationMs: Long = 0L,
         timestamp: Long = System.currentTimeMillis()
     ) {
-        runBlocking {
-            engagementDao.recordPlay(
-                songId = songId,
-                durationMs = songDurationMs.coerceAtLeast(0L),
-                timestamp = timestamp.coerceAtLeast(0L)
+        engagementDao.recordPlay(
+            songId = songId,
+            durationMs = songDurationMs.coerceAtLeast(0L),
+            timestamp = timestamp.coerceAtLeast(0L)
+        )
+    }
+
+    suspend fun incrementScore(songId: String) {
+        recordPlay(songId)
+    }
+
+    suspend fun getScore(songId: String): Int {
+        return engagementDao.getPlayCount(songId) ?: 0
+    }
+
+    suspend fun getEngagementStats(songId: String): SongEngagementStats? {
+        return engagementDao.getEngagement(songId)?.let { entity ->
+            SongEngagementStats(
+                playCount = entity.playCount,
+                totalPlayDurationMs = entity.totalPlayDurationMs,
+                lastPlayedTimestamp = entity.lastPlayedTimestamp
             )
         }
     }
 
-    fun incrementScore(songId: String) {
-        recordPlay(songId)
-    }
-
-    fun getScore(songId: String): Int {
-        return runBlocking {
-            engagementDao.getPlayCount(songId) ?: 0
-        }
-    }
-
-    fun getEngagementStats(songId: String): SongEngagementStats? {
-        return runBlocking {
-            engagementDao.getEngagement(songId)?.let { entity ->
-                SongEngagementStats(
-                    playCount = entity.playCount,
-                    totalPlayDurationMs = entity.totalPlayDurationMs,
-                    lastPlayedTimestamp = entity.lastPlayedTimestamp
-                )
-            }
-        }
-    }
-
-    fun getAllEngagementStats(): Map<String, SongEngagementStats> {
+    suspend fun getAllEngagementStats(): Map<String, SongEngagementStats> {
         return readEngagements()
     }
 
-    private fun computeRankedSongs(
+    private suspend fun computeRankedSongs(
         allSongs: List<Song>,
         favoriteSongIds: Set<String>,
         random: java.util.Random
@@ -339,7 +331,7 @@ class DailyMixManager @Inject constructor(
             .sortedWith(compareByDescending<RankedSong> { it.finalScore }.thenBy { it.song.id })
     }
 
-    fun generateDailyMix(
+    suspend fun generateDailyMix(
         allSongs: List<Song>,
         favoriteSongIds: Set<String> = emptySet(),
         limit: Int = 30
@@ -370,7 +362,7 @@ class DailyMixManager @Inject constructor(
         return combined.take(limit.coerceAtMost(combined.size))
     }
 
-    fun generateYourMix(
+    suspend fun generateYourMix(
         allSongs: List<Song>,
         favoriteSongIds: Set<String> = emptySet(),
         limit: Int = 60

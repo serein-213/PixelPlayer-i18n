@@ -12,11 +12,9 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,23 +40,22 @@ class ThemeStateHolder @Inject constructor(
 
     private val playerThemePreference = userPreferencesRepository.playerThemePreferenceFlow
 
-    val activePlayerColorSchemePair: StateFlow<ColorSchemePair?> = combine(
-        playerThemePreference, _currentAlbumArtColorSchemePair
-    ) { playerPref, albumScheme ->
-        when (playerPref) {
-            com.theveloper.pixelplay.data.preferences.ThemePreference.ALBUM_ART -> albumScheme
-            // DYNAMIC and DEFAULT fall back to null (system theme)
-            else -> null
-        }
-    }.stateIn(
-        scope = CoroutineScope(Dispatchers.Default), // Placeholder, will be replaced in initialize
-        started = SharingStarted.Eagerly,
-        initialValue = null
-    )
+    private val _activePlayerColorSchemePair = MutableStateFlow<ColorSchemePair?>(null)
+    val activePlayerColorSchemePair: StateFlow<ColorSchemePair?> = _activePlayerColorSchemePair.asStateFlow()
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
-        // Re-scope the activePlayerColorSchemePair if possible, or just rely on the injected scope for processing
+
+        // Drive activePlayerColorSchemePair from the proper lifecycle-scoped coroutine
+        // instead of the orphaned placeholder CoroutineScope used during field initialisation.
+        scope.launch {
+            combine(playerThemePreference, _currentAlbumArtColorSchemePair) { playerPref, albumScheme ->
+                when (playerPref) {
+                    com.theveloper.pixelplay.data.preferences.ThemePreference.ALBUM_ART -> albumScheme
+                    else -> null
+                }
+            }.collect { _activePlayerColorSchemePair.value = it }
+        }
 
         scope.launch {
             userPreferencesRepository.albumArtPaletteStyleFlow.collect { style ->
