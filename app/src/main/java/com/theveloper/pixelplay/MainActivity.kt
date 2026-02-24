@@ -80,7 +80,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
@@ -155,6 +154,7 @@ private data class DismissUndoBarSlice(
 class MainActivity : ComponentActivity() {
 
     private val playerViewModel: PlayerViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
     private var mediaControllerFuture: ListenableFuture<MediaController>? = null
     @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository // Inject here
@@ -169,7 +169,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         LogUtils.d(this, "onCreate")
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.auto(
                 android.graphics.Color.TRANSPARENT,
@@ -185,11 +185,14 @@ class MainActivity : ComponentActivity() {
         }
         super.onCreate(savedInstanceState)
 
+        // Keep splash screen visible until DataStore has emitted the initial setup state,
+        // preventing the blank-screen flash between splash and first frame.
+        splashScreen.setKeepOnScreenCondition { mainViewModel.isSetupComplete.value == null }
+
         // LEER SEÑAL DE BENCHMARK
         val isBenchmarkMode = intent.getBooleanExtra("is_benchmark", false)
 
         setContent {
-            val mainViewModel: MainViewModel = hiltViewModel()
             val systemDarkTheme = isSystemInDarkTheme()
             val appThemeMode by userPreferencesRepository.appThemeModeFlow.collectAsStateWithLifecycle(initialValue = AppThemeMode.FOLLOW_SYSTEM)
             val useDarkTheme = when (appThemeMode) {
