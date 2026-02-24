@@ -44,16 +44,16 @@ class TelegramDashboardViewModel @Inject constructor(
                 // Fetch latest songs (getAudioMessages implements pagination and fetches ALL)
                 val songs = telegramRepository.getAudioMessages(channel.chatId)
                 
+                musicRepository.replaceTelegramSongsForChannel(channel.chatId, songs)
+
+                // Update metadata
+                val updatedChannel = channel.copy(
+                    songCount = songs.size,
+                    lastSyncTime = System.currentTimeMillis()
+                )
+                musicRepository.saveTelegramChannel(updatedChannel)
+
                 if (songs.isNotEmpty()) {
-                    musicRepository.saveTelegramSongs(songs)
-                    
-                    // Update metadata
-                    val updatedChannel = channel.copy(
-                        songCount = songs.size,
-                        lastSyncTime = System.currentTimeMillis()
-                    )
-                    musicRepository.saveTelegramChannel(updatedChannel)
-                    
                     _statusMessage.value = "Synced ${songs.size} songs from ${channel.title}"
                 } else {
                     _statusMessage.value = "No songs found in ${channel.title}"

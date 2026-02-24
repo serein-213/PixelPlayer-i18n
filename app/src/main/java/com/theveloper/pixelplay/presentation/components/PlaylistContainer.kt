@@ -414,7 +414,16 @@ fun PlaylistItem(
                         Icon(
                             painter = painterResource(R.drawable.netease_cloud_music_logo_icon_206716__1_),
                             contentDescription = "Netease Cloud Music",
-                            tint = Color.Unspecified,
+                            tint = MaterialTheme.colorScheme.tertiary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                    if (playlist.source == "TELEGRAM") {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(
+                            painter = painterResource(R.drawable.telegram),
+                            contentDescription = "Telegram",
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(18.dp)
                         )
                     }

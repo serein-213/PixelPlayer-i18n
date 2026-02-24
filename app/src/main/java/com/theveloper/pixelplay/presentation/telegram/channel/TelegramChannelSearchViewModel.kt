@@ -94,7 +94,7 @@ class TelegramChannelSearchViewModel @Inject constructor(
             val fetchedSongs = telegramRepository.getAudioMessages(chatId)
 
             if (fetchedSongs.isNotEmpty()) {
-                musicRepository.saveTelegramSongs(fetchedSongs)
+                musicRepository.replaceTelegramSongsForChannel(chatId, fetchedSongs)
 
                 // Save Channel Entity
                 val chat = _foundChat.value
