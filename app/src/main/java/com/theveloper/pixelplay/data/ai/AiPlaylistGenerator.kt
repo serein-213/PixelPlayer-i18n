@@ -1,6 +1,6 @@
 package com.theveloper.pixelplay.data.ai
 
-import com.google.ai.client.generativeai.GenerativeModel
+import com.google.genai.Client
 import com.theveloper.pixelplay.data.DailyMixManager
 import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
@@ -43,10 +43,7 @@ class AiPlaylistGenerator @Inject constructor(
             val selectedModel = userPreferencesRepository.geminiModel.first()
             val modelName = selectedModel.ifEmpty { "" }
 
-            val generativeModel = GenerativeModel(
-                modelName = modelName,
-                apiKey = apiKey
-            )
+            val client = Client.builder().apiKey(apiKey).build()
 
             val samplingPool = when {
                 candidateSongs.isNullOrEmpty().not() -> candidateSongs ?: allSongs
@@ -113,8 +110,9 @@ class AiPlaylistGenerator @Inject constructor(
             ]
             """.trimIndent()
 
-            val response = generativeModel.generateContent(fullPrompt)
-            val responseText = response.text ?: return Result.failure(Exception("AI returned an empty response."))
+            val response = client.models.generateContent(modelName, fullPrompt, null)
+            val responseText = response.text()
+                ?: return Result.failure(Exception("AI returned an empty response."))
 
             val songIds = extractPlaylistSongIds(responseText)
 

@@ -1,8 +1,8 @@
 package com.theveloper.pixelplay.data.ai
 
-import com.google.ai.client.generativeai.GenerativeModel
-import com.google.ai.client.generativeai.type.SerializationException
+import com.google.genai.Client
 import com.theveloper.pixelplay.data.model.Song
+import kotlinx.serialization.SerializationException
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.Serializable
@@ -39,10 +39,7 @@ class AiMetadataGenerator @Inject constructor(
             val selectedModel = userPreferencesRepository.geminiModel.first()
             val modelName = selectedModel.ifEmpty { "" }
 
-            val generativeModel = GenerativeModel(
-                modelName = modelName,
-                apiKey = apiKey
-            )
+            val client = Client.builder().apiKey(apiKey).build()
 
             val fieldsJson = fieldsToComplete.joinToString(separator = ", ") { "\"$it\"" }
 
@@ -72,8 +69,8 @@ class AiMetadataGenerator @Inject constructor(
             Fields to complete: [$fieldsJson]
             """.trimIndent()
 
-            val response = generativeModel.generateContent(fullPrompt)
-            val responseText = response.text
+            val response = client.models.generateContent(modelName, fullPrompt, null)
+            val responseText = response.text()
             if (responseText.isNullOrBlank()) {
                 Timber.e("AI returned an empty or null response.")
                 return Result.failure(Exception("AI returned an empty response."))

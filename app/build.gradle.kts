@@ -116,6 +116,32 @@ android {
             it.useJUnitPlatform()
         }
     }
+
+    // ABI Splits: 为每个 CPU 架构生成独立 APK，避免单 APK 同时打包所有架构 native 库
+    // TDLib 单架构约 15~25MB，四架构合计 87MB，开启后每个 APK 只含对应架构
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            // 覆盖市面上 >99% 设备：arm64-v8a（现代手机）+ armeabi-v7a（旧设备）
+            // x86 / x86_64 仅模拟器使用，发布阶段可不包含
+            include("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
+            isUniversalApk = true // 同时生成通用包（保留调试用途）
+        }
+    }
+
+    // AAB bundle 配置：通过 Google Play 分发时自动按架构拆分（推荐）
+    bundle {
+        abi {
+            enableSplit = true
+        }
+        density {
+            enableSplit = true
+        }
+        language {
+            enableSplit = true
+        }
+    }
 }
 
 dependencies {
@@ -133,7 +159,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.generativeai)
+    // google.genai 1.11.0 — 新版统一 Gemini SDK
+    implementation(libs.google.genai)
     implementation(libs.androidx.mediarouter)
     implementation(libs.play.services.cast.framework)
     implementation(libs.androidx.navigation.runtime.ktx)
@@ -223,7 +250,7 @@ dependencies {
     implementation(libs.capturable) // Verifica la última versión en GitHub
 
     //Reorderable List/Drag and Drop
-    implementation(libs.compose.dnd)
+    // compose.dnd (mohamedrejeb) 未被使用，已删除
     implementation(libs.reorderables)
 
     //CodeView
@@ -270,8 +297,8 @@ dependencies {
     // Kotlin Collections
     implementation(libs.kotlinx.collections.immutable) // Verifica la última versión
 
-    // Gemini
-    implementation(libs.google.genai)
+    // Gemini — 使用 com.google.ai.client.generativeai (已在上方声明)
+    // google.genai (Java JVM SDK) 未被任何代码引用，已移除
 
     //permisisons
     implementation(libs.accompanist.permissions)

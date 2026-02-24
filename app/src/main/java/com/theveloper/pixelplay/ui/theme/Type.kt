@@ -3,7 +3,6 @@ package com.theveloper.pixelplay.ui.theme
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.googlefonts.Font
@@ -61,10 +60,14 @@ val ExpTitleTypography = Typography(
     )
 )
 
-// Define tu FontFamily personalizada aquí
+// Google Sans Rounded — 通过 GMS 运行时下载，不再本地打包 (~19.6MB TTF 已移除)
+private val googleSansRoundedFont = GoogleFont("Google Sans Rounded")
 val GoogleSansRounded = FontFamily(
-    Font(R.font.google_sans_rounded_regular, FontWeight.Normal)
-    // Agrega otras variantes (light, medium, italic) si las tienes
+    Font(googleFont = googleSansRoundedFont, fontProvider = provider, weight = FontWeight.Light),
+    Font(googleFont = googleSansRoundedFont, fontProvider = provider, weight = FontWeight.Normal),
+    Font(googleFont = googleSansRoundedFont, fontProvider = provider, weight = FontWeight.Medium),
+    Font(googleFont = googleSansRoundedFont, fontProvider = provider, weight = FontWeight.SemiBold),
+    Font(googleFont = googleSansRoundedFont, fontProvider = provider, weight = FontWeight.Bold),
 )
 
 // Tipografía - Usar fuentes amigables y modernas.
