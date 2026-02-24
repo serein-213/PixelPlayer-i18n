@@ -170,6 +170,18 @@ class MusicRepositoryImpl @Inject constructor(
          }
     }
 
+    override suspend fun replaceTelegramSongsForChannel(chatId: Long, songs: List<Song>) {
+        val entities = songs.mapNotNull { it.toTelegramEntity() }.filter { it.chatId == chatId }
+        telegramDao.deleteSongsByChatId(chatId)
+        if (entities.isNotEmpty()) {
+            telegramDao.insertSongs(entities)
+        }
+        // Trigger sync to update main DB (and remove deleted songs)
+        androidx.work.WorkManager.getInstance(context).enqueue(
+            com.theveloper.pixelplay.data.worker.SyncWorker.incrementalSyncWork()
+        )
+    }
+
     /**
      * Compute allowed parent directories by subtracting blocked dirs from all known dirs.
      * Returns Pair(allowedDirs, applyFilter) for use with Room DAO filtered queries.
@@ -651,6 +663,12 @@ class MusicRepositoryImpl @Inject constructor(
     }
 
     override suspend fun clearTelegramData() {
+        // Delete all Telegram playlists from app playlists
+        val allChannels = telegramDao.getAllChannels().first()
+        allChannels.forEach { channel ->
+            telegramRepository.deleteAppPlaylistForTelegramChannel(channel.chatId)
+        }
+        
         musicDao.clearAllTelegramSongs()
         telegramDao.clearAll()
         // Clear all Telegram caches (TDLib files, embedded art, memory)
@@ -660,6 +678,21 @@ class MusicRepositoryImpl @Inject constructor(
 
     override suspend fun saveTelegramChannel(channel: TelegramChannelEntity) {
         telegramDao.insertChannel(channel)
+        
+        // Create or update the corresponding app playlist
+        try {
+            val channelSongs = withContext(Dispatchers.IO) {
+                telegramDao.getSongsByChatId(channel.chatId)
+            }
+            
+            telegramRepository.updateAppPlaylistForTelegramChannel(
+                channel.chatId,
+                channel.title,
+                channelSongs
+            )
+        } catch (e: Exception) {
+            Log.e("MusicRepo", "Failed to update app playlist for Telegram channel ${channel.chatId}", e)
+        }
     }
 
     override fun getAllTelegramChannels(): Flow<List<TelegramChannelEntity>> {
@@ -670,6 +703,9 @@ class MusicRepositoryImpl @Inject constructor(
         musicDao.clearTelegramSongsForChat(chatId)
         telegramDao.deleteSongsByChatId(chatId) // Cascade delete songs
         telegramDao.deleteChannel(chatId)
+        
+        // Delete corresponding app playlist
+        telegramRepository.deleteAppPlaylistForTelegramChannel(chatId)
     }
 
     override suspend fun getSongIdsSorted(

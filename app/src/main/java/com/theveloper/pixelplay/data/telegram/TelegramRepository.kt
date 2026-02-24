@@ -1,6 +1,10 @@
 package com.theveloper.pixelplay.data.telegram
 
+import com.theveloper.pixelplay.data.database.TelegramDao
+import com.theveloper.pixelplay.data.database.TelegramSongEntity
 import com.theveloper.pixelplay.data.model.Song
+import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -11,6 +15,7 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -24,15 +29,19 @@ import kotlinx.coroutines.isActive
 import org.drinkless.tdlib.TdApi
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.absoluteValue
 
 import timber.log.Timber
 
 @Singleton
 class TelegramRepository @Inject constructor(
-    private val clientManager: TelegramClientManager
+    private val clientManager: TelegramClientManager,
+    private val dao: TelegramDao,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) {
     private companion object {
         private const val AUTH_REQUEST_TIMEOUT_MS = 20_000L
+        private const val TELEGRAM_PLAYLIST_PREFIX = "telegram_channel:"
     }
 
     val authorizationState: Flow<TdApi.AuthorizationState?> = clientManager.authorizationState
@@ -528,6 +537,74 @@ class TelegramRepository @Inject constructor(
         } catch (e: kotlinx.coroutines.CancellationException) {
             newJob.cancel(e) // Cancel the background work if the caller cancels
             throw e
+        }
+    }
+
+    // ─── App Playlist Management ────────────────────────────────────────
+
+    private suspend fun getAppPlaylistIdForTelegram(chatId: Long): String {
+        return "$TELEGRAM_PLAYLIST_PREFIX$chatId"
+    }
+
+    private fun toUnifiedTelegramSongId(telegramSongId: String): Long {
+        val songId = -(telegramSongId.hashCode().toLong().absoluteValue)
+        return if (songId == 0L) -1L else songId
+    }
+
+    suspend fun updateAppPlaylistForTelegramChannel(
+        chatId: Long,
+        channelTitle: String,
+        telegramEntities: List<TelegramSongEntity>
+    ) {
+        try {
+            // Convert Telegram song entities to unified song IDs (SyncWorker-compatible)
+            val unifiedSongIds = telegramEntities.map { entity ->
+                toUnifiedTelegramSongId(entity.id).toString()
+            }
+
+            val appPlaylistId = getAppPlaylistIdForTelegram(chatId)
+            
+            // Get all current app playlists
+            val allPlaylists = userPreferencesRepository.userPlaylistsFlow
+            val existingPlaylist = withContext(Dispatchers.IO) {
+                allPlaylists.map { playlists ->
+                    playlists.find { it.id == appPlaylistId }
+                }.first()
+            }
+
+            if (existingPlaylist != null) {
+                // Update the existing playlist
+                userPreferencesRepository.updatePlaylist(
+                    existingPlaylist.copy(
+                        name = channelTitle,
+                        songIds = unifiedSongIds,
+                        lastModified = System.currentTimeMillis(),
+                        source = "TELEGRAM" // Mark as Telegram source
+                    )
+                )
+                Timber.d("Updated app playlist for Telegram channel $chatId: $channelTitle")
+            } else {
+                // Create a new playlist
+                userPreferencesRepository.createPlaylist(
+                    name = channelTitle,
+                    songIds = unifiedSongIds,
+                    customId = appPlaylistId,
+                    source = "TELEGRAM"
+                )
+                Timber.d("Created new app playlist for Telegram channel $chatId: $channelTitle")
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to update/create app playlist for Telegram channel $chatId")
+        }
+    }
+
+    suspend fun deleteAppPlaylistForTelegramChannel(chatId: Long) {
+        try {
+            val appPlaylistId = getAppPlaylistIdForTelegram(chatId)
+            userPreferencesRepository.deletePlaylist(appPlaylistId)
+            Timber.d("Deleted app playlist for Telegram channel $chatId")
+        } catch (e: Exception) {
+            Timber.w(e, "Failed to delete app playlist for Telegram channel $chatId")
         }
     }
 }

@@ -236,6 +236,8 @@ interface MusicRepository {
 
     suspend fun deleteById(id: Long)
     suspend fun saveTelegramSongs(songs: List<Song>)
+
+    suspend fun replaceTelegramSongsForChannel(chatId: Long, songs: List<Song>)
     
     suspend fun clearTelegramData()
 

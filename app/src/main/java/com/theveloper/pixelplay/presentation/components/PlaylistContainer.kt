@@ -418,6 +418,15 @@ fun PlaylistItem(
                             modifier = Modifier.size(18.dp)
                         )
                     }
+                    if (playlist.source == "TELEGRAM") {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(
+                            painter = painterResource(R.drawable.telegram),
+                            contentDescription = "Telegram",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                 }
                 Text(
                     text = stringResource(R.string.playlist_songs_count, playlist.songIds.size),
