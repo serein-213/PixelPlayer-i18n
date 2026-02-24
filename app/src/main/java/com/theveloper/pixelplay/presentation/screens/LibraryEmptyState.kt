@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -29,8 +30,8 @@ import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 
 private data class LibraryEmptySpec(
     val iconRes: Int,
-    val title: String,
-    val subtitle: String
+    val titleRes: Int,
+    val subtitleRes: Int
 )
 
 private fun libraryEmptySpec(
@@ -41,85 +42,85 @@ private fun libraryEmptySpec(
         LibraryTabId.SONGS -> when (storageFilter) {
             StorageFilter.ALL -> LibraryEmptySpec(
                 iconRes = R.drawable.rounded_music_off_24,
-                title = "No songs yet",
-                subtitle = "Add music to your device or sync a cloud source to start listening."
+                titleRes = R.string.library_empty_no_songs_yet,
+                subtitleRes = R.string.library_empty_add_music_subtitle
             )
             StorageFilter.OFFLINE -> LibraryEmptySpec(
                 iconRes = R.drawable.rounded_music_off_24,
-                title = "No local songs found",
-                subtitle = "Try another source filter or rescan your device library."
+                titleRes = R.string.library_empty_no_local_songs,
+                subtitleRes = R.string.library_empty_try_filter_or_rescan
             )
             StorageFilter.ONLINE -> LibraryEmptySpec(
                 iconRes = R.drawable.rounded_music_off_24,
-                title = "No cloud songs found",
-                subtitle = "Sync Telegram or Netease songs, or switch to local source."
+                titleRes = R.string.library_empty_no_cloud_songs,
+                subtitleRes = R.string.library_empty_sync_cloud_sources
             )
         }
 
         LibraryTabId.ALBUMS -> when (storageFilter) {
             StorageFilter.ALL -> LibraryEmptySpec(
                 iconRes = R.drawable.rounded_album_24,
-                title = "No albums available",
-                subtitle = "Albums will appear here as soon as your library has grouped tracks."
+                titleRes = R.string.library_empty_no_albums,
+                subtitleRes = R.string.library_empty_albums_appear_when_grouped
             )
             StorageFilter.OFFLINE -> LibraryEmptySpec(
                 iconRes = R.drawable.rounded_album_24,
-                title = "No local albums found",
-                subtitle = "Local songs are required to build local album groups."
+                titleRes = R.string.library_empty_no_local_albums,
+                subtitleRes = R.string.library_empty_local_songs_required
             )
             StorageFilter.ONLINE -> LibraryEmptySpec(
                 iconRes = R.drawable.rounded_album_24,
-                title = "No cloud albums found",
-                subtitle = "Cloud songs with album data will appear here after sync."
+                titleRes = R.string.library_empty_no_cloud_albums,
+                subtitleRes = R.string.library_empty_cloud_albums_appear_after_sync
             )
         }
 
         LibraryTabId.ARTISTS -> when (storageFilter) {
             StorageFilter.ALL -> LibraryEmptySpec(
                 iconRes = R.drawable.rounded_artist_24,
-                title = "No artists available",
-                subtitle = "Artists are shown after songs are indexed from any source."
+                titleRes = R.string.library_empty_no_artists,
+                subtitleRes = R.string.library_empty_artists_after_indexing
             )
             StorageFilter.OFFLINE -> LibraryEmptySpec(
                 iconRes = R.drawable.rounded_artist_24,
-                title = "No local artists found",
-                subtitle = "No artist metadata is available for local songs right now."
+                titleRes = R.string.library_empty_no_local_artists,
+                subtitleRes = R.string.library_empty_no_artist_metadata
             )
             StorageFilter.ONLINE -> LibraryEmptySpec(
                 iconRes = R.drawable.rounded_artist_24,
-                title = "No cloud artists found",
-                subtitle = "Cloud artist entries appear when remote songs are synced."
+                titleRes = R.string.library_empty_no_cloud_artists,
+                subtitleRes = R.string.library_empty_cloud_artist_after_sync
             )
         }
 
         LibraryTabId.LIKED -> when (storageFilter) {
             StorageFilter.ALL -> LibraryEmptySpec(
                 iconRes = R.drawable.rounded_favorite_24,
-                title = "No liked songs yet",
-                subtitle = "Tap the heart icon while playing a song to save it here."
+                titleRes = R.string.library_empty_no_liked_songs,
+                subtitleRes = R.string.library_empty_tap_heart_to_like
             )
             StorageFilter.OFFLINE -> LibraryEmptySpec(
                 iconRes = R.drawable.rounded_favorite_24,
-                title = "No liked local songs",
-                subtitle = "Switch source filter or like songs from your device."
+                titleRes = R.string.library_empty_no_liked_local_songs,
+                subtitleRes = R.string.library_empty_switch_source_or_like
             )
             StorageFilter.ONLINE -> LibraryEmptySpec(
                 iconRes = R.drawable.rounded_favorite_24,
-                title = "No liked cloud songs",
-                subtitle = "Like Telegram or Netease tracks to see them in this view."
+                titleRes = R.string.library_empty_no_liked_cloud_songs,
+                subtitleRes = R.string.library_empty_like_cloud_tracks
             )
         }
 
         LibraryTabId.FOLDERS -> LibraryEmptySpec(
             iconRes = R.drawable.ic_folder,
-            title = "No folders found",
-            subtitle = "Internal storage folders with music will appear here."
+            titleRes = R.string.library_empty_no_folders,
+            subtitleRes = R.string.library_empty_internal_storage_folders
         )
 
         LibraryTabId.PLAYLISTS -> LibraryEmptySpec(
             iconRes = R.drawable.rounded_playlist_play_24,
-            title = "No playlists yet",
-            subtitle = "Create your first playlist to organize your library."
+            titleRes = R.string.library_empty_no_playlists,
+            subtitleRes = R.string.library_empty_create_first_playlist
         )
     }
 }
@@ -171,14 +172,14 @@ internal fun LibraryExpressiveEmptyState(
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
-                    text = spec.title,
+                    text = stringResource(spec.titleRes),
                     style = MaterialTheme.typography.titleLarge,
                     fontFamily = GoogleSansRounded,
                     fontWeight = FontWeight.SemiBold,
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = spec.subtitle,
+                    text = stringResource(spec.subtitleRes),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center

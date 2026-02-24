@@ -1,5 +1,6 @@
 package com.theveloper.pixelplay.data.equalizer
 
+import android.content.Context
 import androidx.compose.runtime.Immutable
 import kotlinx.serialization.Serializable
 
@@ -94,5 +95,33 @@ data class EqualizerPreset(
         fun fromName(name: String): EqualizerPreset {
             return ALL_PRESETS.find { it.name == name } ?: FLAT
         }
+        
+        /**
+         * Get the resource ID for the displayed preset name based on the preset name
+         */
+        fun getDisplayNameResId(presetName: String): Int {
+            return when (presetName.lowercase()) {
+                "flat" -> com.theveloper.pixelplay.R.string.equalizer_preset_flat
+                "rock" -> com.theveloper.pixelplay.R.string.equalizer_preset_rock
+                "pop" -> com.theveloper.pixelplay.R.string.equalizer_preset_pop
+                "hip_hop" -> com.theveloper.pixelplay.R.string.equalizer_preset_hip_hop
+                "jazz" -> com.theveloper.pixelplay.R.string.equalizer_preset_jazz
+                "classical" -> com.theveloper.pixelplay.R.string.equalizer_preset_classical
+                "electronic" -> com.theveloper.pixelplay.R.string.equalizer_preset_electronic
+                "bass_boost" -> com.theveloper.pixelplay.R.string.equalizer_preset_bass_boost
+                "treble_boost" -> com.theveloper.pixelplay.R.string.equalizer_preset_treble_boost
+                "vocal" -> com.theveloper.pixelplay.R.string.equalizer_preset_vocal
+                "custom" -> com.theveloper.pixelplay.R.string.equalizer_preset_custom
+                else -> com.theveloper.pixelplay.R.string.equalizer_preset_flat
+            }
+        }
     }
+}
+
+/**
+ * Get the localized display name for the preset
+ */
+fun EqualizerPreset.getLocalizedDisplayName(context: Context): String {
+    val resId = EqualizerPreset.getDisplayNameResId(this.name)
+    return context.getString(resId)
 }

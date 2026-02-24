@@ -219,9 +219,9 @@ class LibraryStateHolder @Inject constructor(
         }
 
         albumsJob = scope?.launch {
-            _isLoadingCategories.value = true
             @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
             _currentStorageFilter.flatMapLatest { filter ->
+                _isLoadingCategories.value = true
                 musicRepository.getAlbums(filter)
             }.collect { albums ->
                 _albums.value = albums.toImmutableList()
@@ -231,9 +231,9 @@ class LibraryStateHolder @Inject constructor(
         }
 
         artistsJob = scope?.launch {
-            _isLoadingCategories.value = true
             @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
             _currentStorageFilter.flatMapLatest { filter ->
+                _isLoadingCategories.value = true
                 musicRepository.getArtists(filter)
             }.collect { artists ->
                 _artists.value = artists.toImmutableList()

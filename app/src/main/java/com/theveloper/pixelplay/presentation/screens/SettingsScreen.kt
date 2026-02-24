@@ -1,7 +1,5 @@
 package com.theveloper.pixelplay.presentation.screens
 
-import com.theveloper.pixelplay.presentation.navigation.navigateSafely
-
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.MutableTransitionState
@@ -66,18 +64,20 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.theveloper.pixelplay.R
-import com.theveloper.pixelplay.presentation.components.CollapsibleCommonTopBar
 import com.theveloper.pixelplay.presentation.components.ExpressiveTopBarContent
 import com.theveloper.pixelplay.presentation.components.MiniPlayerHeight
 import com.theveloper.pixelplay.presentation.model.SettingsCategory
 import com.theveloper.pixelplay.presentation.navigation.Screen
+import com.theveloper.pixelplay.presentation.navigation.navigateSafely
 import com.theveloper.pixelplay.presentation.viewmodel.PlayerViewModel
+import com.theveloper.pixelplay.presentation.components.CollapsibleCommonTopBar
 import com.theveloper.pixelplay.presentation.viewmodel.SettingsViewModel
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
@@ -88,8 +88,7 @@ import com.theveloper.pixelplay.data.preferences.LaunchTab
 
 // SettingsTopBar removed, replaced by CollapsibleCommonTopBar
 
-@androidx.annotation.OptIn(UnstableApi::class)
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(UnstableApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
         navController: NavController,
@@ -97,7 +96,6 @@ fun SettingsScreen(
         onNavigationIconClick: () -> Unit,
         settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
-
     // Animation effects
     val transitionState = remember { MutableTransitionState(false) }
     LaunchedEffect(true) { transitionState.targetState = true }
@@ -264,8 +262,8 @@ fun SettingsScreen(
 
                 // Accounts (Standalone)
                 ExpressiveNavigationItem(
-                    title = "Accounts",
-                    subtitle = "Manage Telegram, Google Drive, Netease, and more services",
+                    title = stringResource(R.string.accounts_title),
+                    subtitle = stringResource(R.string.cloud_streaming_subtitle),
                     icon = Icons.Rounded.AccountCircle,
                     colors = getAccountsColors(isDark),
                     onClick = { navController.navigateSafely(Screen.Accounts.route) },
@@ -287,10 +285,10 @@ fun SettingsScreen(
             }
         }
         CollapsibleCommonTopBar(
-                title = "Settings",
-                collapseFraction = collapseFraction,
-                headerHeight = currentTopBarHeightDp,
-                onBackClick = onNavigationIconClick
+            title = stringResource(R.string.nav_settings),
+            collapseFraction = collapseFraction,
+            headerHeight = currentTopBarHeightDp,
+            onBackClick = onNavigationIconClick
         )
 
         // Block interaction during transition
@@ -418,7 +416,7 @@ fun ExpressiveCategoryItem(
             
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = category.title,
+                    text = stringResource(category.titleResId),
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
@@ -426,31 +424,13 @@ fun ExpressiveCategoryItem(
                     maxLines = 1
                 )
                 Text(
-                    text = category.subtitle,
+                    text = stringResource(category.subtitleResId),
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f),
                     maxLines = 2
                 )
             }
-            
-            Spacer(modifier = Modifier.width(8.dp))
-            
-//            // Chevron or indicator
-//             Box(
-//                contentAlignment = Alignment.Center,
-//                modifier = Modifier
-//                    .size(36.dp)
-//                    .clip(CircleShape)
-//                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-//            ) {
-//                 Icon(
-//                    imageVector = Icons.Rounded.ChevronRight,
-//                    contentDescription = null,
-//                    tint = MaterialTheme.colorScheme.onSurface,
-//                    modifier = Modifier.size(20.dp)
-//                )
-//            }
         }
     }
 }
