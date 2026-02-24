@@ -614,12 +614,24 @@ class MusicService : MediaLibraryService() {
 
     private suspend fun buildPlayerInfo(): PlayerInfo {
         val player = engine.masterPlayer
-        val currentItem = withContext(Dispatchers.Main) { player.currentMediaItem }
-        val isPlaying = withContext(Dispatchers.Main) { player.isPlaying }
+        // Batch all main-thread reads into a single context switch (was 7 separate hops → 1)
+        var currentItem: MediaItem? = null
+        var isPlaying = false
+        var repeatMode = Player.REPEAT_MODE_OFF
+        var currentPosition = 0L
+        var totalDuration = 0L
+        var snapshotWindowIndex = 0
+        var snapshotTimeline: androidx.media3.common.Timeline = androidx.media3.common.Timeline.EMPTY
+        withContext(Dispatchers.Main) {
+            currentItem = player.currentMediaItem
+            isPlaying = player.isPlaying
+            repeatMode = player.repeatMode
+            currentPosition = player.currentPosition
+            totalDuration = player.duration.coerceAtLeast(0)
+            snapshotWindowIndex = player.currentMediaItemIndex
+            snapshotTimeline = player.currentTimeline
+        }
         val shuffleEnabled = isManualShuffleEnabled // Manual shuffle for sync with PlayerViewModel
-        val repeatMode = withContext(Dispatchers.Main) { player.repeatMode }
-        val currentPosition = withContext(Dispatchers.Main) { player.currentPosition }
-        val totalDuration = withContext(Dispatchers.Main) { player.duration.coerceAtLeast(0) }
 
         val title = currentItem?.mediaMetadata?.title?.toString().orEmpty()
         val artist = currentItem?.mediaMetadata?.artist?.toString().orEmpty()
@@ -629,22 +641,33 @@ class MusicService : MediaLibraryService() {
 
         val (artBytes, artUriString) = getAlbumArtForWidget(artworkData, artworkUri)
 
-        val playerTheme = withContext(Dispatchers.IO) {
-            userPreferencesRepository.playerThemePreferenceFlow.first()
+        // Merge two IO preference reads into a single context switch
+        val (playerTheme, paletteStyle) = withContext(Dispatchers.IO) {
+            Pair(
+                userPreferencesRepository.playerThemePreferenceFlow.first(),
+                AlbumArtPaletteStyle.fromStorageKey(userPreferencesRepository.albumArtPaletteStyleFlow.first().storageKey)
+            )
         }
 
-        val paletteStyle = withContext(Dispatchers.IO) {
-            AlbumArtPaletteStyle.fromStorageKey(userPreferencesRepository.albumArtPaletteStyleFlow.first().storageKey)
+        val schemePair: ColorSchemePair? = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && playerTheme == ThemePreference.DYNAMIC ->
+                ColorSchemePair(
+                    light = dynamicLightColorScheme(applicationContext),
+                    dark = dynamicDarkColorScheme(applicationContext)
+                )
+            artUriString != null ->
+                // Skip heavy palette recomputation when art + style haven't changed
+                if (artUriString == cachedSchemeArtUri && paletteStyle == cachedSchemePaletteStyle) {
+                    cachedColorSchemePair
+                } else {
+                    colorSchemeProcessor.getOrGenerateColorScheme(artUriString, paletteStyle).also {
+                        cachedSchemeArtUri = artUriString
+                        cachedSchemePaletteStyle = paletteStyle
+                        cachedColorSchemePair = it
+                    }
+                }
+            else -> null
         }
-
-        val schemePair: ColorSchemePair? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && playerTheme == ThemePreference.DYNAMIC) {
-             ColorSchemePair(
-                 light = dynamicLightColorScheme(applicationContext),
-                 dark = dynamicDarkColorScheme(applicationContext)
-             )
-        } else if (artUriString != null) {
-            colorSchemeProcessor.getOrGenerateColorScheme(artUriString, paletteStyle)
-        } else null
 
         val widgetColors = schemePair?.let {
             WidgetThemeColors(
@@ -672,18 +695,17 @@ class MusicService : MediaLibraryService() {
 //        } ?: false
 
         val queueItems = mutableListOf<com.theveloper.pixelplay.data.model.QueueItem>()
-        val timeline = withContext(Dispatchers.Main) { player.currentTimeline }
-        if (!timeline.isEmpty) {
+        // Reuse snapshotTimeline / snapshotWindowIndex captured at the top — no extra main-thread hop
+        if (!snapshotTimeline.isEmpty) {
             val window = androidx.media3.common.Timeline.Window()
-            val currentWindowIndex = withContext(Dispatchers.Main) { player.currentMediaItemIndex }
 
             // Empezar desde la siguiente canción en la cola
-            val startIndex = if (currentWindowIndex + 1 < timeline.windowCount) currentWindowIndex + 1 else 0
+            val startIndex = if (snapshotWindowIndex + 1 < snapshotTimeline.windowCount) snapshotWindowIndex + 1 else 0
 
             // Limitar el número de elementos de la cola a 4
-            val endIndex = (startIndex + 4).coerceAtMost(timeline.windowCount)
+            val endIndex = (startIndex + 4).coerceAtMost(snapshotTimeline.windowCount)
             for (i in startIndex until endIndex) {
-                timeline.getWindow(i, window)
+                snapshotTimeline.getWindow(i, window)
                 val mediaItem = window.mediaItem
                 val songId = mediaItem.mediaId.toLongOrNull()
                 if (songId != null) {
@@ -720,6 +742,11 @@ class MusicService : MediaLibraryService() {
     private val widgetArtByteArrayCache = object : LruCache<String, ByteArray>(5 * 256 * 1024) {
         override fun sizeOf(key: String, value: ByteArray): Int = value.size
     }
+
+    // Color scheme cache: skip recomputation when art URI and palette style haven't changed
+    private var cachedSchemeArtUri: String? = null
+    private var cachedSchemePaletteStyle: AlbumArtPaletteStyle? = null
+    private var cachedColorSchemePair: ColorSchemePair? = null
 
     private suspend fun getAlbumArtForWidget(embeddedArt: ByteArray?, artUri: Uri?): Pair<ByteArray?, String?> = withContext(Dispatchers.IO) {
         if (embeddedArt != null && embeddedArt.isNotEmpty()) {
