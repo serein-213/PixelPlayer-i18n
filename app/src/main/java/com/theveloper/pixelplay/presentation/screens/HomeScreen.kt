@@ -1,6 +1,7 @@
 package com.theveloper.pixelplay.presentation.screens
 
 import com.theveloper.pixelplay.presentation.navigation.navigateSafely
+import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 
 import android.content.Intent
 import androidx.activity.compose.ReportDrawnWhen
@@ -52,11 +53,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -557,29 +554,14 @@ fun SongListItemFavsWrapper(
 }
 
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 private fun rememberYourMixTitleStyle(): TextStyle {
     return remember {
         TextStyle(
-            fontFamily = FontFamily(
-                Font(
-                    resId = R.font.gflex_variable,
-                    variationSettings = FontVariation.Settings(
-                        FontVariation.weight(636),
-                        FontVariation.width(152f),
-                        //FontVariation.grade(40),
-                        FontVariation.Setting("ROND", 50f),
-                        FontVariation.Setting("XTRA", 520f),
-                        FontVariation.Setting("YOPQ", 90f),
-                        FontVariation.Setting("YTLC", 505f)
-                    )
-                )
-            ),
-            fontWeight = FontWeight(760),
+            fontFamily = GoogleSansRounded,
+            fontWeight = FontWeight.Bold,
             fontSize = 64.sp,
             lineHeight = 62.sp,
-//            letterSpacing = (-0.4).sp
         )
     }
 }
