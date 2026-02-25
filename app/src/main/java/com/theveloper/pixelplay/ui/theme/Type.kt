@@ -1,11 +1,9 @@
 package com.theveloper.pixelplay.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
@@ -20,6 +18,16 @@ private val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage   = "com.google.android.gms",
     certificates      = R.array.com_google_android_gms_fonts_certs
+)
+
+// PingFang HK (苹方圆体) — Local font file with full CJK support (Chinese/Japanese/Korean)
+// Rounded sans-serif design perfect for modern UI
+// Character coverage: 20,932 common Chinese characters + English and symbols
+val GoogleSansRounded = FontFamily(
+    androidx.compose.ui.text.font.Font(R.font.google_sans_rounded_regular, weight = FontWeight.Normal),
+    androidx.compose.ui.text.font.Font(R.font.google_sans_rounded_regular, weight = FontWeight.Medium),
+    androidx.compose.ui.text.font.Font(R.font.google_sans_rounded_regular, weight = FontWeight.SemiBold),
+    androidx.compose.ui.text.font.Font(R.font.google_sans_rounded_regular, weight = FontWeight.Bold),
 )
 
 val MontserratFamily = FontFamily(
@@ -60,53 +68,6 @@ val ExpTitleTypography = Typography(
         lineHeight = 0.95.em,
         platformStyle = PlatformTextStyle(includeFontPadding = false)
     )
-)
-
-// Google Sans Flex variable font with rounded axis for Google Sans Rounded-like appearance.
-private const val GoogleSansFlexRond = 100f
-
-@OptIn(ExperimentalTextApi::class)
-val GoogleSansRounded = FontFamily(
-    androidx.compose.ui.text.font.Font(
-        resId = R.font.gflex_variable,
-        weight = FontWeight.Light,
-        variationSettings = FontVariation.Settings(
-            FontVariation.weight(FontWeight.Light.weight),
-            FontVariation.Setting("ROND", GoogleSansFlexRond)
-        )
-    ),
-    androidx.compose.ui.text.font.Font(
-        resId = R.font.gflex_variable,
-        weight = FontWeight.Normal,
-        variationSettings = FontVariation.Settings(
-            FontVariation.weight(FontWeight.Normal.weight),
-            FontVariation.Setting("ROND", GoogleSansFlexRond)
-        )
-    ),
-    androidx.compose.ui.text.font.Font(
-        resId = R.font.gflex_variable,
-        weight = FontWeight.Medium,
-        variationSettings = FontVariation.Settings(
-            FontVariation.weight(FontWeight.Medium.weight),
-            FontVariation.Setting("ROND", GoogleSansFlexRond)
-        )
-    ),
-    androidx.compose.ui.text.font.Font(
-        resId = R.font.gflex_variable,
-        weight = FontWeight.SemiBold,
-        variationSettings = FontVariation.Settings(
-            FontVariation.weight(FontWeight.SemiBold.weight),
-            FontVariation.Setting("ROND", GoogleSansFlexRond)
-        )
-    ),
-    androidx.compose.ui.text.font.Font(
-        resId = R.font.gflex_variable,
-        weight = FontWeight.Bold,
-        variationSettings = FontVariation.Settings(
-            FontVariation.weight(FontWeight.Bold.weight),
-            FontVariation.Setting("ROND", GoogleSansFlexRond)
-        )
-    ),
 )
 
 // Tipografía - Usar fuentes amigables y modernas.
