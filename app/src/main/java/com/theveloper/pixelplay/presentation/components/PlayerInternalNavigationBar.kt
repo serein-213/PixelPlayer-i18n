@@ -117,10 +117,13 @@ private fun PlayerInternalNavigationItemsRow(
                         lastSearchTapTimestamp = now
 
                         if (!isAlreadySelected) {
-                            navController.navigateSafely(itemRoute) {
-                                popUpTo(navController.graph.id) { inclusive = true; saveState = false }
+                            // Direct navigation for bottom bar - no lifecycle check needed
+                            navController.navigate(itemRoute) {
+                                popUpTo(navController.graph.startDestinationId) { 
+                                    saveState = true 
+                                }
                                 launchSingleTop = true
-                                restoreState = false
+                                restoreState = true
                             }
                         }
 
@@ -137,10 +140,13 @@ private fun PlayerInternalNavigationItemsRow(
                         }
                     } else if (!isAlreadySelected) {
                         lastSearchTapTimestamp = 0L
-                        navController.navigateSafely(itemRoute) {
-                            popUpTo(navController.graph.id) { inclusive = true; saveState = false }
+                        // Direct navigation for bottom bar - no lifecycle check needed
+                        navController.navigate(itemRoute) {
+                            popUpTo(navController.graph.startDestinationId) { 
+                                saveState = true 
+                            }
                             launchSingleTop = true
-                            restoreState = false
+                            restoreState = true
                         }
                     } else {
                         lastSearchTapTimestamp = 0L

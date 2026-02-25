@@ -532,11 +532,14 @@ private enum class MainRootDirection {
     BACKWARD
 }
 
+// Faster transitions for bottom navigation bar switching
+private const val BOTTOM_NAV_TRANSITION_DURATION = 250
+
 private val MAIN_ROOT_TRANSITION_SPEC =
-    tween<IntOffset>(durationMillis = TRANSITION_DURATION, easing = FastOutSlowInEasing)
+    tween<IntOffset>(durationMillis = BOTTOM_NAV_TRANSITION_DURATION, easing = FastOutSlowInEasing)
 
 private val MAIN_ROOT_FADE_SPEC =
-    tween<Float>(durationMillis = TRANSITION_DURATION, easing = FastOutSlowInEasing)
+    tween<Float>(durationMillis = BOTTOM_NAV_TRANSITION_DURATION, easing = FastOutSlowInEasing)
 
 private fun mainRootDirection(
     fromRoute: String?,
