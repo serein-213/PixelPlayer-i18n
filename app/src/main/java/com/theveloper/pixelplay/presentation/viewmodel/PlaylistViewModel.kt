@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import android.content.Intent
 import android.widget.Toast
+import com.theveloper.pixelplay.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.theveloper.pixelplay.data.model.Playlist
@@ -129,12 +130,12 @@ class PlaylistViewModel @Inject constructor(
             // Then, collect playlists and apply the sort option
             playlistPreferencesRepository.userPlaylistsFlow.collect { playlists ->
                 val currentSortOption =
-                    _uiState.value.currentPlaylistSortOption // Use the most up-to-date sort option
+                    _uiState.value.currentPlaylistSortOption
                 val sortedPlaylists = when (currentSortOption) {
                     SortOption.PlaylistNameAZ -> playlists.sortedBy { it.name.lowercase() }
                     SortOption.PlaylistNameZA -> playlists.sortedByDescending { it.name.lowercase() }
                     SortOption.PlaylistDateCreated -> playlists.sortedByDescending { it.lastModified }
-                    else -> playlists.sortedBy { it.name.lowercase() } // Default to NameAZ
+                    else -> playlists.sortedBy { it.name.lowercase() }
                 }
                 _uiState.update { it.copy(playlists = sortedPlaylists) }
             }
@@ -1003,12 +1004,12 @@ class PlaylistViewModel @Inject constructor(
                 }
                 
                 Log.d("PlaylistViewModel", "Launching share intent for: $shareFileName")
-                activity.startActivity(Intent.createChooser(shareIntent, "Share Playlists"))
-                Toast.makeText(context, "Sharing ${playlistsWithSongs.size} playlist(s)", Toast.LENGTH_SHORT).show()
+                activity.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.playlist_share_playlists_chooser)))
+                Toast.makeText(context, context.getString(R.string.playlist_sharing_count, playlistsWithSongs.size), Toast.LENGTH_SHORT).show()
                 
             } catch (e: Exception) {
                 Log.e("PlaylistViewModel", "Error sharing playlists", e)
-                Toast.makeText(context, "Share failed: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.getString(R.string.playlist_share_failed, e.message ?: ""), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -1083,7 +1084,7 @@ class PlaylistViewModel @Inject constructor(
                 val playlistsWithSongs = getPlaylistsWithSongs(playlistIds)
                 if (playlistsWithSongs.isEmpty()) {
                     Log.w("PlaylistViewModel", "No playlists found to export")
-                    Toast.makeText(context, "No playlists to export", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.playlist_no_playlists_to_export), Toast.LENGTH_SHORT).show()
                     return@launch
                 }
                 
@@ -1095,11 +1096,11 @@ class PlaylistViewModel @Inject constructor(
                 }
                 
                 Log.d("PlaylistViewModel", "Successfully exported ${playlistIds.size} playlists to $exportDir")
-                Toast.makeText(context, "Exported ${playlistsWithSongs.size} playlist(s) to Music/PixelPlayer Exports", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.playlist_exported_success, playlistsWithSongs.size), Toast.LENGTH_SHORT).show()
                 
             } catch (e: Exception) {
                 Log.e("PlaylistViewModel", "Error exporting playlists", e)
-                Toast.makeText(context, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.playlist_export_failed, e.message ?: ""), Toast.LENGTH_SHORT).show()
             }
         }
     }

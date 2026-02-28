@@ -1,7 +1,5 @@
 package com.theveloper.pixelplay.presentation.screens
 
-import com.theveloper.pixelplay.presentation.navigation.navigateSafely
-
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.MutableTransitionState
@@ -66,18 +64,20 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.theveloper.pixelplay.R
-import com.theveloper.pixelplay.presentation.components.CollapsibleCommonTopBar
 import com.theveloper.pixelplay.presentation.components.ExpressiveTopBarContent
 import com.theveloper.pixelplay.presentation.components.MiniPlayerHeight
 import com.theveloper.pixelplay.presentation.model.SettingsCategory
 import com.theveloper.pixelplay.presentation.navigation.Screen
+import com.theveloper.pixelplay.presentation.navigation.navigateSafely
 import com.theveloper.pixelplay.presentation.viewmodel.PlayerViewModel
+import com.theveloper.pixelplay.presentation.components.CollapsibleCommonTopBar
 import com.theveloper.pixelplay.presentation.viewmodel.SettingsViewModel
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
@@ -88,8 +88,7 @@ import com.theveloper.pixelplay.data.preferences.LaunchTab
 
 // SettingsTopBar removed, replaced by CollapsibleCommonTopBar
 
-@androidx.annotation.OptIn(UnstableApi::class)
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(UnstableApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
         navController: NavController,
@@ -97,7 +96,6 @@ fun SettingsScreen(
         onNavigationIconClick: () -> Unit,
         settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
-
     // Animation effects
     val transitionState = remember { MutableTransitionState(false) }
     LaunchedEffect(true) { transitionState.targetState = true }
@@ -212,84 +210,85 @@ fun SettingsScreen(
             item {
                 val isDark = MaterialTheme.colorScheme.surface.luminance() < 0.5f
                 ExpressiveSettingsGroup {
-                    val mainCategories = SettingsCategory.entries.filter {
+                    val mainCategories = SettingsCategory.entries.filter { 
                         it != SettingsCategory.ABOUT && 
+                        it != SettingsCategory.EQUALIZER &&
                         it != SettingsCategory.DEVICE_CAPABILITIES
                     }
-
-                    val totalItems = mainCategories.size + 3 // Device + Accounts + About
-                    fun shapeFor(index: Int) =
-                        when {
-                            totalItems == 1 -> RoundedCornerShape(24.dp)
-                            index == 0 -> RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
-                            index == totalItems - 1 -> RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
-                            else -> RoundedCornerShape(4.dp)
-                        }
-
-                    var itemIndex = 0
-
-                    mainCategories.forEach { category ->
+                    
+                    mainCategories.forEachIndexed { index, category ->
                         val colors = getCategoryColors(category, isDark)
-
+                        
                         ExpressiveCategoryItem(
                             category = category,
                             customColors = colors,
                             onClick = {
-                                if (category == SettingsCategory.EQUALIZER) {
-                                    navController.navigateSafely(Screen.Equalizer.route)
-                                } else {
-                                    navController.navigateSafely(Screen.SettingsCategory.createRoute(category.id))
-                                }
+                                navController.navigateSafely(Screen.SettingsCategory.createRoute(category.id))
                             },
-                            shape = shapeFor(itemIndex)
+                            shape = when {
+                                mainCategories.size == 1 -> RoundedCornerShape(24.dp)
+                                index == 0 -> RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
+                                index == mainCategories.lastIndex -> RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
+                                else -> RoundedCornerShape(4.dp)
+                            }
                         )
-                        if (itemIndex < totalItems - 1) {
+                        if (index < mainCategories.lastIndex) {
                             Spacer(modifier = Modifier.height(2.dp))
                         }
-                        itemIndex++
                     }
-
-                    ExpressiveCategoryItem(
-                        category = SettingsCategory.DEVICE_CAPABILITIES,
-                        customColors = getCategoryColors(SettingsCategory.DEVICE_CAPABILITIES, isDark),
-                        onClick = { navController.navigateSafely(Screen.DeviceCapabilities.route) },
-                        shape = shapeFor(itemIndex)
-                    )
-                    if (itemIndex < totalItems - 1) {
-                        Spacer(modifier = Modifier.height(2.dp))
-                    }
-                    itemIndex++
-
-                    ExpressiveNavigationItem(
-                        title = "Accounts",
-                        subtitle = "Manage Telegram, Google Drive, Netease, and more services",
-                        icon = Icons.Rounded.AccountCircle,
-                        colors = getAccountsColors(isDark),
-                        onClick = { navController.navigateSafely(Screen.Accounts.route) },
-                        shape = shapeFor(itemIndex)
-                    )
-                    if (itemIndex < totalItems - 1) {
-                        Spacer(modifier = Modifier.height(2.dp))
-                    }
-                    itemIndex++
-
-                    ExpressiveCategoryItem(
-                        category = SettingsCategory.ABOUT,
-                        customColors = getCategoryColors(SettingsCategory.ABOUT, isDark),
-                        onClick = { navController.navigateSafely("about") },
-                        shape = shapeFor(itemIndex)
-                    )
                 }
+                
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                // Equalizer Category (Standalone)
+                ExpressiveCategoryItem(
+                    category = SettingsCategory.EQUALIZER,
+                    customColors = getCategoryColors(SettingsCategory.EQUALIZER, isDark),
+                    onClick = { navController.navigateSafely(Screen.Equalizer.route) }, // Direct navigation
+                    shape = RoundedCornerShape(24.dp)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                // Device Capabilities (Standalone)
+                ExpressiveCategoryItem(
+                    category = SettingsCategory.DEVICE_CAPABILITIES,
+                    customColors = getCategoryColors(SettingsCategory.DEVICE_CAPABILITIES, isDark),
+                    onClick = { navController.navigateSafely(Screen.DeviceCapabilities.route) },
+                    shape = RoundedCornerShape(24.dp)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Accounts (Standalone)
+                ExpressiveNavigationItem(
+                    title = stringResource(R.string.accounts_title),
+                    subtitle = stringResource(R.string.cloud_streaming_subtitle),
+                    icon = Icons.Rounded.AccountCircle,
+                    colors = getAccountsColors(isDark),
+                    onClick = { navController.navigateSafely(Screen.Accounts.route) },
+                    shape = RoundedCornerShape(24.dp)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                // About Category (Standalone)
+                ExpressiveCategoryItem(
+                    category = SettingsCategory.ABOUT,
+                    customColors = getCategoryColors(SettingsCategory.ABOUT, isDark),
+                    onClick = { navController.navigateSafely("about") }, // Direct navigation
+                    shape = RoundedCornerShape(24.dp)
+                )
 
                 // for player active:
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
         CollapsibleCommonTopBar(
-                title = "Settings",
-                collapseFraction = collapseFraction,
-                headerHeight = currentTopBarHeightDp,
-                onBackClick = onNavigationIconClick
+            title = stringResource(R.string.nav_settings),
+            collapseFraction = collapseFraction,
+            headerHeight = currentTopBarHeightDp,
+            onBackClick = onNavigationIconClick
         )
 
         // Block interaction during transition
@@ -417,7 +416,7 @@ fun ExpressiveCategoryItem(
             
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = category.title,
+                    text = stringResource(category.titleResId),
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
@@ -425,31 +424,13 @@ fun ExpressiveCategoryItem(
                     maxLines = 1
                 )
                 Text(
-                    text = category.subtitle,
+                    text = stringResource(category.subtitleResId),
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f),
                     maxLines = 2
                 )
             }
-            
-            Spacer(modifier = Modifier.width(8.dp))
-            
-//            // Chevron or indicator
-//             Box(
-//                contentAlignment = Alignment.Center,
-//                modifier = Modifier
-//                    .size(36.dp)
-//                    .clip(CircleShape)
-//                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-//            ) {
-//                 Icon(
-//                    imageVector = Icons.Rounded.ChevronRight,
-//                    contentDescription = null,
-//                    tint = MaterialTheme.colorScheme.onSurface,
-//                    modifier = Modifier.size(20.dp)
-//                )
-//            }
         }
     }
 }

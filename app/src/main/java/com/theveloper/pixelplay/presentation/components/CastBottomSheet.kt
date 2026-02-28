@@ -109,6 +109,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -215,14 +216,6 @@ fun CastBottomSheet(
     } else {
         emptyList()
     }
-    val bluetoothDeviceNames = bluetoothAudioDevices
-        .map { it.trim() }
-        .filter { it.isNotEmpty() }
-        .distinct()
-    val activeBluetoothName = bluetoothName
-        ?.trim()
-        ?.takeIf { it.isNotEmpty() && it in bluetoothDeviceNames }
-
     val devices = buildList {
         if (isWifiEnabled) {
             addAll(
@@ -254,8 +247,12 @@ fun CastBottomSheet(
         }
 
         if (isBluetoothEnabled) {
-            bluetoothDeviceNames.forEach { name ->
-                val isConnected = name == activeBluetoothName
+            val bluetoothNames = (bluetoothAudioDevices + listOfNotNull(bluetoothName))
+                .filter { it.isNotEmpty() }
+                .distinct()
+
+            bluetoothNames.forEach { name ->
+                val isConnected = name == bluetoothName
                 add(
                     CastDeviceUi(
                         id = "bluetooth_$name",
@@ -278,14 +275,13 @@ fun CastBottomSheet(
         }
     }
 
-    val activeDevice = if (isRemoteSession) {
-        val remoteRoute = checkNotNull(activeRoute)
+    val activeDevice = if (isRemoteSession && activeRoute != null) {
         ActiveDeviceUi(
-            id = remoteRoute.id,
-            title = remoteRoute.name,
-            subtitle = "Casting session",
+            id = activeRoute.id,
+            title = activeRoute.name,
+            subtitle = stringResource(R.string.cast_session_subtitle),
             isRemote = true,
-            icon = when (remoteRoute.deviceType) {
+            icon = when (activeRoute.deviceType) {
                 MediaRouter.RouteInfo.DEVICE_TYPE_TV -> Icons.Rounded.Tv
                 MediaRouter.RouteInfo.DEVICE_TYPE_REMOTE_SPEAKER, MediaRouter.RouteInfo.DEVICE_TYPE_BUILTIN_SPEAKER -> Icons.Rounded.Speaker
                 MediaRouter.RouteInfo.DEVICE_TYPE_BLUETOOTH_A2DP -> Icons.Rounded.Bluetooth
@@ -293,21 +289,21 @@ fun CastBottomSheet(
             },
             isConnecting = isCastConnecting,
             volume = routeVolume.toFloat().coerceAtLeast(0f),
-            volumeRange = 0f..remoteRoute.volumeMax.toFloat().coerceAtLeast(1f),
-            connectionLabel = if (isCastConnecting) "Connecting" else "Connected"
+            volumeRange = 0f..activeRoute.volumeMax.toFloat().coerceAtLeast(1f),
+            connectionLabel = if (isCastConnecting) stringResource(R.string.cast_connecting) else stringResource(R.string.cast_connected)
         )
     } else {
-        val isBluetoothAudio = isBluetoothEnabled && !activeBluetoothName.isNullOrEmpty()
+        val isBluetoothAudio = isBluetoothEnabled && !bluetoothName.isNullOrEmpty()
         ActiveDeviceUi(
             id = "phone",
-            title = if (isBluetoothAudio) activeBluetoothName!! else "This phone",
-            subtitle = if (isBluetoothAudio) "Bluetooth audio" else "Local playback",
+            title = if (isBluetoothAudio) bluetoothName!! else stringResource(R.string.cast_this_phone),
+            subtitle = if (isBluetoothAudio) stringResource(R.string.cast_bluetooth_audio) else stringResource(R.string.cast_local_playback),
             isRemote = false,
             icon = if (isBluetoothAudio) Icons.Rounded.Bluetooth else Icons.Rounded.Headphones,
             isConnecting = false,
             volume = trackVolume,
             volumeRange = 0f..1f,
-            connectionLabel = if (isPlaying) "Playing" else "Paused"
+            connectionLabel = if (isPlaying) stringResource(R.string.cast_playing) else stringResource(R.string.cast_paused)
         )
     }
 
@@ -320,7 +316,7 @@ fun CastBottomSheet(
         devices = devices,
         activeDevice = activeDevice,
         isBluetoothEnabled = isBluetoothEnabled,
-        bluetoothName = activeBluetoothName
+        bluetoothName = bluetoothName
     )
 
     val sheetState = rememberModalBottomSheetState(
@@ -443,11 +439,11 @@ private fun CastPermissionStep(
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
         Text(
-            text = "Get ready to connect",
+            text = stringResource(R.string.cast_get_ready_title),
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
         )
         Text(
-            text = "Allow PixelPlayer to see your nearby devices and current Wi‑Fi so we can keep your cast, Bluetooth audio, and speakers in sync.",
+            text = stringResource(R.string.cast_permission_description),
             style = MaterialTheme.typography.bodyMedium,
             color = colors.onSurfaceVariant
         )
@@ -465,13 +461,13 @@ private fun CastPermissionStep(
             ) {
                 PermissionHighlight(
                     icon = Icons.Rounded.Bluetooth,
-                    title = "Nearby devices",
-                    description = "Needed to read and control your connected Bluetooth audio gear."
+                    title = stringResource(R.string.cast_nearby_devices_title),
+                    description = stringResource(R.string.cast_nearby_devices_desc)
                 )
                 PermissionHighlight(
                     icon = Icons.Rounded.Wifi,
-                    title = "Location for Wi‑Fi",
-                    description = "Android requires Location to share the Wi‑Fi network (SSID) you're on so we can find compatible cast devices."
+                    title = stringResource(R.string.cast_location_wifi_title),
+                    description = stringResource(R.string.cast_location_wifi_desc)
                 )
             }
         }
@@ -481,12 +477,12 @@ private fun CastPermissionStep(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(50)
         ) {
-            Text(text = "Allow access")
+            Text(text = stringResource(R.string.cast_allow_access_button))
         }
 
         if (missingPermissions.isNotEmpty()) {
             Text(
-                text = "We only use these permissions for device interconnectivity — casting, controlling nearby speakers, and keeping audio in sync.",
+                text = stringResource(R.string.cast_permission_privacy_note),
                 style = MaterialTheme.typography.bodySmall,
                 color = colors.onSurfaceVariant
             )
@@ -1176,7 +1172,7 @@ private fun CollapsibleCastTopBar(
             ) {
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
-                    text = "Connect device",
+                    text = stringResource(R.string.cast_connect_device),
                     style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold)
                 )
             }
@@ -1188,7 +1184,7 @@ private fun CollapsibleCastTopBar(
                 label = "scanningIndicator"
             ) {
                 BadgeChip(
-                    text = "Scanning nearby",
+                    text = stringResource(R.string.cast_scanning_nearby),
                     iconVector = Icons.Filled.Refresh,
                     contentColor = MaterialTheme.colorScheme.primary
                 )
@@ -1223,11 +1219,11 @@ private fun DeviceSectionHeader(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text(
-                text = "Nearby devices",
+                text = stringResource(R.string.cast_nearby_devices_title),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
             Text(
-                text = if (hasDevices) "Tap to connect" else "No devices yet",
+                text = if (hasDevices) stringResource(R.string.cast_tap_to_connect) else stringResource(R.string.cast_no_devices_yet),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -1241,7 +1237,7 @@ private fun DeviceSectionHeader(
             ),
             modifier = Modifier.clip(RoundedCornerShape(16.dp))
         ) {
-            Icon(Icons.Filled.Refresh, contentDescription = "Refresh devices")
+            Icon(Icons.Filled.Refresh, contentDescription = stringResource(R.string.cast_refresh_cd))
         }
     }
 }
@@ -1348,7 +1344,7 @@ private fun ActiveDeviceHero(
                     }
 
                     Text(
-                        text = if (device.isConnecting && device.isRemote) "Connecting..." else statusText,
+                        text = if (device.isConnecting && device.isRemote) stringResource(R.string.cast_connecting_subtitle) else statusText,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         maxLines = 1
@@ -1374,7 +1370,7 @@ private fun ActiveDeviceHero(
                             Spacer(
                                 modifier = Modifier.width(6.dp)
                             )
-                            Text("Disconnect")
+                            Text(stringResource(R.string.cast_disconnect))
                         }
                     }
                 }
@@ -1388,7 +1384,7 @@ private fun ActiveDeviceHero(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (device.isRemote) "Device volume" else "Phone volume",
+                        text = if (device.isRemote) stringResource(R.string.device_volume) else stringResource(R.string.phone_volume),
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
@@ -1478,13 +1474,13 @@ private fun EmptyDeviceState() {
                 modifier = Modifier.size(36.dp)
             )
             Text(
-                text = "Searching for devices...",
+                text = stringResource(R.string.cast_searching),
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "Make sure your TV or speaker is on and sharing the same Wi‑Fi network.",
+                text = stringResource(R.string.cast_searching_desc),
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -1605,10 +1601,10 @@ private fun CastDeviceRow(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 val statusText = when {
-                    device.isBluetooth -> "Bluetooth Audio"
-                    device.isSelected && device.connectionState == MediaRouter.RouteInfo.CONNECTION_STATE_CONNECTED -> "Connected"
-                    device.isSelected && device.connectionState == MediaRouter.RouteInfo.CONNECTION_STATE_CONNECTING -> "Connecting"
-                    else -> "Available"
+                    device.isBluetooth -> stringResource(R.string.cast_bluetooth_audio)
+                    device.isSelected && device.connectionState == MediaRouter.RouteInfo.CONNECTION_STATE_CONNECTED -> stringResource(R.string.cast_connected)
+                    device.isSelected && device.connectionState == MediaRouter.RouteInfo.CONNECTION_STATE_CONNECTING -> stringResource(R.string.cast_connecting)
+                    else -> stringResource(R.string.cast_available)
                 }
 
                 val statusIcon = if (device.isBluetooth) R.drawable.rounded_bluetooth_24 else R.drawable.rounded_wifi_24
@@ -1677,11 +1673,11 @@ private fun QuickSettingsRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         QuickSettingTile(
-            label = if (wifiConnected && !wifiSsid.isNullOrEmpty()) wifiSsid else "Wi-Fi",
+            label = if (wifiConnected && !wifiSsid.isNullOrEmpty()) wifiSsid else stringResource(R.string.cast_wifi),
             subtitle = when {
-                !wifiOn -> "Off"
-                wifiConnected -> "Connected"
-                else -> "On"
+                !wifiOn -> stringResource(R.string.cast_off)
+                wifiConnected -> stringResource(R.string.cast_connected)
+                else -> stringResource(R.string.cast_on)
             },
             icon = if (wifiOn) Icons.Rounded.Wifi else Icons.Rounded.WifiOff,
             isActive = wifiOn,
@@ -1689,10 +1685,10 @@ private fun QuickSettingsRow(
             modifier = Modifier.weight(1f)
         )
         QuickSettingTile(
-            label = if (bluetoothEnabled && !bluetoothName.isNullOrEmpty()) bluetoothName else "Bluetooth",
+            label = if (bluetoothEnabled && !bluetoothName.isNullOrEmpty()) bluetoothName else stringResource(R.string.cast_bluetooth),
             subtitle = if (bluetoothEnabled) {
-                if (!bluetoothName.isNullOrEmpty()) "Connected" else "On"
-            } else "Off",
+                if (!bluetoothName.isNullOrEmpty()) stringResource(R.string.cast_connected) else stringResource(R.string.cast_on)
+            } else stringResource(R.string.cast_off),
             icon = if (bluetoothEnabled) Icons.Rounded.Bluetooth else Icons.Rounded.BluetoothDisabled,
             isActive = bluetoothEnabled,
             onClick = onBluetoothClick,
@@ -1831,11 +1827,11 @@ private fun WifiOffIllustration(
                 drawCircle(color = prim3, radius = size.minDimension / 6)
             }
             Text(
-                text = "Connections are off",
+                text = stringResource(R.string.cast_connections_off),
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
             )
             Text(
-                text = "Turn on Wi‑Fi or Bluetooth to discover nearby devices",
+                text = stringResource(R.string.cast_connections_off_desc),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1853,7 +1849,7 @@ private fun WifiOffIllustration(
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
-                    Text("Turn on Wi‑Fi")
+                    Text(stringResource(R.string.cast_turn_on_wifi))
                 }
 
                 Button(
@@ -1864,7 +1860,7 @@ private fun WifiOffIllustration(
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 ) {
-                    Text("Open Bluetooth")
+                    Text(stringResource(R.string.cast_open_bluetooth))
                 }
             }
         }

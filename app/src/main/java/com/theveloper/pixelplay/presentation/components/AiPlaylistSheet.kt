@@ -57,10 +57,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.ui.theme.ExpTitleTypography
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
@@ -222,7 +224,7 @@ fun AiPlaylistSheet(
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = Icons.Rounded.AutoAwesome,
-                            contentDescription = "AI",
+                            contentDescription = stringResource(R.string.ai_playlist_label),
                             modifier = Modifier.size(32.dp),
                             tint = if (isGenerating) colors.onPrimaryContainer else colors.onTertiaryContainer
                         )
@@ -231,7 +233,7 @@ fun AiPlaylistSheet(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "AI",
+                        text = stringResource(R.string.ai_playlist_label),
                         style = ExpTitleTypography.displayMedium.copy(
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold
@@ -239,7 +241,7 @@ fun AiPlaylistSheet(
                         color = colors.primary
                     )
                     Text(
-                        text = "Playlist Generator",
+                        text = stringResource(R.string.ai_playlist_generator),
                         style = MaterialTheme.typography.titleMedium,
                         fontFamily = GoogleSansRounded,
                         color = colors.onSurfaceVariant
@@ -249,7 +251,7 @@ fun AiPlaylistSheet(
 
             // Description text
             Text(
-                text = "Describe the vibe, mood, or activity and let AI curate the perfect playlist from your library.",
+                text = stringResource(R.string.ai_playlist_description),
                 style = MaterialTheme.typography.bodyMedium,
                 color = colors.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth()
@@ -267,7 +269,7 @@ fun AiPlaylistSheet(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Playlist size",
+                        text = stringResource(R.string.ai_playlist_size_label),
                         style = MaterialTheme.typography.labelLarge,
                         fontFamily = GoogleSansRounded,
                         fontWeight = FontWeight.SemiBold,
@@ -280,7 +282,7 @@ fun AiPlaylistSheet(
                         OutlinedTextField(
                             value = minLength,
                             onValueChange = { minLength = it.filter { char -> char.isDigit() } },
-                            label = { Text("Min songs") },
+                            label = { Text(stringResource(R.string.ai_playlist_min_songs)) },
                             modifier = Modifier.weight(1f),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
@@ -290,7 +292,7 @@ fun AiPlaylistSheet(
                         OutlinedTextField(
                             value = maxLength,
                             onValueChange = { maxLength = it.filter { char -> char.isDigit() } },
-                            label = { Text("Max songs") },
+                            label = { Text(stringResource(R.string.ai_playlist_max_songs)) },
                             modifier = Modifier.weight(1f),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
@@ -309,7 +311,7 @@ fun AiPlaylistSheet(
                 onValueChange = { prompt = it },
                 placeholder = { 
                     Text(
-                        "e.g. Chill evening vibes, upbeat workout energy...",
+                        stringResource(R.string.ai_playlist_prompt_placeholder),
                         color = colors.onSurfaceVariant.copy(alpha = 0.6f)
                     ) 
                 },
@@ -385,7 +387,7 @@ fun AiPlaylistSheet(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "Generating...",
+                            text = stringResource(R.string.ai_playlist_generating),
                             style = MaterialTheme.typography.titleMedium,
                             fontFamily = GoogleSansRounded,
                             fontWeight = FontWeight.SemiBold,
@@ -403,7 +405,7 @@ fun AiPlaylistSheet(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "Generate Playlist",
+                            text = stringResource(R.string.ai_playlist_generate_button),
                             style = MaterialTheme.typography.titleMedium,
                             fontFamily = GoogleSansRounded,
                             fontWeight = FontWeight.SemiBold,

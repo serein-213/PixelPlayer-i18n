@@ -64,6 +64,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.text.style.TextOverflow
@@ -464,7 +465,7 @@ private fun CollapsingAlbumTopBar(
                 ) {
                     SmartImage(
                         model = album.albumArtUriString,
-                        contentDescription = "Cover of ${album.title}",
+                        contentDescription = stringResource(R.string.album_detail_cover_cd, album.title),
                         contentScale = ContentScale.Crop,
                         targetSize = Size(1600, 1600),
                         modifier = Modifier.fillMaxSize()
@@ -520,7 +521,7 @@ private fun CollapsingAlbumTopBar(
                     onClick = onBackPressed,
                     colors = IconButtonDefaults.filledIconButtonColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
                 ) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_back))
                 }
 
                 Box(
@@ -552,7 +553,7 @@ private fun CollapsingAlbumTopBar(
                             overflow = TextOverflow.Ellipsis
                         )
                         Text(
-                            text = "${album.artist} • $songsCount songs",
+                            text = stringResource(R.string.album_detail_subtitle, album.artist, songsCount),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1,
@@ -573,7 +574,7 @@ private fun CollapsingAlbumTopBar(
                             alpha = fabScale
                         }
                 ) {
-                    Icon(Icons.Rounded.Shuffle, contentDescription = "Shuffle play album")
+                    Icon(Icons.Rounded.Shuffle, contentDescription = stringResource(R.string.album_detail_shuffle_cd))
                 }
             }
         }

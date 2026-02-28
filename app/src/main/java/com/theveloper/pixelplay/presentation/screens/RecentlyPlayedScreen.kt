@@ -70,6 +70,7 @@ import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
@@ -116,6 +117,9 @@ fun RecentlyPlayedScreen(
     val favoriteSongIds by playerViewModel.favoriteSongIds.collectAsStateWithLifecycle()
     val selectedSongForInfo by playerViewModel.selectedSongForInfo.collectAsStateWithLifecycle()
     val playlistUiState by playlistViewModel.uiState.collectAsStateWithLifecycle()
+    val recentlyPlayedTitle = stringResource(id = R.string.home_recently_played)
+    val todayLabel = stringResource(id = R.string.range_today)
+    val yesterdayLabel = stringResource(id = R.string.range_yesterday)
 
     var selectedRange by rememberSaveable { mutableStateOf(StatsTimeRange.WEEK) }
     val lazyListState = rememberLazyListState()
@@ -131,10 +135,12 @@ fun RecentlyPlayedScreen(
             maxItems = Int.MAX_VALUE
         )
     }
-    val groupedSongs = remember(recentlyPlayedSongs, selectedRange) {
+    val groupedSongs = remember(recentlyPlayedSongs, selectedRange, todayLabel, yesterdayLabel) {
         groupRecentlyPlayedSongs(
             songs = recentlyPlayedSongs,
-            range = selectedRange
+            range = selectedRange,
+            todayLabel = todayLabel,
+            yesterdayLabel = yesterdayLabel
         )
     }
     val queueSongs = remember(recentlyPlayedSongs) {
@@ -196,12 +202,12 @@ fun RecentlyPlayedScreen(
                         RecentlyPlayedActions(
                             onPlay = {
                                 val firstSong = queueSongs.firstOrNull() ?: return@RecentlyPlayedActions
-                                playerViewModel.playSongs(queueSongs, firstSong, "Recently Played")
+                                playerViewModel.playSongs(queueSongs, firstSong, recentlyPlayedTitle)
                             },
                             onShuffle = {
                                 playerViewModel.playSongsShuffled(
                                     songsToPlay = queueSongs,
-                                    queueName = "Recently Played"
+                                    queueName = recentlyPlayedTitle
                                 )
                             },
                             modifier = Modifier.padding(horizontal = 16.dp)
@@ -235,7 +241,7 @@ fun RecentlyPlayedScreen(
                                     playerViewModel.playSongs(
                                         songsToPlay = queueSongs,
                                         startSong = item.song,
-                                        queueName = "Recently Played"
+                                        queueName = recentlyPlayedTitle
                                     )
                                 },
                                 onMoreOptionsClick = { song ->
@@ -263,7 +269,7 @@ fun RecentlyPlayedScreen(
                 },
                 onPlaySong = {
                     if (queueSongs.isNotEmpty()) {
-                        playerViewModel.playSongs(queueSongs, song, "Recently Played")
+                        playerViewModel.playSongs(queueSongs, song, recentlyPlayedTitle)
                     }
                     showSongInfoBottomSheet = false
                 },
@@ -329,7 +335,7 @@ fun RecentlyPlayedScreen(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                contentDescription = "Back"
+                contentDescription = stringResource(id = R.string.common_back)
             )
         }
     }
@@ -408,7 +414,7 @@ private fun ExpressiveRecentlyPlayedHeader(
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                text = "Recently Played",
+                text = stringResource(R.string.home_recently_played),
                 style = titleStyle,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -459,7 +465,7 @@ private fun RecentlyPlayedRangeSelector(
                 modifier = Modifier.height(44.dp),
                 selected = selected == range,
                 onClick = { onRangeSelected(range) },
-                label = { Text(range.displayName) },
+                label = { Text(stringResource(range.displayNameResId)) },
                 border = BorderStroke(
                     width = 2.dp,
                     color = MaterialTheme.colorScheme.tertiary
@@ -519,7 +525,7 @@ private fun RecentlyPlayedActions(
                 modifier = Modifier.size(ButtonDefaults.IconSize)
             )
             Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-            Text("Play latest")
+            Text(stringResource(R.string.play_latest))
         }
 
         FilledTonalButton(
@@ -540,7 +546,7 @@ private fun RecentlyPlayedActions(
                 modifier = Modifier.size(ButtonDefaults.IconSize)
             )
             Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-            Text("Shuffle")
+            Text(stringResource(R.string.library_shuffle))
         }
     }
 }
@@ -656,12 +662,12 @@ private fun RecentlyPlayedEmptyState(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "No recent plays in ${range.displayName.lowercase()}",
+                text = stringResource(R.string.stats_no_recent_plays, stringResource(range.displayNameResId).lowercase()),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
             Text(
-                text = "Change the range or play more songs to fill this timeline.",
+                text = stringResource(R.string.stats_change_range_prompt),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -678,7 +684,9 @@ private data class TimestampGroup(
 
 private fun groupRecentlyPlayedSongs(
     songs: List<RecentlyPlayedSongUiModel>,
-    range: StatsTimeRange
+    range: StatsTimeRange,
+    todayLabel: String,
+    yesterdayLabel: String
 ): List<TimestampGroup> {
     if (songs.isEmpty()) return emptyList()
     val zoneId = ZoneId.systemDefault()
@@ -694,7 +702,9 @@ private fun groupRecentlyPlayedSongs(
         val timeBucket = resolveTimestampBucket(
             timestamp = item.lastPlayedTimestamp,
             range = range,
-            zoneId = zoneId
+            zoneId = zoneId,
+            todayLabel = todayLabel,
+            yesterdayLabel = yesterdayLabel
         )
         if (currentBucketKey == null || currentBucketKey == timeBucket.key) {
             currentBucketKey = timeBucket.key
@@ -736,7 +746,9 @@ private data class TimestampBucket(
 private fun resolveTimestampBucket(
     timestamp: Long,
     range: StatsTimeRange,
-    zoneId: ZoneId
+    zoneId: ZoneId,
+    todayLabel: String,
+    yesterdayLabel: String
 ): TimestampBucket {
     val safeTimestamp = timestamp.coerceAtLeast(0L)
     val safeNow = System.currentTimeMillis().coerceAtLeast(0L)
@@ -760,14 +772,14 @@ private fun resolveTimestampBucket(
         date == nowDate -> {
             TimestampBucket(
                 key = date.toString(),
-                label = "Today",
+                label = todayLabel,
                 isHourBucket = false
             )
         }
         date == nowDate.minusDays(1) -> {
             TimestampBucket(
                 key = date.toString(),
-                label = "Yesterday",
+                label = yesterdayLabel,
                 isHourBucket = false
             )
         }

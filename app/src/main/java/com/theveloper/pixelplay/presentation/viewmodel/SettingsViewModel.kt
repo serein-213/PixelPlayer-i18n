@@ -17,12 +17,10 @@ import com.theveloper.pixelplay.data.preferences.CarouselStyle
 import com.theveloper.pixelplay.data.preferences.LibraryNavigationMode
 import com.theveloper.pixelplay.data.preferences.ThemePreference
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
-import com.theveloper.pixelplay.data.preferences.AiPreferencesRepository
 import com.theveloper.pixelplay.data.preferences.AlbumArtQuality
 import com.theveloper.pixelplay.data.preferences.AlbumArtPaletteStyle
 import com.theveloper.pixelplay.data.preferences.CollagePattern
 import com.theveloper.pixelplay.data.preferences.FullPlayerLoadingTweaks
-import com.theveloper.pixelplay.data.preferences.ThemePreferencesRepository
 import com.theveloper.pixelplay.data.repository.LyricsRepository
 import com.theveloper.pixelplay.data.repository.MusicRepository
 import com.theveloper.pixelplay.data.model.LyricsSourcePreference
@@ -30,6 +28,7 @@ import com.theveloper.pixelplay.data.worker.SyncManager
 import com.theveloper.pixelplay.data.worker.SyncProgress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import com.theveloper.pixelplay.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.Job
@@ -37,9 +36,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 import com.theveloper.pixelplay.data.preferences.NavBarStyle
+import com.theveloper.pixelplay.data.ai.GeminiModelService
 import com.theveloper.pixelplay.data.ai.GeminiModel
-import com.theveloper.pixelplay.data.ai.provider.AiClientFactory
-import com.theveloper.pixelplay.data.ai.provider.AiProvider
 import com.theveloper.pixelplay.data.preferences.LaunchTab
 import com.theveloper.pixelplay.data.model.Song
 import java.io.File
@@ -148,10 +146,8 @@ private sealed interface SettingsUiUpdate {
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val aiPreferencesRepository: AiPreferencesRepository,
-    private val themePreferencesRepository: ThemePreferencesRepository,
     private val syncManager: SyncManager,
-    private val aiClientFactory: AiClientFactory,
+    private val geminiModelService: GeminiModelService,
     private val lyricsRepository: LyricsRepository,
     private val musicRepository: MusicRepository,
     private val backupManager: BackupManager,
@@ -161,27 +157,14 @@ class SettingsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
-    val geminiApiKey: StateFlow<String> = aiPreferencesRepository.geminiApiKey
+    val geminiApiKey: StateFlow<String> = userPreferencesRepository.geminiApiKey
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
 
-    val geminiModel: StateFlow<String> = aiPreferencesRepository.geminiModel
+    val geminiModel: StateFlow<String> = userPreferencesRepository.geminiModel
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
 
-    val geminiSystemPrompt: StateFlow<String> = aiPreferencesRepository.geminiSystemPrompt
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AiPreferencesRepository.DEFAULT_SYSTEM_PROMPT)
-
-    val deepseekSystemPrompt: StateFlow<String> = aiPreferencesRepository.deepseekSystemPrompt
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AiPreferencesRepository.DEFAULT_DEEPSEEK_SYSTEM_PROMPT)
-    
-    // AI Provider Settings
-    val aiProvider: StateFlow<String> = aiPreferencesRepository.aiProvider
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "GEMINI")
-    
-    val deepseekApiKey: StateFlow<String> = aiPreferencesRepository.deepseekApiKey
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
-    
-    val deepseekModel: StateFlow<String> = aiPreferencesRepository.deepseekModel
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+    val geminiSystemPrompt: StateFlow<String> = userPreferencesRepository.geminiSystemPrompt
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UserPreferencesRepository.DEFAULT_SYSTEM_PROMPT)
 
     private val fileExplorerStateHolder = FileExplorerStateHolder(userPreferencesRepository, viewModelScope, context)
 
@@ -244,9 +227,9 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             combine<Any?, SettingsUiUpdate.Group1>(
                 userPreferencesRepository.appRebrandDialogShownFlow,
-                themePreferencesRepository.appThemeModeFlow,
-                themePreferencesRepository.playerThemePreferenceFlow,
-                themePreferencesRepository.albumArtPaletteStyleFlow,
+                userPreferencesRepository.appThemeModeFlow,
+                userPreferencesRepository.playerThemePreferenceFlow,
+                userPreferencesRepository.albumArtPaletteStyleFlow,
                 userPreferencesRepository.mockGenresEnabledFlow,
                 userPreferencesRepository.navBarCornerRadiusFlow,
                 userPreferencesRepository.navBarStyleFlow,
@@ -456,13 +439,13 @@ class SettingsViewModel @Inject constructor(
     // Método para guardar la preferencia de tema del reproductor
     fun setPlayerThemePreference(preference: String) {
         viewModelScope.launch {
-            themePreferencesRepository.setPlayerThemePreference(preference)
+            userPreferencesRepository.setPlayerThemePreference(preference)
         }
     }
 
     fun setAlbumArtPaletteStyle(style: AlbumArtPaletteStyle) {
         viewModelScope.launch {
-            themePreferencesRepository.setAlbumArtPaletteStyle(style)
+            userPreferencesRepository.setAlbumArtPaletteStyle(style)
         }
     }
 
@@ -480,7 +463,7 @@ class SettingsViewModel @Inject constructor(
 
     fun setAppThemeMode(mode: String) {
         viewModelScope.launch {
-            themePreferencesRepository.setAppThemeMode(mode)
+            userPreferencesRepository.setAppThemeMode(mode)
         }
     }
 
@@ -716,11 +699,11 @@ class SettingsViewModel @Inject constructor(
 
     fun onGeminiApiKeyChange(apiKey: String) {
         viewModelScope.launch {
-            aiPreferencesRepository.setGeminiApiKey(apiKey)
+            userPreferencesRepository.setGeminiApiKey(apiKey)
 
             // Fetch models when API key changes and is not empty
             if (apiKey.isNotBlank()) {
-                fetchAvailableModels(apiKey, "GEMINI")
+                fetchAvailableModels(apiKey)
             } else {
                 // Clear models if API key is empty
                 _uiState.update {
@@ -729,87 +712,18 @@ class SettingsViewModel @Inject constructor(
                         modelsFetchError = null
                     )
                 }
-                aiPreferencesRepository.setGeminiModel("")
+                userPreferencesRepository.setGeminiModel("")
             }
         }
     }
-    
-    fun onAiProviderChange(provider: String) {
-        viewModelScope.launch {
-            aiPreferencesRepository.setAiProvider(provider)
 
-            // Fetch models for the selected provider
-            val apiKey = when (provider) {
-                "GEMINI" -> geminiApiKey.value
-                "DEEPSEEK" -> deepseekApiKey.value
-                else -> ""
-            }
-
-            _uiState.update {
-                it.copy(
-                    availableModels = emptyList(),
-                    modelsFetchError = null
-                )
-            }
-
-            if (apiKey.isNotBlank()) {
-                fetchAvailableModels(apiKey, provider)
-            }
-        }
-    }
-    
-    fun onDeepseekApiKeyChange(apiKey: String) {
-        viewModelScope.launch {
-            aiPreferencesRepository.setDeepseekApiKey(apiKey)
-            
-            // Fetch models when API key changes and is not empty
-            if (apiKey.isNotBlank() && aiProvider.value == "DEEPSEEK") {
-                fetchAvailableModels(apiKey, "DEEPSEEK")
-            } else if (apiKey.isBlank()) {
-                // Clear models if API key is empty
-                _uiState.update {
-                    it.copy(
-                        availableModels = emptyList(),
-                        modelsFetchError = null
-                    )
-                }
-                aiPreferencesRepository.setDeepseekModel("")
-            }
-        }
-    }
-    
-    fun onDeepseekModelChange(model: String) {
-        viewModelScope.launch {
-            aiPreferencesRepository.setDeepseekModel(model)
-        }
-    }
-
-    fun onDeepseekSystemPromptChange(prompt: String) {
-        viewModelScope.launch {
-            aiPreferencesRepository.setDeepseekSystemPrompt(prompt)
-        }
-    }
-
-    fun resetDeepseekSystemPrompt() {
-        viewModelScope.launch {
-            aiPreferencesRepository.resetDeepseekSystemPrompt()
-        }
-    }
-
-    fun fetchAvailableModels(apiKey: String, providerName: String = aiProvider.value) {
+    fun fetchAvailableModels(apiKey: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoadingModels = true, modelsFetchError = null) }
 
-            val result = runCatching {
-                val provider = AiProvider.fromString(providerName)
-                val client = aiClientFactory.createClient(provider, apiKey)
-                client.getAvailableModels(apiKey).map { modelName ->
-                    GeminiModel(name = modelName, displayName = formatModelDisplayName(modelName))
-                }
-            }
+            val result = geminiModelService.fetchAvailableModels(apiKey)
 
-            result.onSuccess { rawModels ->
-                val models = rawModels.distinctBy { it.name }
+            result.onSuccess { models ->
                 _uiState.update {
                     it.copy(
                         availableModels = models,
@@ -819,15 +733,9 @@ class SettingsViewModel @Inject constructor(
                 }
 
                 // Auto-select first model if none is selected
-                val currentModel = when (providerName) {
-                    "DEEPSEEK" -> aiPreferencesRepository.deepseekModel.first()
-                    else -> aiPreferencesRepository.geminiModel.first()
-                }
+                val currentModel = userPreferencesRepository.geminiModel.first()
                 if (currentModel.isEmpty() && models.isNotEmpty()) {
-                    when (providerName) {
-                        "DEEPSEEK" -> aiPreferencesRepository.setDeepseekModel(models.first().name)
-                        else -> aiPreferencesRepository.setGeminiModel(models.first().name)
-                    }
+                    userPreferencesRepository.setGeminiModel(models.first().name)
                 }
             }.onFailure { error ->
                 _uiState.update {
@@ -840,21 +748,9 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun formatModelDisplayName(modelName: String): String {
-        return modelName
-            .removePrefix("models/")
-            .replace('-', ' ')
-            .replace('_', ' ')
-            .split(' ')
-            .filter { it.isNotBlank() }
-            .joinToString(" ") { token ->
-                token.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-            }
-    }
-
     fun onGeminiModelChange(modelName: String) {
         viewModelScope.launch {
-            aiPreferencesRepository.setGeminiModel(modelName)
+            userPreferencesRepository.setGeminiModel(modelName)
         }
     }
 
@@ -866,13 +762,13 @@ class SettingsViewModel @Inject constructor(
 
     fun onGeminiSystemPromptChange(prompt: String) {
         viewModelScope.launch {
-            aiPreferencesRepository.setGeminiSystemPrompt(prompt)
+            userPreferencesRepository.setGeminiSystemPrompt(prompt)
         }
     }
 
     fun resetGeminiSystemPrompt() {
         viewModelScope.launch {
-            aiPreferencesRepository.resetGeminiSystemPrompt()
+            userPreferencesRepository.resetGeminiSystemPrompt()
         }
     }
 
@@ -948,8 +844,8 @@ class SettingsViewModel @Inject constructor(
                 _dataTransferProgress.value = progress
             }
             result.fold(
-                onSuccess = { _dataTransferEvents.emit("Data exported successfully") },
-                onFailure = { _dataTransferEvents.emit("Export failed: ${it.localizedMessage ?: "Unknown error"}") }
+                onSuccess = { _dataTransferEvents.emit(context.getString(R.string.backup_export_success)) },
+                onFailure = { _dataTransferEvents.emit(context.getString(R.string.backup_export_failed, it.localizedMessage ?: "Unknown error")) }
             )
             delay(300)
             _uiState.update { it.copy(isDataTransferInProgress = false) }
@@ -967,7 +863,7 @@ class SettingsViewModel @Inject constructor(
                     _uiState.update { it.copy(restorePlan = plan, isInspectingBackup = false) }
                 },
                 onFailure = { error ->
-                    _dataTransferEvents.emit("Invalid backup: ${error.localizedMessage ?: "Unknown error"}")
+                    _dataTransferEvents.emit(context.getString(R.string.backup_invalid, error.localizedMessage ?: "Unknown error"))
                     _uiState.update { it.copy(isInspectingBackup = false) }
                 }
             )
@@ -999,20 +895,16 @@ class SettingsViewModel @Inject constructor(
             }
             when (result) {
                 is RestoreResult.Success -> {
-                    _dataTransferEvents.emit("Data restored successfully")
+                    _dataTransferEvents.emit(context.getString(R.string.backup_restore_success))
                     syncManager.sync()
                 }
                 is RestoreResult.PartialFailure -> {
-                    val failedNames = result.failed.entries.joinToString { "${it.key.label}: ${it.value}" }
-                    _dataTransferEvents.emit(
-                        "Restore completed with unresolved issues. Failed: $failedNames"
-                    )
-                    if (result.succeeded.isNotEmpty() || !result.rolledBack) {
-                        syncManager.sync()
-                    }
+                    val failedNames = result.failed.entries.joinToString { "${it.key.getLabel(context)}: ${it.value}" }
+                    _dataTransferEvents.emit(context.getString(R.string.backup_restore_partial, failedNames))
+                    if (result.succeeded.isNotEmpty()) syncManager.sync()
                 }
                 is RestoreResult.TotalFailure -> {
-                    _dataTransferEvents.emit("Restore failed: ${result.error}")
+                    _dataTransferEvents.emit(context.getString(R.string.backup_restore_failed, result.error))
                 }
             }
             delay(300)

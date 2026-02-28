@@ -1,9 +1,7 @@
 package com.theveloper.pixelplay.presentation.components
 
 import android.app.Activity
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -64,9 +62,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil.size.Size
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
+import androidx.compose.ui.res.stringResource
 
 /**
  * Bottom sheet for batch operations on multiple selected songs.
@@ -116,27 +116,6 @@ fun MultiSelectionBottomSheet(
         cornerRadiusTL = evenCornerRadius, smoothnessAsPercentBL = 60,
         cornerRadiusBL = evenCornerRadius, smoothnessAsPercentTR = 60
     )
-
-    val favoriteButtonCornerRadius by animateDpAsState(
-        targetValue = if (allAreLiked) evenCornerRadius else 60.dp,
-        animationSpec = tween(durationMillis = 300), label = "FavoriteCornerAnimation"
-    )
-    val favoriteButtonContainerColor by animateColorAsState(
-        targetValue = if (allAreLiked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
-        animationSpec = tween(durationMillis = 300), label = "FavoriteContainerColorAnimation"
-    )
-    val favoriteButtonContentColor by animateColorAsState(
-        targetValue = if (allAreLiked) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-        animationSpec = tween(durationMillis = 300), label = "FavoriteContentColorAnimation"
-    )
-
-    val favoriteButtonShape = remember(favoriteButtonCornerRadius) {
-        AbsoluteSmoothCornerShape(
-            cornerRadiusTR = favoriteButtonCornerRadius, smoothnessAsPercentBR = 60, cornerRadiusBR = favoriteButtonCornerRadius,
-            smoothnessAsPercentTL = 60, cornerRadiusTL = favoriteButtonCornerRadius, smoothnessAsPercentBL = 60,
-            cornerRadiusBL = favoriteButtonCornerRadius, smoothnessAsPercentTR = 60
-        )
-    }
     
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -182,7 +161,7 @@ fun MultiSelectionBottomSheet(
                     // Song count and label
                     Column {
                         Text(
-                            text = "${selectedSongs.size} SONGS",
+                            text = stringResource(R.string.selection_songs_count, selectedSongs.size),
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
                             fontFamily = GoogleSansRounded,
@@ -194,7 +173,7 @@ fun MultiSelectionBottomSheet(
                                 //.fillMaxWidth()
                         )
                         Text(
-                            text = "selected",
+                            text = stringResource(R.string.selection_selected_label),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontFamily = GoogleSansRounded
@@ -230,13 +209,16 @@ fun MultiSelectionBottomSheet(
                                 elevation = FloatingActionButtonDefaults.elevation(0.dp),
                                 shape = buttonShape,
                                 icon = {
-                                    Icon(Icons.Rounded.PlayArrow, contentDescription = "Play all")
+                                    Icon(
+                                        Icons.Rounded.PlayArrow,
+                                        contentDescription = stringResource(R.string.selection_play_all_cd)
+                                    )
                                 },
                                 text = {
                                     Text(
                                         modifier = Modifier.padding(end = 0.dp),
                                         style = MaterialTheme.typography.titleMediumEmphasized,
-                                        text = "Play All"
+                                        text = stringResource(R.string.selection_play_all)
                                     )
                                 }
                             )
@@ -251,19 +233,29 @@ fun MultiSelectionBottomSheet(
                                     onToggleLikeAll(!allAreLiked) // true = like all, false = unlike all
                                     onDismiss()
                                 },
-                                shape = favoriteButtonShape,
+                                shape = buttonShape,
                                 colors = IconButtonDefaults.filledIconButtonColors(
-                                    containerColor = favoriteButtonContainerColor,
-                                    contentColor = favoriteButtonContentColor
+                                    containerColor = if (allAreLiked) 
+                                        MaterialTheme.colorScheme.surfaceContainerHigh 
+                                    else 
+                                        MaterialTheme.colorScheme.secondaryContainer,
+                                    contentColor = if (allAreLiked) 
+                                        MaterialTheme.colorScheme.onSurfaceVariant 
+                                    else 
+                                        MaterialTheme.colorScheme.onSecondaryContainer
                                 )
                             ) {
                                 Icon(
                                     modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize),
                                     imageVector = if (allAreLiked) 
                                         Icons.Rounded.HeartBroken 
-                                    else
-                                        Icons.Rounded.FavoriteBorder,
-                                    contentDescription = if (allAreLiked) "Unlike all" else "Like all"
+                                    else 
+                                        Icons.Rounded.Favorite,
+                                    contentDescription = if (allAreLiked) {
+                                        stringResource(R.string.selection_unlike_all_cd)
+                                    } else {
+                                        stringResource(R.string.selection_like_all_cd)
+                                    }
                                 )
                             }
                             
@@ -284,7 +276,7 @@ fun MultiSelectionBottomSheet(
                                 Icon(
                                     modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize),
                                     imageVector = Icons.Rounded.Share,
-                                    contentDescription = "Share all as ZIP"
+                                    contentDescription = stringResource(R.string.selection_share_all_cd)
                                 )
                             }
                         }
@@ -316,10 +308,10 @@ fun MultiSelectionBottomSheet(
                             ) {
                                 Icon(
                                     Icons.AutoMirrored.Rounded.QueueMusic,
-                                    contentDescription = "Add all to Queue"
+                                    contentDescription = stringResource(R.string.selection_add_to_queue_cd)
                                 )
                                 Spacer(Modifier.width(14.dp))
-                                Text("Add to Queue")
+                                Text(stringResource(R.string.selection_add_to_queue))
                             }
                             
                             FilledTonalButton(
@@ -339,10 +331,10 @@ fun MultiSelectionBottomSheet(
                             ) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.QueueMusic,
-                                    contentDescription = "Play Next"
+                                    contentDescription = stringResource(R.string.selection_play_next_cd)
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Text("Next")
+                                Text(stringResource(R.string.selection_next_label))
                             }
                         }
                     }
@@ -372,10 +364,10 @@ fun MultiSelectionBottomSheet(
                             ) {
                                 Icon(
                                     Icons.AutoMirrored.Rounded.PlaylistAdd,
-                                    contentDescription = "Add to Playlist"
+                                    contentDescription = stringResource(R.string.selection_add_to_playlist_cd)
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Text("Playlist")
+                                Text(stringResource(R.string.selection_playlist_label))
                             }
                             
                             FilledTonalButton(
@@ -398,10 +390,10 @@ fun MultiSelectionBottomSheet(
                             ) {
                                 Icon(
                                     Icons.Rounded.Delete,
-                                    contentDescription = "Delete all"
+                                    contentDescription = stringResource(R.string.selection_delete_all_cd)
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Text("Delete All")
+                                Text(stringResource(R.string.selection_delete_all))
                             }
                         }
                     }

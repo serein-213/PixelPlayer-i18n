@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
@@ -42,6 +43,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.theveloper.pixelplay.data.model.SortOption
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
 
@@ -54,8 +56,6 @@ fun LibrarySortBottomSheet(
     onDismiss: () -> Unit,
     onOptionSelected: (SortOption) -> Unit,
     showViewToggle: Boolean = false,
-    viewSectionTitle: String = "View",
-    viewToggleLabel: String = "Playlist View",
     viewToggleChecked: Boolean = false,
     onViewToggleChange: (Boolean) -> Unit = {},
     viewToggleContent: (@Composable () -> Unit)? = null,
@@ -152,7 +152,7 @@ fun LibrarySortBottomSheet(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = option.displayName,
+                                text = stringResource(option.displayNameStringResId),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface
                             )
@@ -166,32 +166,101 @@ fun LibrarySortBottomSheet(
             }
 
             if (showViewToggle || viewToggleContent != null) {
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = viewSectionTitle,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontFamily = GoogleSansRounded,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 2.dp, top = 8.dp, bottom = 8.dp)
-                )
-
                 if (viewToggleContent != null) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = stringResource(R.string.library_sort_view_label),
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontFamily = GoogleSansRounded,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 2.dp, top = 8.dp, bottom = 8.dp)
+                    )
+                    
                     viewToggleContent()
                 } else {
-                    LibrarySheetToggleCard(
-                        label = viewToggleLabel,
-                        checked = viewToggleChecked,
-                        boxBackgroundColor = boxBackgroundColor,
-                        boxCornerRadius = boxCornerRadius,
-                        onCheckedChange = onViewToggleChange
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = stringResource(R.string.library_sort_view_label),
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontFamily = GoogleSansRounded,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 2.dp, top = 8.dp, bottom = 8.dp)
                     )
+
+                    val viewContainerColor = remember(viewToggleChecked) {
+                        if (viewToggleChecked) selectedColor else unselectedColor
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 0.dp)
+                            .clip(
+                                AbsoluteSmoothCornerShape(
+                                    cornerRadiusBL = boxCornerRadius,
+                                    smoothnessAsPercentBR = 60,
+                                    cornerRadiusTR = boxCornerRadius,
+                                    smoothnessAsPercentTL = 60,
+                                    cornerRadiusTL = boxCornerRadius,
+                                    smoothnessAsPercentBL = 60,
+                                    cornerRadiusBR = boxCornerRadius,
+                                    smoothnessAsPercentTR = 60
+                                )
+                            ) // Apply animated corner radius for clipping
+                            .background(color = boxBackgroundColor)   // Apply animated background color
+                            .clickable(
+                                onClick = {
+                                    onViewToggleChange(!viewToggleChecked)
+                                }
+                            )
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp, horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(R.string.library_sort_playlist_view_label),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(start = 6.dp, end = 8.dp),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = if (viewToggleChecked) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onSurface // Adjust text color for contrast
+                            )
+                            Switch(
+                                checked = viewToggleChecked,
+                                onCheckedChange = {
+                                    onViewToggleChange(it)
+                                },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = MaterialTheme.colorScheme.tertiary,
+                                    checkedTrackColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                    uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                                ),
+                                thumbContent = if (viewToggleChecked) {
+                                    {
+                                        Icon(
+                                            imageVector = Icons.Rounded.Check,
+                                            contentDescription = "Switch is on",
+                                            tint = MaterialTheme.colorScheme.tertiaryContainer,
+                                            modifier = Modifier.size(SwitchDefaults.IconSize),
+                                        )
+                                    }
+                                } else {
+                                    null
+                                }
+                            )
+                        }
+                    }
                 }
             }
 
             if (sourceToggleContent != null) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "Source",
+                    text = stringResource(R.string.library_sort_source_label),
                     style = MaterialTheme.typography.headlineSmall,
                     fontFamily = GoogleSansRounded,
                     fontWeight = FontWeight.Bold,
@@ -201,73 +270,6 @@ fun LibrarySortBottomSheet(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}
-
-@Composable
-private fun LibrarySheetToggleCard(
-    label: String,
-    checked: Boolean,
-    boxBackgroundColor: Color,
-    boxCornerRadius: androidx.compose.ui.unit.Dp,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 0.dp)
-            .clip(
-                AbsoluteSmoothCornerShape(
-                    cornerRadiusBL = boxCornerRadius,
-                    smoothnessAsPercentBR = 60,
-                    cornerRadiusTR = boxCornerRadius,
-                    smoothnessAsPercentTL = 60,
-                    cornerRadiusTL = boxCornerRadius,
-                    smoothnessAsPercentBL = 60,
-                    cornerRadiusBR = boxCornerRadius,
-                    smoothnessAsPercentTR = 60
-                )
-            )
-            .background(color = boxBackgroundColor)
-            .clickable(onClick = { onCheckedChange(!checked) })
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp, horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = label,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 6.dp, end = 8.dp),
-                style = MaterialTheme.typography.bodyLarge,
-                color = if (checked) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onSurface
-            )
-            Switch(
-                checked = checked,
-                onCheckedChange = onCheckedChange,
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = MaterialTheme.colorScheme.tertiary,
-                    checkedTrackColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
-                ),
-                thumbContent = if (checked) {
-                    {
-                        Icon(
-                            imageVector = Icons.Rounded.Check,
-                            contentDescription = "Switch is on",
-                            tint = MaterialTheme.colorScheme.tertiaryContainer,
-                            modifier = Modifier.size(SwitchDefaults.IconSize),
-                        )
-                    }
-                } else {
-                    null
-                }
-            )
         }
     }
 }

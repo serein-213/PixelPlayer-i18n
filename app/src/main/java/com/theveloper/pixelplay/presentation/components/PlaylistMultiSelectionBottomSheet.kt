@@ -44,6 +44,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
+import com.theveloper.pixelplay.R
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -183,10 +185,10 @@ fun PlaylistMultiSelectionBottomSheet(
                             ) {
                                 Icon(
                                     Icons.Rounded.Delete,
-                                    contentDescription = "Delete all"
+                                    contentDescription = stringResource(R.string.playlist_selection_delete_all_cd)
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Text("Delete")
+                                Text(stringResource(R.string.playlist_selection_delete))
                             }
 
                             FilledTonalButton(
@@ -205,10 +207,10 @@ fun PlaylistMultiSelectionBottomSheet(
                             ) {
                                 Icon(
                                     Icons.Rounded.FileDownload,
-                                    contentDescription = "Export all"
+                                    contentDescription = stringResource(R.string.playlist_selection_export_all_cd)
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Text("Export")
+                                Text(stringResource(R.string.playlist_selection_export))
                             }
                         }
                     }
@@ -238,10 +240,10 @@ fun PlaylistMultiSelectionBottomSheet(
                             ) {
                                 Icon(
                                     Icons.Rounded.Merge,
-                                    contentDescription = "Merge all"
+                                    contentDescription = stringResource(R.string.playlist_selection_merge_all_cd)
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Text("Merge")
+                                Text(stringResource(R.string.playlist_selection_merge))
                             }
 
                             FilledTonalButton(
@@ -260,10 +262,10 @@ fun PlaylistMultiSelectionBottomSheet(
                             ) {
                                 Icon(
                                     Icons.Rounded.Share,
-                                    contentDescription = "Share all"
+                                    contentDescription = stringResource(R.string.playlist_selection_share_all_cd)
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Text("Share")
+                                Text(stringResource(R.string.playlist_selection_share))
                             }
                         }
                     }
