@@ -179,6 +179,10 @@ fun SettingsCategoryScreen(
     val geminiApiKey by settingsViewModel.geminiApiKey.collectAsStateWithLifecycle()
     val geminiModel by settingsViewModel.geminiModel.collectAsStateWithLifecycle()
     val geminiSystemPrompt by settingsViewModel.geminiSystemPrompt.collectAsStateWithLifecycle()
+    val aiProvider by settingsViewModel.aiProvider.collectAsStateWithLifecycle()
+    val deepseekApiKey by settingsViewModel.deepseekApiKey.collectAsStateWithLifecycle()
+    val deepseekModel by settingsViewModel.deepseekModel.collectAsStateWithLifecycle()
+    val deepseekSystemPrompt by settingsViewModel.deepseekSystemPrompt.collectAsStateWithLifecycle()
     val currentPath by settingsViewModel.currentPath.collectAsStateWithLifecycle()
     val directoryChildren by settingsViewModel.currentDirectoryChildren.collectAsStateWithLifecycle()
     val availableStorages by settingsViewModel.availableStorages.collectAsStateWithLifecycle()
@@ -267,12 +271,16 @@ fun SettingsCategoryScreen(
     }
 
     // Fetch models on page load when API key exists and models are not already loaded
-    LaunchedEffect(category, geminiApiKey) {
-        if (category == SettingsCategory.AI_INTEGRATION && 
-            geminiApiKey.isNotBlank() && 
-            uiState.availableModels.isEmpty() && 
-            !uiState.isLoadingModels) {
-            settingsViewModel.fetchAvailableModels(geminiApiKey)
+    LaunchedEffect(category, aiProvider, geminiApiKey, deepseekApiKey) {
+        if (category == SettingsCategory.AI_INTEGRATION && !uiState.isLoadingModels) {
+            val apiKey = when (aiProvider) {
+                "DEEPSEEK" -> deepseekApiKey
+                else -> geminiApiKey
+            }
+            
+            if (apiKey.isNotBlank() && uiState.availableModels.isEmpty()) {
+                settingsViewModel.fetchAvailableModels(apiKey, aiProvider)
+            }
         }
     }
 
@@ -788,16 +796,50 @@ fun SettingsCategoryScreen(
                             }
                         }
                         SettingsCategory.AI_INTEGRATION -> {
-                            SettingsSubsection(title = "Credentials") {
-                                GeminiApiKeyItem(
-                                    apiKey = geminiApiKey,
-                                    onApiKeySave = { settingsViewModel.onGeminiApiKeyChange(it) },
-                                    title = "Gemini API Key",
-                                    subtitle = "Needed for AI-powered features."
+                            // AI Provider Selection
+                            SettingsSubsection(title = "AI Provider") {
+                                ThemeSelectorItem(
+                                    label = "Provider",
+                                    description = "Choose your AI provider",
+                                    options = mapOf(
+                                        "GEMINI" to "Google Gemini",
+                                        "DEEPSEEK" to "DeepSeek"
+                                    ),
+                                    selectedKey = aiProvider,
+                                    onSelectionChanged = { settingsViewModel.onAiProviderChange(it) },
+                                    leadingIcon = { Icon(Icons.Rounded.Science, null, tint = MaterialTheme.colorScheme.secondary) }
                                 )
                             }
+                            
+                            // API Key Section
+                            SettingsSubsection(title = "Credentials") {
+                                when (aiProvider) {
+                                    "GEMINI" -> {
+                                        GeminiApiKeyItem(
+                                            apiKey = geminiApiKey,
+                                            onApiKeySave = { settingsViewModel.onGeminiApiKeyChange(it) },
+                                            title = "Gemini API Key",
+                                            subtitle = "Needed for AI-powered features."
+                                        )
+                                    }
+                                    "DEEPSEEK" -> {
+                                        GeminiApiKeyItem(
+                                            apiKey = deepseekApiKey,
+                                            onApiKeySave = { settingsViewModel.onDeepseekApiKeyChange(it) },
+                                            title = "DeepSeek API Key",
+                                            subtitle = "Needed for AI-powered features."
+                                        )
+                                    }
+                                }
+                            }
 
-                            if (uiState.availableModels.isNotEmpty()) {
+                            // Model Selection Section
+                            val hasApiKey = when (aiProvider) {
+                                "DEEPSEEK" -> deepseekApiKey.isNotBlank()
+                                else -> geminiApiKey.isNotBlank()
+                            }
+                            
+                            if (hasApiKey) {
                                 SettingsSubsection(title = "Model Selection") {
                                     if (uiState.isLoadingModels) {
                                         Surface(
@@ -835,30 +877,60 @@ fun SettingsCategoryScreen(
                                             )
                                         }
                                     } else if (uiState.availableModels.isNotEmpty()) {
+                                        val currentModel = when (aiProvider) {
+                                            "GEMINI" -> geminiModel
+                                            "DEEPSEEK" -> deepseekModel
+                                            else -> ""
+                                        }
+                                        val modelLabel = when (aiProvider) {
+                                            "GEMINI" -> "Select the Gemini model to use."
+                                            "DEEPSEEK" -> "Select the DeepSeek model to use."
+                                            else -> "Select a model."
+                                        }
                                         ThemeSelectorItem(
                                             label = "AI Model",
-                                            description = "Select the Gemini model to use.",
+                                            description = modelLabel,
                                             options = uiState.availableModels.associate { it.name to it.displayName },
-                                            selectedKey = geminiModel.ifEmpty { uiState.availableModels.firstOrNull()?.name ?: "" },
-                                            onSelectionChanged = { settingsViewModel.onGeminiModelChange(it) },
+                                            selectedKey = currentModel.ifEmpty { uiState.availableModels.firstOrNull()?.name ?: "" },
+                                            onSelectionChanged = { 
+                                                when (aiProvider) {
+                                                    "GEMINI" -> settingsViewModel.onGeminiModelChange(it)
+                                                    "DEEPSEEK" -> settingsViewModel.onDeepseekModelChange(it)
+                                                }
+                                            },
                                             leadingIcon = { Icon(Icons.Rounded.Science, null, tint = MaterialTheme.colorScheme.secondary) }
                                         )
                                     }
                                 }
                             }
 
+                            // Prompt Behavior Section
                             SettingsSubsection(
                                 title = "Prompt Behavior",
                                 addBottomSpace = false
                             ) {
-                                GeminiSystemPromptItem(
-                                    systemPrompt = geminiSystemPrompt,
-                                    defaultPrompt = com.theveloper.pixelplay.data.preferences.UserPreferencesRepository.DEFAULT_SYSTEM_PROMPT,
-                                    onSystemPromptSave = { settingsViewModel.onGeminiSystemPromptChange(it) },
-                                    onReset = { settingsViewModel.resetGeminiSystemPrompt() },
-                                    title = "System Prompt",
-                                    subtitle = "Customize how the AI behaves."
-                                )
+                                when (aiProvider) {
+                                    "GEMINI" -> {
+                                        GeminiSystemPromptItem(
+                                            systemPrompt = geminiSystemPrompt,
+                                            defaultPrompt = com.theveloper.pixelplay.data.preferences.UserPreferencesRepository.DEFAULT_SYSTEM_PROMPT,
+                                            onSystemPromptSave = { settingsViewModel.onGeminiSystemPromptChange(it) },
+                                            onReset = { settingsViewModel.resetGeminiSystemPrompt() },
+                                            title = "System Prompt",
+                                            subtitle = "Customize how the AI behaves."
+                                        )
+                                    }
+                                    "DEEPSEEK" -> {
+                                        GeminiSystemPromptItem(
+                                            systemPrompt = deepseekSystemPrompt,
+                                            defaultPrompt = com.theveloper.pixelplay.data.preferences.UserPreferencesRepository.DEFAULT_DEEPSEEK_SYSTEM_PROMPT,
+                                            onSystemPromptSave = { settingsViewModel.onDeepseekSystemPromptChange(it) },
+                                            onReset = { settingsViewModel.resetDeepseekSystemPrompt() },
+                                            title = "System Prompt",
+                                            subtitle = "Customize how the AI behaves."
+                                        )
+                                    }
+                                }
                             }
                         }
                         SettingsCategory.BACKUP_RESTORE -> {
