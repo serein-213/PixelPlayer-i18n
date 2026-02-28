@@ -46,6 +46,8 @@ import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.model.Lyrics
 import com.theveloper.pixelplay.presentation.components.LocalMaterialTheme
 import com.theveloper.pixelplay.presentation.components.player.BottomToggleRow
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -104,7 +106,7 @@ fun LyricsMoreBottomSheet(
                 Text(
                     modifier = Modifier
                         .padding(start = 6.dp, bottom = 6.dp),
-                    text = "Lyrics",
+                    text = stringResource(R.string.lyrics_section_title),
                     color = accentColor,
                     style = MaterialTheme.typography.bodyLargeEmphasized
                 )
@@ -167,8 +169,8 @@ fun LyricsMoreBottomSheet(
             if (showResetDialog) {
                 androidx.compose.material3.AlertDialog(
                     onDismissRequest = { showResetDialog = false },
-                    title = { Text("Reset Lyrics?") },
-                    text = { Text("Are you sure you want to reset the lyrics for this song?") },
+                    title = { Text(stringResource(R.string.lyrics_reset_title)) },
+                    text = { Text(stringResource(R.string.lyrics_reset_message)) },
                     confirmButton = {
                         androidx.compose.material3.TextButton(
                             onClick = {
@@ -177,14 +179,14 @@ fun LyricsMoreBottomSheet(
                                 onResetImportedLyrics()
                             }
                         ) {
-                            Text("Reset", color = MaterialTheme.colorScheme.error)
+                            Text(stringResource(R.string.lyrics_reset_confirm), color = MaterialTheme.colorScheme.error)
                         }
                     },
                     dismissButton = {
                         androidx.compose.material3.TextButton(
                             onClick = { showResetDialog = false }
                         ) {
-                            Text("Cancel")
+                            Text(stringResource(R.string.cancel))
                         }
                     },
                     containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -202,12 +204,20 @@ fun LyricsMoreBottomSheet(
                      Text(
                          modifier = Modifier
                              .padding(start = 6.dp, bottom = 6.dp),
-                         text = "Controls",
+                        text = stringResource(R.string.lyrics_controls_title),
                          color = accentColor,
                          style = MaterialTheme.typography.bodyLargeEmphasized
                      )
                     ListItem(
-                        headlineContent = { Text(if (isSyncControlsVisible) "Hide Sync Controls" else "Adjust Sync") },
+                        headlineContent = {
+                            Text(
+                                if (isSyncControlsVisible) {
+                                    stringResource(R.string.lyrics_hide_sync_controls)
+                                } else {
+                                    stringResource(R.string.lyrics_adjust_sync)
+                                }
+                            )
+                        },
                         leadingContent = {
                             Icon(
                                 imageVector = Icons.Rounded.Tune,
@@ -231,7 +241,7 @@ fun LyricsMoreBottomSheet(
 
                     // Immersive Mode Toggle
                     ListItem(
-                        headlineContent = { Text("Disable Immersive (Once)") },
+                        headlineContent = { Text(stringResource(R.string.lyrics_disable_immersive_once)) },
                         leadingContent = {
                             Icon(
                                 imageVector = Icons.Rounded.VisibilityOff,

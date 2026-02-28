@@ -89,6 +89,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -198,7 +199,7 @@ fun TelegramLoginScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Telegram Login",
+                        text = stringResource(R.string.telegram_login_title),
                         fontFamily = GoogleSansRounded,
                         style = MaterialTheme.typography.titleMedium
                     )
@@ -218,7 +219,7 @@ fun TelegramLoginScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.telegram_login_back)
                         )
                     }
                 },
@@ -258,7 +259,7 @@ fun TelegramLoginScreen(
                     enabled = false,
                     label = {
                         Text(
-                            text = "You are editing your number. Sending code again will replace the previous one.",
+                            text = stringResource(R.string.telegram_login_editing_notice),
                             fontFamily = GoogleSansRounded
                         )
                     },
@@ -393,7 +394,7 @@ private fun TelegramBrandingHeader() {
         Spacer(modifier = Modifier.height(18.dp))
 
         Text(
-            text = "Connect Telegram",
+            text = stringResource(R.string.telegram_login_connect),
             style = MaterialTheme.typography.headlineSmall,
             fontFamily = GoogleSansRounded,
             fontWeight = FontWeight.Bold,
@@ -403,7 +404,7 @@ private fun TelegramBrandingHeader() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Login with robust error handling, timeout control, and editable steps.",
+            text = stringResource(R.string.telegram_login_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             fontFamily = GoogleSansRounded,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -585,8 +586,8 @@ fun ExpressivePhoneNumberInput(
     ) {
         AuthStepHeader(
             icon = Icons.Rounded.Phone,
-            title = "Phone Number",
-            subtitle = "Enter your Telegram number. You can come back and edit it later."
+            title = stringResource(R.string.telegram_login_phone_number),
+            subtitle = stringResource(R.string.telegram_login_enter_phone_subtitle)
         )
 
         Spacer(Modifier.height(24.dp))
@@ -624,7 +625,7 @@ fun ExpressivePhoneNumberInput(
                             )
                             Spacer(Modifier.width(12.dp))
                             Text(
-                                text = "Phone number",
+                                text = stringResource(R.string.telegram_login_phone_number_input),
                                 style = MaterialTheme.typography.bodyLarge.copy(
                                     fontFamily = GoogleSansRounded,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f)
@@ -747,7 +748,7 @@ fun ExpressivePhoneNumberInput(
 
             if (isExpanded) {
                 Text(
-                    text = "Phone number",
+                    text = stringResource(R.string.telegram_login_phone_number_input),
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontFamily = GoogleSansRounded,
                         color = if (isActive) MaterialTheme.colorScheme.primary
@@ -766,7 +767,7 @@ fun ExpressivePhoneNumberInput(
         Spacer(Modifier.height(28.dp))
 
         ExpressiveButton(
-            text = "Send Code",
+            text = stringResource(R.string.telegram_login_send_code),
             onClick = onSend,
             enabled = countryCode.isNotEmpty() && localNumber.isNotBlank() && !isLoading,
             loading = isLoading
@@ -801,8 +802,8 @@ fun ExpressiveCodeInput(
     ) {
         AuthStepHeader(
             icon = Icons.Rounded.Sms,
-            title = "Verification Code",
-            subtitle = "Enter the code from Telegram. If the number is wrong, go back and edit it."
+            title = stringResource(R.string.telegram_login_verification_code_title),
+            subtitle = stringResource(R.string.telegram_login_enter_code_subtitle)
         )
 
         Spacer(Modifier.height(24.dp))
@@ -810,8 +811,8 @@ fun ExpressiveCodeInput(
         OutlinedTextField(
             value = code,
             onValueChange = { onCodeChanged(it.filter(Char::isDigit).take(8)) },
-            label = { Text("Code", fontFamily = GoogleSansRounded) },
-            placeholder = { Text("12345", fontFamily = GoogleSansRounded) },
+            label = { Text(stringResource(R.string.telegram_login_code_input_label), fontFamily = GoogleSansRounded) },
+            placeholder = { Text(stringResource(R.string.telegram_login_code_placeholder), fontFamily = GoogleSansRounded) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Rounded.Sms,
@@ -845,17 +846,17 @@ fun ExpressiveCodeInput(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TextButton(onClick = onEditPhone, enabled = !isLoading) {
-                Text(text = "Edit phone", fontFamily = GoogleSansRounded)
+                Text(text = stringResource(R.string.telegram_login_edit_phone), fontFamily = GoogleSansRounded)
             }
             TextButton(onClick = onResendCode, enabled = !isLoading) {
-                Text(text = "Resend code", fontFamily = GoogleSansRounded)
+                Text(text = stringResource(R.string.telegram_login_resend_code), fontFamily = GoogleSansRounded)
             }
         }
 
         Spacer(Modifier.height(18.dp))
 
         ExpressiveButton(
-            text = "Verify Code",
+            text = stringResource(R.string.telegram_login_verify_code),
             onClick = onCheck,
             enabled = code.length >= 3 && !isLoading,
             loading = isLoading
@@ -889,8 +890,8 @@ fun ExpressivePasswordInput(
     ) {
         AuthStepHeader(
             icon = Icons.Rounded.Lock,
-            title = "Two-Step Password",
-            subtitle = "Enter your Telegram password. You can still go back to fix your number."
+            title = stringResource(R.string.telegram_login_two_step_password_title),
+            subtitle = stringResource(R.string.telegram_login_enter_password_subtitle)
         )
 
         Spacer(Modifier.height(24.dp))
@@ -898,7 +899,7 @@ fun ExpressivePasswordInput(
         OutlinedTextField(
             value = password,
             onValueChange = onPasswordChanged,
-            label = { Text("Password", fontFamily = GoogleSansRounded) },
+            label = { Text(stringResource(R.string.telegram_login_password_input_label), fontFamily = GoogleSansRounded) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Rounded.Lock,
@@ -933,14 +934,14 @@ fun ExpressivePasswordInput(
             horizontalArrangement = Arrangement.End
         ) {
             TextButton(onClick = onEditPhone, enabled = !isLoading) {
-                Text(text = "Edit phone", fontFamily = GoogleSansRounded)
+                Text(text = stringResource(R.string.telegram_login_edit_phone), fontFamily = GoogleSansRounded)
             }
         }
 
         Spacer(Modifier.height(18.dp))
 
         ExpressiveButton(
-            text = "Verify Password",
+            text = stringResource(R.string.telegram_login_verify_password),
             onClick = onCheck,
             enabled = password.isNotBlank() && !isLoading,
             loading = isLoading

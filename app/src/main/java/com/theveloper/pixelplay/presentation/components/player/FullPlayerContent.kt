@@ -527,7 +527,7 @@ fun FullPlayerContent(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Text(
                                         modifier = Modifier.padding(start = 18.dp),
-                                        text = "Now Playing",
+                                        text = stringResource(R.string.settings_now_playing_title),
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
                                         style = MaterialTheme.typography.labelLargeEmphasized,

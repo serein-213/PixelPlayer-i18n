@@ -38,9 +38,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
 
@@ -126,7 +128,7 @@ fun SelectionActionRow(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "All",
+                    text = stringResource(R.string.selection_all),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Medium,
                     fontFamily = GoogleSansRounded
@@ -151,7 +153,7 @@ fun SelectionActionRow(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "Deselect",
+                    text = stringResource(R.string.selection_deselect),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Medium,
                     fontFamily = GoogleSansRounded
@@ -174,12 +176,12 @@ fun SelectionActionRow(
         ) {
             Icon(
                 imageVector = Icons.Rounded.MoreHoriz,
-                contentDescription = "More options",
+                contentDescription = stringResource(R.string.selection_more_options_cd),
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(
-                text = "Options",
+                text = stringResource(R.string.selection_options),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Medium,
                 fontFamily = GoogleSansRounded

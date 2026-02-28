@@ -411,7 +411,7 @@ private fun ResultItemCard(
                             contentColor = MaterialTheme.colorScheme.onPrimary
                         ) {
                             Text(
-                                text = "SYNCED",
+                                text = stringResource(R.string.lyrics_synced_tag),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
@@ -487,14 +487,14 @@ fun NotFoundContent(
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Text(
-            text = "Title",
+            text = stringResource(R.string.fetch_lyrics_title_placeholder),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.labelLarge
         )
         OutlinedTextField(
             value = title,
             onValueChange = { title = it },
-            placeholder = { Text("Title") },
+            placeholder = { Text(stringResource(R.string.fetch_lyrics_title_placeholder)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )
@@ -507,14 +507,14 @@ fun NotFoundContent(
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Text(
-            text = "Artist (optional)",
+            text = stringResource(R.string.fetch_lyrics_artist_placeholder),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.labelLarge
         )
         OutlinedTextField(
             value = artist,
             onValueChange = { artist = it },
-            placeholder = { Text("Artist (optional)") },
+            placeholder = { Text(stringResource(R.string.fetch_lyrics_artist_placeholder)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )

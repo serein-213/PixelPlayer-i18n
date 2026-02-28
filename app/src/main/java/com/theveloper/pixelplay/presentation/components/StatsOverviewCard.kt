@@ -29,10 +29,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.stats.PlaybackStatsRepository
 import com.theveloper.pixelplay.data.stats.StatsTimeRange
 import com.theveloper.pixelplay.utils.formatListeningDurationCompact
@@ -91,12 +93,12 @@ fun StatsOverviewCard(
                         Modifier.padding(start = 24.dp, top = 24.dp, bottom = 24.dp)
                     ) {
                         Text(
-                            text = "Listening stats",
+                            text = stringResource(R.string.stats_listening_stats),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = summary?.range?.displayName ?: StatsTimeRange.WEEK.displayName,
+                            text = summary?.range?.let { stringResource(it.displayNameResId) } ?: stringResource(StatsTimeRange.WEEK.displayNameResId),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -144,7 +146,7 @@ private fun OverviewContent(summary: PlaybackStatsRepository.PlaybackStatsSummar
         Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Total plays",
+                    text = stringResource(R.string.stats_total_plays),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -157,7 +159,7 @@ private fun OverviewContent(summary: PlaybackStatsRepository.PlaybackStatsSummar
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Avg per day",
+                    text = stringResource(R.string.stats_avg_per_day),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -173,7 +175,7 @@ private fun OverviewContent(summary: PlaybackStatsRepository.PlaybackStatsSummar
         if (topTrack != null) {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
-                    text = "Top track",
+                    text = stringResource(R.string.stats_top_track),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -185,7 +187,7 @@ private fun OverviewContent(summary: PlaybackStatsRepository.PlaybackStatsSummar
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "${topTrack.artist} • ${topTrack.playCount} plays",
+                    text = stringResource(R.string.stats_artist_plays, topTrack.artist, topTrack.playCount),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,

@@ -1,6 +1,7 @@
 package com.theveloper.pixelplay.presentation.screens
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -22,21 +23,37 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Sync
+import androidx.compose.material.icons.outlined.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ContainedLoadingIndicator
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.platform.LocalView
+import com.theveloper.pixelplay.presentation.utils.LocalAppHapticsConfig
+import com.theveloper.pixelplay.presentation.utils.performAppCompatHapticFeedback
+import androidx.core.view.HapticFeedbackConstantsCompat
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
@@ -44,6 +61,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -54,18 +72,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.worker.SyncProgress
 import com.theveloper.pixelplay.presentation.viewmodel.LyricsRefreshProgress
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import androidx.compose.ui.res.vectorResource
-import androidx.core.view.HapticFeedbackConstantsCompat
-import com.theveloper.pixelplay.presentation.utils.LocalAppHapticsConfig
-import com.theveloper.pixelplay.presentation.utils.performAppCompatHapticFeedback
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun SettingsSection(title: String, icon: @Composable () -> Unit, content: @Composable () -> Unit) {
@@ -142,9 +158,6 @@ fun SwitchSettingItem(
         leadingIcon: @Composable (() -> Unit)? = null,
         enabled: Boolean = true
 ) {
-    val view = LocalView.current
-    val appHapticsConfig = LocalAppHapticsConfig.current
-
     Surface(
             color = MaterialTheme.colorScheme.surfaceContainer,
             modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp))
@@ -180,6 +193,9 @@ fun SwitchSettingItem(
                                 else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                 )
             }
+
+            val view = LocalView.current
+            val appHapticsConfig = LocalAppHapticsConfig.current
 
             Switch(
                 checked = checked,
@@ -335,7 +351,7 @@ fun ThemeSelectorItem(
                                 if (isSelected) {
                                     Icon(
                                         imageVector = Icons.Rounded.Check,
-                                        contentDescription = "Selected",
+                                        contentDescription = stringResource(R.string.settings_selected_cd),
                                         tint = contentColor
                                     )
                                 }
@@ -438,12 +454,12 @@ fun RefreshLibraryItem(
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                            text = "Refresh Library",
+                            text = stringResource(R.string.settings_refresh_library_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                            text = "Scan entire library for new and modified files.",
+                            text = stringResource(R.string.settings_refresh_library_subtitle),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -464,7 +480,7 @@ fun RefreshLibraryItem(
                         modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Full Rescan")
+                Text(stringResource(R.string.settings_full_rescan))
             }
              
             Spacer(modifier = Modifier.height(8.dp))
@@ -485,7 +501,7 @@ fun RefreshLibraryItem(
                         modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Rebuild Database")
+                Text(stringResource(R.string.settings_rebuild_database))
             }
 
             if (isSyncing) {
@@ -517,14 +533,15 @@ fun RefreshLibraryItem(
     }
 }
 
+@Composable
 private fun syncPhaseLabel(phase: SyncProgress.SyncPhase): String =
         when (phase) {
-            SyncProgress.SyncPhase.IDLE -> "Preparing sync"
-            SyncProgress.SyncPhase.FETCHING_MEDIASTORE -> "Reading MediaStore"
-            SyncProgress.SyncPhase.PROCESSING_FILES -> "Processing tracks"
-            SyncProgress.SyncPhase.SAVING_TO_DATABASE -> "Saving to database"
-            SyncProgress.SyncPhase.SCANNING_LRC -> "Scanning lyrics files"
-            SyncProgress.SyncPhase.COMPLETING -> "Completing sync"
+            SyncProgress.SyncPhase.IDLE -> stringResource(R.string.sync_phase_idle)
+            SyncProgress.SyncPhase.FETCHING_MEDIASTORE -> stringResource(R.string.sync_phase_fetching_mediastore)
+            SyncProgress.SyncPhase.PROCESSING_FILES -> stringResource(R.string.sync_phase_processing_files)
+            SyncProgress.SyncPhase.SAVING_TO_DATABASE -> stringResource(R.string.sync_phase_saving_to_database)
+            SyncProgress.SyncPhase.SCANNING_LRC -> stringResource(R.string.sync_phase_scanning_lrc)
+            SyncProgress.SyncPhase.COMPLETING -> stringResource(R.string.sync_phase_completing)
         }
 
 @Composable
@@ -558,12 +575,12 @@ fun RefreshLyricsItem(
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                            text = "Refresh Lyrics",
+                            text = stringResource(R.string.settings_refresh_lyrics_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                            text = "Automatically fetch lyrics for all songs using lrclib.",
+                            text = stringResource(R.string.settings_refresh_lyrics_subtitle),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -579,7 +596,7 @@ fun RefreshLyricsItem(
                 ) {
                     Icon(
                             imageVector = Icons.Outlined.Sync,
-                            contentDescription = "Refresh lyrics",
+                            contentDescription = stringResource(R.string.settings_refresh_lyrics_cd),
                             tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
@@ -594,7 +611,7 @@ fun RefreshLyricsItem(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                         text =
-                                "Processing ${progress.currentCount} of ${progress.totalSongs} songs",
+                                stringResource(R.string.lyrics_refresh_progress_format, progress.currentCount, progress.totalSongs),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -711,7 +728,7 @@ fun GeminiApiKeyItem(
                 value = localApiKey,
                 onValueChange = { localApiKey = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Enter API Key") },
+                placeholder = { Text(stringResource(R.string.settings_enter_api_key_placeholder)) },
                 singleLine = true
             )
             Spacer(modifier = Modifier.height(12.dp))
@@ -727,11 +744,11 @@ fun GeminiApiKeyItem(
                     },
                     enabled = hasChanges
                 ) {
-                    Text("Save")
+                    Text(stringResource(R.string.settings_save))
                 }
                 if (showSaved) {
                     Text(
-                        text = "Saved!",
+                        text = stringResource(R.string.settings_saved),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
@@ -783,7 +800,7 @@ fun GeminiSystemPromptItem(
                 value = localPrompt,
                 onValueChange = { localPrompt = it },
                 modifier = Modifier.fillMaxWidth().heightIn(min = 100.dp, max = 200.dp),
-                placeholder = { Text("Enter system prompt...") },
+                placeholder = { Text(stringResource(R.string.settings_enter_system_prompt_placeholder)) },
                 minLines = 3,
                 maxLines = 6
             )
@@ -800,16 +817,16 @@ fun GeminiSystemPromptItem(
                     },
                     enabled = hasChanges
                 ) {
-                    Text("Save")
+                    Text(stringResource(R.string.settings_save))
                 }
                 if (!isDefault) {
                     OutlinedButton(onClick = onReset) {
-                        Text("Reset")
+                        Text(stringResource(R.string.settings_reset))
                     }
                 }
                 if (showSaved) {
                     Text(
-                        text = "Saved!",
+                        text = stringResource(R.string.settings_saved),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
