@@ -78,7 +78,7 @@
     <string name="lyrics_later">Later</string>
 
     
-    <string name="ai_error_api_key">Please configure your Gemini API Key in Settings.</string>
+    <string name="ai_error_api_key">Please configure an AI provider API key in Settings.</string>
     <string name="ai_error_generic">AI Error: %s</string>
     <string name="ai_no_songs_found">AI couldn\'t find any songs for your prompt.</string>
     <string name="ai_prompt_empty">Write an idea for your Daily Mix</string>
@@ -441,7 +441,7 @@
     <string name="settings_category_behavior_title">Behavior</string>
     <string name="settings_category_behavior_subtitle">Gestures, haptics, and navigation behavior</string>
     <string name="settings_category_ai_title">AI Integration (Beta)</string>
-    <string name="settings_category_ai_subtitle">Gemini API key and AI features</string>
+    <string name="settings_category_ai_subtitle">AI provider, API keys and AI features</string>
     <string name="settings_category_backup_title">Backup &amp; Restore</string>
     <string name="settings_category_backup_subtitle">Export and recover your personal app data</string>
     <string name="settings_category_developer_title">Developer Options</string>
@@ -949,7 +949,7 @@
     <string name="playlist_mode_manual_subtitle">Design artwork, icon, shape and pick songs yourself.</string>
     <string name="playlist_mode_ai_title">With AI</string>
     <string name="playlist_mode_ai_subtitle">Generate a curated playlist with advanced controls.</string>
-    <string name="playlist_mode_ai_no_key">Requires Gemini API key configured in settings.</string>
+    <string name="playlist_mode_ai_no_key">Requires an AI provider API key configured in settings.</string>
     <string name="playlist_setup_api_key">Setup API Key</string>
     <string name="playlist_ai_lab_title">AI Playlist Lab</string>
     <string name="playlist_reset">Reset</string>
@@ -965,7 +965,9 @@
     <string name="playlist_era_any">Any era</string>
     <string name="playlist_ai_section_curation">Curation Engine</string>
     <string name="playlist_energy_label">Energy</string>
+    <string name="playlist_energy_description">Controls the intensity and tempo of songs. 1 = calm/slow, 5 = high-energy/fast.</string>
     <string name="playlist_discovery_label">Discovery</string>
+    <string name="playlist_discovery_description">Controls how familiar the selections are. 1 = your most played favorites, 5 = rarely played deep cuts.</string>
     <string name="playlist_ai_section_filters">Filters</string>
     <string name="playlist_prioritize_genres_label">Prioritize genres (optional)</string>
     <string name="playlist_prioritize_genres_placeholder">e.g. synthwave, indie pop</string>
@@ -999,7 +1001,22 @@
     <string name="playlist_era_2000s">2000s</string>
     <string name="playlist_era_2010s">2010s</string>
     <string name="playlist_era_2020s">2020s</string>
+    <string name="playlist_custom_option">Custom…</string>
+    <string name="playlist_custom_input_title">Enter Custom Value</string>
+    <string name="playlist_custom_input_hint">Enter your custom value</string>
     <string name="playlist_prompt_preview_empty">Your final prompt will appear here once you add preferences.</string>
+    <string name="playlist_prompt_core_request">Core request: %s.</string>
+    <string name="playlist_prompt_mood_target">Mood target: %s.</string>
+    <string name="playlist_prompt_activity_context">Activity context: %s.</string>
+    <string name="playlist_prompt_era_focus">Era focus: %s.</string>
+    <string name="playlist_prompt_prioritize_genres">Prioritize genres: %s.</string>
+    <string name="playlist_prompt_avoid_genres">Avoid genres: %s.</string>
+    <string name="playlist_prompt_preferred_language">Preferred language: %s.</string>
+    <string name="playlist_prompt_energy_level">Energy level target: %d/5.</string>
+    <string name="playlist_prompt_discovery_level">Discovery target: %d/5 where 1 is familiar and 5 is deep cuts.</string>
+    <string name="playlist_prompt_prioritize_favorites">Prioritize songs closer to listener favorites when possible.</string>
+    <string name="playlist_prompt_avoid_explicit">Avoid explicit lyrics whenever alternatives exist.</string>
+    <string name="playlist_prompt_smooth_transitions">Keep transitions smooth and avoid repetitive artist clustering.</string>
     <string name="playlist_hero_title">Curate With Precision</string>
     <string name="playlist_hero_subtitle">Define mood, activity, constraints and depth.</string>
     <string name="playlist_hero_note">The AI will only use songs from your local library.</string>
@@ -1013,7 +1030,7 @@
     <string name="common_saved">Saved</string>
     <string name="common_add">Add</string>
     <string name="common_dismiss">Dismiss</string>
-    <string name="playlist_api_key_required">Set your Gemini API key first</string>
+    <string name="playlist_api_key_required">Set an AI provider API key first</string>
     <string name="common_play">Play</string>
     <string name="common_delete">Delete</string>
     <string name="common_next">Next</string>
@@ -1111,12 +1128,28 @@
     
     <string name="settings_gemini_api_key_title">Gemini API Key</string>
     <string name="settings_gemini_api_key_subtitle">Needed for AI-powered features.</string>
+    <string name="settings_ai_provider_title">AI Provider</string>
+    <string name="settings_ai_provider_subtitle">Choose between Google Gemini or DeepSeek.</string>
+    <string name="settings_ai_provider_gemini">Google Gemini</string>
+    <string name="settings_ai_provider_deepseek">DeepSeek</string>
+    <string name="settings_deepseek_api_key_title">DeepSeek API Key</string>
+    <string name="settings_deepseek_api_key_subtitle">Required for DeepSeek AI features.</string>
     <string name="settings_ai_model_title">AI Model</string>
     <string name="settings_ai_model_subtitle">Select the Gemini model to use.</string>
+    <string name="settings_ai_model_subtitle_format">Select the %1$s model to use.</string>
     <string name="settings_ai_loading_models">Loading available models...</string>
     <string name="settings_ai_models_error">Error loading models</string>
+    <string name="settings_ai_models_empty">No models returned for this provider.</string>
+    <string name="settings_ai_model_requires_key">Save an API key first to load model options.</string>
     <string name="settings_system_prompt_title">System Prompt</string>
     <string name="settings_system_prompt_subtitle">Customize how the AI behaves.</string>
+    <string name="settings_prompt_presets_title">Preset Prompts</string>
+    <string name="settings_prompt_preset_balanced_label">Balanced</string>
+    <string name="settings_prompt_preset_balanced_text">You are a helpful AI assistant inside a music player app. Build playlists that match the user request first, then optimize flow and variety. Prefer familiar tracks with a small discovery ratio and avoid repetitive artist clustering.</string>
+    <string name="settings_prompt_preset_creative_label">Creative</string>
+    <string name="settings_prompt_preset_creative_text">You are a creative playlist curator. Follow the user request, but add tasteful surprises and deeper cuts when they still fit the mood. Keep transitions smooth and diversify artists, tempos, and eras.</string>
+    <string name="settings_prompt_preset_precise_label">Precise</string>
+    <string name="settings_prompt_preset_precise_text">You are a strict music recommendation assistant. Prioritize exact prompt matching, minimize weak matches, and keep results consistent with requested genres, mood, and activity. Return concise, deterministic selections over novelty.</string>
 
     
     <string name="artist_settings_multi_parsing_title">Multi-Artist Parsing</string>
@@ -1751,7 +1784,7 @@
     <string name="folder_source_internal">Internal Storage</string>
     <string name="folder_source_sd_card">SD Card</string>
     <string name="browse_folders_permission_required">All files access is required to browse folders.</string>
-    <string name="gemini_api_key_required">Set your Gemini API key first</string>
+    <string name="gemini_api_key_required">Set an AI provider API key first</string>
     <string name="album_detail_cover_cd">Cover of %1$s</string>
     <string name="album_detail_subtitle">%1$s • %2$d songs</string>
     <string name="album_sort_songs">Sort Songs</string>

@@ -773,9 +773,9 @@ fun GeminiSystemPromptItem(
     val isDefault = systemPrompt == defaultPrompt
     var showSaved by remember { mutableStateOf(false) }
     val presets = listOf(
-        "Balanced" to "You are a helpful AI assistant inside a music player app. Build playlists that match the user request first, then optimize flow and variety. Prefer familiar tracks with a small discovery ratio and avoid repetitive artist clustering.",
-        "Creative" to "You are a creative playlist curator. Follow the user request, but add tasteful surprises and deeper cuts when they still fit the mood. Keep transitions smooth and diversify artists, tempos, and eras.",
-        "Precise" to "You are a strict music recommendation assistant. Prioritize exact prompt matching, minimize weak matches, and keep results consistent with requested genres, mood, and activity. Return concise, deterministic selections over novelty."
+        stringResource(R.string.settings_prompt_preset_balanced_label) to stringResource(R.string.settings_prompt_preset_balanced_text),
+        stringResource(R.string.settings_prompt_preset_creative_label) to stringResource(R.string.settings_prompt_preset_creative_text),
+        stringResource(R.string.settings_prompt_preset_precise_label) to stringResource(R.string.settings_prompt_preset_precise_text)
     )
 
     LaunchedEffect(showSaved) {
@@ -802,7 +802,7 @@ fun GeminiSystemPromptItem(
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "Preset Prompts",
+                text = stringResource(R.string.settings_prompt_presets_title),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )

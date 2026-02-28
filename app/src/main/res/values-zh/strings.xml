@@ -78,7 +78,7 @@
     <string name="lyrics_later">更晚</string>
 
     
-    <string name="ai_error_api_key">请在设置中配置您的 Gemini API 密钥。</string>
+    <string name="ai_error_api_key">请在设置中配置一个 AI 提供商的 API 密钥。</string>
     <string name="ai_error_generic">AI 错误：%s</string>
     <string name="ai_no_songs_found">AI 找不到符合你的要求的歌曲。</string>
     <string name="ai_prompt_empty">为你的每日精选写个想法</string>
@@ -447,7 +447,7 @@
     <string name="settings_category_behavior_title">行为</string>
     <string name="settings_category_behavior_subtitle">手势、触感与导航行为</string>
     <string name="settings_category_ai_title">AI 集成（测试版）</string>
-    <string name="settings_category_ai_subtitle">Gemini API 密钥与 AI 功能</string>
+    <string name="settings_category_ai_subtitle">AI 提供商、API 密钥与 AI 功能</string>
     <string name="settings_category_backup_title">备份与恢复</string>
     <string name="settings_category_backup_subtitle">导出并恢复你的个人数据</string>
     <string name="settings_category_developer_title">开发者选项</string>
@@ -955,7 +955,7 @@
     <string name="playlist_mode_manual_subtitle">设计封面、图标、形状并亲自挑选歌曲。</string>
     <string name="playlist_mode_ai_title">使用 AI</string>
     <string name="playlist_mode_ai_subtitle">使用高级控制生成策划好的播放列表。</string>
-    <string name="playlist_mode_ai_no_key">需要在设置中配置 Gemini API 密钥。</string>
+    <string name="playlist_mode_ai_no_key">需要在设置中配置 AI 提供商 API 密钥。</string>
     <string name="playlist_setup_api_key">设置 API 密钥</string>
     <string name="playlist_ai_lab_title">AI 播放列表实验室</string>
     <string name="playlist_reset">重置</string>
@@ -969,9 +969,11 @@
     <string name="playlist_activity_label">活动</string>
     <string name="playlist_era_label">时代</string>
     <string name="playlist_era_any">任何时代</string>
-    <string name="playlist_ai_section_curation">策划引擎</string>
+    <string name="playlist_ai_section_curation">智能筛选</string>
     <string name="playlist_energy_label">能量</string>
+    <string name="playlist_energy_description">控制歌曲的强度和节奏。1 = 平静/慢速，5 = 高能量/快节奏。</string>
     <string name="playlist_discovery_label">发现</string>
+    <string name="playlist_discovery_description">控制选曲的熟悉度。1 = 最常播放的收藏，5 = 很少播放的冷门曲目。</string>
     <string name="playlist_ai_section_filters">过滤器</string>
     <string name="playlist_prioritize_genres_label">优先流派 (可选)</string>
     <string name="playlist_prioritize_genres_placeholder">例如：合成器波、独立流行</string>
@@ -1005,7 +1007,22 @@
     <string name="playlist_era_2000s">2000年代</string>
     <string name="playlist_era_2010s">2010年代</string>
     <string name="playlist_era_2020s">2020年代</string>
+    <string name="playlist_custom_option">自定义…</string>
+    <string name="playlist_custom_input_title">输入自定义值</string>
+    <string name="playlist_custom_input_hint">输入您的自定义值</string>
     <string name="playlist_prompt_preview_empty">一旦您添加了偏好，您的最终提示词将出现在这里。</string>
+    <string name="playlist_prompt_core_request">核心请求：%s。</string>
+    <string name="playlist_prompt_mood_target">氛围目标：%s。</string>
+    <string name="playlist_prompt_activity_context">场景：%s。</string>
+    <string name="playlist_prompt_era_focus">年代：%s。</string>
+    <string name="playlist_prompt_prioritize_genres">优先流派：%s。</string>
+    <string name="playlist_prompt_avoid_genres">避免流派：%s。</string>
+    <string name="playlist_prompt_preferred_language">首选语言：%s。</string>
+    <string name="playlist_prompt_energy_level">能量等级：%d/5。</string>
+    <string name="playlist_prompt_discovery_level">探索度：%d/5（1为熟悉，5为深度挖掘）。</string>
+    <string name="playlist_prompt_prioritize_favorites">优先选择接近收藏的歌曲。</string>
+    <string name="playlist_prompt_avoid_explicit">尽可能避免露骨歌词。</string>
+    <string name="playlist_prompt_smooth_transitions">保持过渡流畅，避免艺术家重复聚集。</string>
     <string name="playlist_hero_title">精准策划</string>
     <string name="playlist_hero_subtitle">定义心情、活动、约束和深度。</string>
     <string name="playlist_hero_note">AI 仅会使用您本地媒体库中的歌曲。</string>
@@ -1019,7 +1036,7 @@
     <string name="common_saved">已保存</string>
     <string name="common_add">添加</string>
     <string name="common_dismiss">关闭</string>
-    <string name="playlist_api_key_required">请先设置您的 Gemini API 密钥</string>
+    <string name="playlist_api_key_required">请先设置 AI 提供商 API 密钥</string>
     <string name="common_play">播放</string>
     <string name="common_delete">删除</string>
     <string name="common_next">下一首</string>
@@ -1117,12 +1134,28 @@
     
     <string name="settings_gemini_api_key_title">Gemini API 密钥</string>
     <string name="settings_gemini_api_key_subtitle">AI 功能所需。</string>
+    <string name="settings_ai_provider_title">AI 提供商</string>
+    <string name="settings_ai_provider_subtitle">选择 Google Gemini 或 DeepSeek。</string>
+    <string name="settings_ai_provider_gemini">Google Gemini</string>
+    <string name="settings_ai_provider_deepseek">DeepSeek</string>
+    <string name="settings_deepseek_api_key_title">DeepSeek API 密钥</string>
+    <string name="settings_deepseek_api_key_subtitle">DeepSeek AI 功能所需。</string>
     <string name="settings_ai_model_title">AI 模型</string>
     <string name="settings_ai_model_subtitle">选择要使用的 Gemini 模型。</string>
+    <string name="settings_ai_model_subtitle_format">选择要使用的 %1$s 模型。</string>
     <string name="settings_ai_loading_models">正在加载可用模型…</string>
     <string name="settings_ai_models_error">加载模型出错</string>
+    <string name="settings_ai_models_empty">该提供商未返回可用模型。</string>
+    <string name="settings_ai_model_requires_key">请先保存 API 密钥后再加载模型选项。</string>
     <string name="settings_system_prompt_title">系统提示词</string>
     <string name="settings_system_prompt_subtitle">自定义 AI 的行为方式。</string>
+    <string name="settings_prompt_presets_title">预设提示词</string>
+    <string name="settings_prompt_preset_balanced_label">均衡</string>
+    <string name="settings_prompt_preset_balanced_text">你是音乐播放器内的 AI 助手。先严格匹配用户需求，再优化播放流畅度与多样性。优先熟悉曲目，保留少量探索比例，避免同一艺人过度集中。</string>
+    <string name="settings_prompt_preset_creative_label">创意</string>
+    <string name="settings_prompt_preset_creative_text">你是富有创意的歌单策划师。在满足用户需求的前提下，加入恰到好处的新鲜感与冷门佳作。保持衔接自然，并让艺人、节奏与年代更丰富。</string>
+    <string name="settings_prompt_preset_precise_label">精准</string>
+    <string name="settings_prompt_preset_precise_text">你是严格的音乐推荐助手。优先精确匹配提示词，减少弱相关歌曲，并确保结果与请求的风格、情绪、场景高度一致。相比新奇性，更强调稳定和确定性。</string>
 
     
     <string name="artist_settings_multi_parsing_title">多艺术家解析</string>
@@ -1763,7 +1796,7 @@
     <string name="folder_source_internal">内部存储</string>
     <string name="folder_source_sd_card">SD 卡</string>
     <string name="browse_folders_permission_required">浏览文件夹需要所有文件访问权限。</string>
-    <string name="gemini_api_key_required">请先设置您的 Gemini API 密钥</string>
+    <string name="gemini_api_key_required">请先设置 AI 提供商 API 密钥</string>
     <string name="album_detail_cover_cd">%1$s 的封面</string>
     <string name="album_detail_subtitle">%1$s • %2$d 首歌曲</string>
     <string name="album_sort_songs">排序歌曲</string>

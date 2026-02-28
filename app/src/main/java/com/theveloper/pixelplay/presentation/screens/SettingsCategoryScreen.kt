@@ -180,6 +180,10 @@ fun SettingsCategoryScreen(
     val geminiApiKey by settingsViewModel.geminiApiKey.collectAsStateWithLifecycle()
     val geminiModel by settingsViewModel.geminiModel.collectAsStateWithLifecycle()
     val geminiSystemPrompt by settingsViewModel.geminiSystemPrompt.collectAsStateWithLifecycle()
+    val aiProvider by settingsViewModel.aiProvider.collectAsStateWithLifecycle()
+    val deepseekApiKey by settingsViewModel.deepseekApiKey.collectAsStateWithLifecycle()
+    val deepseekModel by settingsViewModel.deepseekModel.collectAsStateWithLifecycle()
+    val deepseekSystemPrompt by settingsViewModel.deepseekSystemPrompt.collectAsStateWithLifecycle()
     val currentPath by settingsViewModel.currentPath.collectAsStateWithLifecycle()
     val directoryChildren by settingsViewModel.currentDirectoryChildren.collectAsStateWithLifecycle()
     val availableStorages by settingsViewModel.availableStorages.collectAsStateWithLifecycle()
@@ -267,13 +271,20 @@ fun SettingsCategoryScreen(
         }
     }
 
-    // Fetch models on page load when API key exists and models are not already loaded
-    LaunchedEffect(category, geminiApiKey) {
-        if (category == SettingsCategory.AI_INTEGRATION && 
-            geminiApiKey.isNotBlank() && 
-            uiState.availableModels.isEmpty() && 
-            !uiState.isLoadingModels) {
-            settingsViewModel.fetchAvailableModels(geminiApiKey)
+    // Fetch models on page load when selected provider API key exists
+    LaunchedEffect(category, aiProvider, geminiApiKey, deepseekApiKey) {
+        val currentApiKey = when (aiProvider) {
+            "DEEPSEEK" -> deepseekApiKey
+            else -> geminiApiKey
+        }
+
+        if (
+            category == SettingsCategory.AI_INTEGRATION &&
+            currentApiKey.isNotBlank() &&
+            uiState.availableModels.isEmpty() &&
+            !uiState.isLoadingModels
+        ) {
+            settingsViewModel.fetchAvailableModels(currentApiKey, aiProvider)
         }
     }
 
@@ -790,63 +801,126 @@ fun SettingsCategoryScreen(
                             }
                         }
                         SettingsCategory.AI_INTEGRATION -> {
-                            SettingsSubsection(title = stringResource(R.string.settings_subsection_credentials)) {
-                                GeminiApiKeyItem(
-                                    apiKey = geminiApiKey,
-                                    onApiKeySave = { settingsViewModel.onGeminiApiKeyChange(it) },
-                                    title = stringResource(R.string.settings_gemini_api_key_title),
-                                    subtitle = stringResource(R.string.settings_gemini_api_key_subtitle)
+                            // AI Provider Selection
+                            SettingsSubsection(title = stringResource(R.string.settings_ai_provider_title)) {
+                                ThemeSelectorItem(
+                                    label = stringResource(R.string.settings_ai_provider_title),
+                                    description = stringResource(R.string.settings_ai_provider_subtitle),
+                                    options = mapOf(
+                                        "GEMINI" to stringResource(R.string.settings_ai_provider_gemini),
+                                        "DEEPSEEK" to stringResource(R.string.settings_ai_provider_deepseek)
+                                    ),
+                                    selectedKey = aiProvider,
+                                    onSelectionChanged = { settingsViewModel.onAiProviderChange(it) },
+                                    leadingIcon = { Icon(Icons.Rounded.Science, null, tint = MaterialTheme.colorScheme.secondary) }
                                 )
                             }
-
-                            if (uiState.availableModels.isNotEmpty()) {
-                                SettingsSubsection(title = stringResource(R.string.settings_subsection_model_selection)) {
-                                    if (uiState.isLoadingModels) {
-                                        Surface(
-                                            color = MaterialTheme.colorScheme.surfaceContainer,
-                                            shape = RoundedCornerShape(10.dp),
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) {
-                                            Row(
-                                                modifier = Modifier.padding(16.dp),
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.spacedBy(12.dp)
-                                            ) {
-                                                CircularProgressIndicator(
-                                                    modifier = Modifier.size(24.dp),
-                                                    strokeWidth = 2.dp
-                                                )
-                                                Text(
-                                                    text = stringResource(R.string.settings_ai_loading_models),
-                                                    style = MaterialTheme.typography.bodyMedium,
-                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                )
-                                            }
-                                        }
-                                    } else if (uiState.modelsFetchError != null) {
-                                        Surface(
-                                            color = MaterialTheme.colorScheme.errorContainer,
-                                            shape = RoundedCornerShape(10.dp),
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) {
-                                            Text(
-                                                text = uiState.modelsFetchError ?: stringResource(R.string.settings_ai_models_error),
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                color = MaterialTheme.colorScheme.onErrorContainer,
-                                                modifier = Modifier.padding(16.dp)
-                                            )
-                                        }
-                                    } else if (uiState.availableModels.isNotEmpty()) {
-                                        ThemeSelectorItem(
-                                            label = stringResource(R.string.settings_ai_model_title),
-                                            description = stringResource(R.string.settings_ai_model_subtitle),
-                                            options = uiState.availableModels.associate { it.name to it.displayName },
-                                            selectedKey = geminiModel.ifEmpty { uiState.availableModels.firstOrNull()?.name ?: "" },
-                                            onSelectionChanged = { settingsViewModel.onGeminiModelChange(it) },
-                                            leadingIcon = { Icon(Icons.Rounded.Science, null, tint = MaterialTheme.colorScheme.secondary) }
+                            
+                            // API Key Section
+                            SettingsSubsection(title = stringResource(R.string.settings_subsection_credentials)) {
+                                when (aiProvider) {
+                                    "GEMINI" -> {
+                                        GeminiApiKeyItem(
+                                            apiKey = geminiApiKey,
+                                            onApiKeySave = { settingsViewModel.onGeminiApiKeyChange(it) },
+                                            title = stringResource(R.string.settings_gemini_api_key_title),
+                                            subtitle = stringResource(R.string.settings_gemini_api_key_subtitle)
+                                        )
+                                    }
+                                    "DEEPSEEK" -> {
+                                        GeminiApiKeyItem(
+                                            apiKey = deepseekApiKey,
+                                            onApiKeySave = { settingsViewModel.onDeepseekApiKeyChange(it) },
+                                            title = stringResource(R.string.settings_deepseek_api_key_title),
+                                            subtitle = stringResource(R.string.settings_deepseek_api_key_subtitle)
                                         )
                                     }
                                 }
+                            }
+
+                            // Model Selection Section
+                            val hasApiKey = when (aiProvider) {
+                                "DEEPSEEK" -> deepseekApiKey.isNotBlank()
+                                else -> geminiApiKey.isNotBlank()
+                            }
+                            
+                            if (hasApiKey) {
+                                SettingsSubsection(title = stringResource(R.string.settings_subsection_model_selection)) {
+                                    if (uiState.isLoadingModels) {
+                                    Surface(
+                                        color = MaterialTheme.colorScheme.surfaceContainer,
+                                        shape = RoundedCornerShape(10.dp),
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Row(
+                                            modifier = Modifier.padding(16.dp),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                        ) {
+                                            CircularProgressIndicator(
+                                                modifier = Modifier.size(24.dp),
+                                                strokeWidth = 2.dp
+                                            )
+                                            Text(
+                                                text = stringResource(R.string.settings_ai_loading_models),
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+                                } else if (uiState.modelsFetchError != null) {
+                                    Surface(
+                                        color = MaterialTheme.colorScheme.errorContainer,
+                                        shape = RoundedCornerShape(10.dp),
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text(
+                                            text = uiState.modelsFetchError ?: stringResource(R.string.settings_ai_models_error),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onErrorContainer,
+                                            modifier = Modifier.padding(16.dp)
+                                        )
+                                    }
+                                } else if (uiState.availableModels.isNotEmpty()) {
+                                    val currentModel = when (aiProvider) {
+                                        "GEMINI" -> geminiModel
+                                        "DEEPSEEK" -> deepseekModel
+                                        else -> ""
+                                    }
+                                    ThemeSelectorItem(
+                                        label = stringResource(R.string.settings_ai_model_title),
+                                        description = stringResource(
+                                            R.string.settings_ai_model_subtitle_format,
+                                            when (aiProvider) {
+                                                "DEEPSEEK" -> stringResource(R.string.settings_ai_provider_deepseek)
+                                                else -> stringResource(R.string.settings_ai_provider_gemini)
+                                            }
+                                        ),
+                                        options = uiState.availableModels.associate { it.name to it.displayName },
+                                        selectedKey = currentModel.ifEmpty { uiState.availableModels.firstOrNull()?.name ?: "" },
+                                        onSelectionChanged = {
+                                            when (aiProvider) {
+                                                "GEMINI" -> settingsViewModel.onGeminiModelChange(it)
+                                                "DEEPSEEK" -> settingsViewModel.onDeepseekModelChange(it)
+                                            }
+                                        },
+                                        leadingIcon = { Icon(Icons.Rounded.Science, null, tint = MaterialTheme.colorScheme.secondary) }
+                                    )
+                                } else {
+                                    Surface(
+                                        color = MaterialTheme.colorScheme.surfaceContainer,
+                                        shape = RoundedCornerShape(10.dp),
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text(
+                                            text = stringResource(R.string.settings_ai_models_empty),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(16.dp)
+                                        )
+                                    }
+                                }
+                            }
                             }
 
                             SettingsSubsection(
@@ -854,10 +928,26 @@ fun SettingsCategoryScreen(
                                 addBottomSpace = false
                             ) {
                                 GeminiSystemPromptItem(
-                                    systemPrompt = geminiSystemPrompt,
-                                    defaultPrompt = com.theveloper.pixelplay.data.preferences.UserPreferencesRepository.DEFAULT_SYSTEM_PROMPT,
-                                    onSystemPromptSave = { settingsViewModel.onGeminiSystemPromptChange(it) },
-                                    onReset = { settingsViewModel.resetGeminiSystemPrompt() },
+                                    systemPrompt = if (aiProvider == "DEEPSEEK") deepseekSystemPrompt else geminiSystemPrompt,
+                                    defaultPrompt = if (aiProvider == "DEEPSEEK") {
+                                        com.theveloper.pixelplay.data.preferences.UserPreferencesRepository.DEFAULT_DEEPSEEK_SYSTEM_PROMPT
+                                    } else {
+                                        com.theveloper.pixelplay.data.preferences.UserPreferencesRepository.DEFAULT_SYSTEM_PROMPT
+                                    },
+                                    onSystemPromptSave = {
+                                        if (aiProvider == "DEEPSEEK") {
+                                            settingsViewModel.onDeepseekSystemPromptChange(it)
+                                        } else {
+                                            settingsViewModel.onGeminiSystemPromptChange(it)
+                                        }
+                                    },
+                                    onReset = {
+                                        if (aiProvider == "DEEPSEEK") {
+                                            settingsViewModel.resetDeepseekSystemPrompt()
+                                        } else {
+                                            settingsViewModel.resetGeminiSystemPrompt()
+                                        }
+                                    },
                                     title = stringResource(R.string.settings_system_prompt_title),
                                     subtitle = stringResource(R.string.settings_system_prompt_subtitle)
                                 )

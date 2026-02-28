@@ -607,7 +607,7 @@ private fun CreateAiPlaylistContent(
                     label = stringResource(R.string.playlist_energy_label),
                     selectedLevel = energyLevel,
                     enabled = controlsEnabled,
-                    description = "Controls the intensity and tempo of songs. 1 = calm/slow, 5 = high-energy/fast.",
+                    description = stringResource(R.string.playlist_energy_description),
                     onLevelSelected = { energyLevel = it }
                 )
                 Spacer(modifier = Modifier.height(10.dp))
@@ -615,7 +615,7 @@ private fun CreateAiPlaylistContent(
                     label = stringResource(R.string.playlist_discovery_label),
                     selectedLevel = discoveryLevel,
                     enabled = controlsEnabled,
-                    description = "Controls how familiar the selections are. 1 = your most played favorites, 5 = rarely played deep cuts.",
+                    description = stringResource(R.string.playlist_discovery_description),
                     onLevelSelected = { discoveryLevel = it }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
@@ -849,7 +849,7 @@ private fun ChipsSingleSelect(
     var customInputValue by remember { mutableStateOf("") }
     
     // Check if current selection is a custom value (not in predefined options)
-    val isCustomSelection = selected != null && options.none { it == selected }
+    val isCustomSelection = selected != null && options.none { it.first == selected }
     
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -934,7 +934,7 @@ private fun ChipsSingleSelect(
                 label = { 
                     Text(
                         if (isCustomSelection) selected!! 
-                        else "Custom…"
+                        else stringResource(R.string.playlist_custom_option)
                     ) 
                 }
             )
@@ -946,12 +946,12 @@ private fun ChipsSingleSelect(
         AlertDialog(
             onDismissRequest = { showCustomDialog = false },
             icon = { Icon(Icons.Rounded.Add, null) },
-            title = { Text("Enter Custom Value") },
+            title = { Text(stringResource(R.string.playlist_custom_input_title)) },
             text = {
                 OutlinedTextField(
                     value = customInputValue,
                     onValueChange = { customInputValue = it },
-                    label = { Text("Enter your custom value") },
+                    label = { Text(stringResource(R.string.playlist_custom_input_hint)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -966,7 +966,7 @@ private fun ChipsSingleSelect(
                         customInputValue = ""
                     }
                 ) {
-                    Text("Save")
+                    Text(stringResource(R.string.common_save))
                 }
             },
             dismissButton = {
@@ -974,7 +974,7 @@ private fun ChipsSingleSelect(
                     showCustomDialog = false
                     customInputValue = ""
                 }) {
-                    Text("Dismiss")
+                    Text(stringResource(R.string.common_dismiss))
                 }
             }
         )
@@ -1092,42 +1092,42 @@ private fun buildAiPlaylistPrompt(
     prioritizeFavorites: Boolean,
     avoidExplicit: Boolean
 ): String {
-    val anyEraText = "Any era"
+    val anyEraText = stringResource(R.string.playlist_era_any)
     val promptParts = mutableListOf<String>()
 
     if (basePrompt.isNotBlank()) {
-        promptParts += "Core request: ${basePrompt.trim()}."
+        promptParts += stringResource(R.string.playlist_prompt_core_request, basePrompt.trim())
     }
     if (!mood.isNullOrBlank()) {
-        promptParts += "Mood target: $mood."
+        promptParts += stringResource(R.string.playlist_prompt_mood_target, mood)
     }
     if (!activity.isNullOrBlank()) {
-        promptParts += "Activity context: $activity."
+        promptParts += stringResource(R.string.playlist_prompt_activity_context, activity)
     }
     if (era != anyEraText) {
-        promptParts += "Era focus: $era."
+        promptParts += stringResource(R.string.playlist_prompt_era_focus, era)
     }
     if (includeGenres.isNotBlank()) {
-        promptParts += "Prioritize genres: ${includeGenres.trim()}."
+        promptParts += stringResource(R.string.playlist_prompt_prioritize_genres, includeGenres.trim())
     }
     if (excludeGenres.isNotBlank()) {
-        promptParts += "Avoid genres: ${excludeGenres.trim()}."
+        promptParts += stringResource(R.string.playlist_prompt_avoid_genres, excludeGenres.trim())
     }
     if (preferredLanguage.isNotBlank()) {
-        promptParts += "Preferred language: ${preferredLanguage.trim()}."
+        promptParts += stringResource(R.string.playlist_prompt_preferred_language, preferredLanguage.trim())
     }
 
-    promptParts += "Energy level target: ${energyLevel.coerceIn(1, 5)}/5."
-    promptParts += "Discovery target: ${discoveryLevel.coerceIn(1, 5)}/5 where 1 is familiar and 5 is deep cuts."
+    promptParts += stringResource(R.string.playlist_prompt_energy_level, energyLevel.coerceIn(1, 5))
+    promptParts += stringResource(R.string.playlist_prompt_discovery_level, discoveryLevel.coerceIn(1, 5))
 
     if (prioritizeFavorites) {
-        promptParts += "Prioritize songs closer to listener favorites when possible."
+        promptParts += stringResource(R.string.playlist_prompt_prioritize_favorites)
     }
     if (avoidExplicit) {
-        promptParts += "Avoid explicit lyrics whenever alternatives exist."
+        promptParts += stringResource(R.string.playlist_prompt_avoid_explicit)
     }
 
-    promptParts += "Keep transitions smooth and avoid repetitive artist clustering."
+    promptParts += stringResource(R.string.playlist_prompt_smooth_transitions)
 
     return promptParts.joinToString(separator = " ").trim()
 }

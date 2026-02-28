@@ -350,7 +350,7 @@ fun LibraryScreen(
             .map { uiState -> uiState.currentFolder != null && uiState.folderBackGestureNavigationEnabled }
             .distinctUntilChanged()
     }.collectAsStateWithLifecycle(initialValue = false)
-    val hasGeminiApiKey by playerViewModel.hasGeminiApiKey.collectAsStateWithLifecycle()
+    val hasActiveAiProviderApiKey by playerViewModel.hasActiveAiProviderApiKey.collectAsStateWithLifecycle()
     val isGeneratingAiPlaylist by playerViewModel.isGeneratingAiPlaylist.collectAsStateWithLifecycle()
     val aiError by playerViewModel.aiError.collectAsStateWithLifecycle()
     var showCreatePlaylistDialog by remember { mutableStateOf(false) }
@@ -517,8 +517,8 @@ fun LibraryScreen(
         aiGenerationRequestedFromDialog = false
     }
 
-    LaunchedEffect(hasGeminiApiKey, showCreateAiPlaylistDialog) {
-        if (!hasGeminiApiKey && showCreateAiPlaylistDialog) {
+    LaunchedEffect(hasActiveAiProviderApiKey, showCreateAiPlaylistDialog) {
+        if (!hasActiveAiProviderApiKey && showCreateAiPlaylistDialog) {
             showCreateAiPlaylistDialog = false
             aiGenerationRequestedFromDialog = false
             playerViewModel.clearAiPlaylistError()
@@ -1335,15 +1335,15 @@ fun LibraryScreen(
             showCreatePlaylistDialog = true
         },
         onAiSelected = {
-            if (hasGeminiApiKey) {
+            if (hasActiveAiProviderApiKey) {
                 showPlaylistCreationTypeDialog = false
                 playerViewModel.clearAiPlaylistError()
                 showCreateAiPlaylistDialog = true
             } else {
-                Toast.makeText(context, context.getString(R.string.gemini_api_key_required), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.playlist_api_key_required), Toast.LENGTH_SHORT).show()
             }
         },
-        isAiEnabled = hasGeminiApiKey,
+        isAiEnabled = hasActiveAiProviderApiKey,
         onSetupAiClick = {
             navController.navigate(Screen.SettingsCategory.createRoute("ai"))
         }
@@ -1379,7 +1379,7 @@ fun LibraryScreen(
     )
 
     CreateAiPlaylistDialog(
-        visible = showCreateAiPlaylistDialog && hasGeminiApiKey,
+        visible = showCreateAiPlaylistDialog && hasActiveAiProviderApiKey,
         isGenerating = isGeneratingAiPlaylist,
         error = aiError,
         onDismiss = {
