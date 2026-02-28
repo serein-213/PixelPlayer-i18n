@@ -1,12 +1,11 @@
 package com.theveloper.pixelplay.data.ai
 
-import com.google.genai.Client
 import com.theveloper.pixelplay.data.DailyMixManager
 import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
-import kotlinx.coroutines.Dispatchers
+import com.theveloper.pixelplay.data.ai.provider.AiClientFactory
+import com.theveloper.pixelplay.data.ai.provider.AiProvider
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import kotlin.math.max
@@ -14,10 +13,11 @@ import kotlin.math.max
 class AiPlaylistGenerator @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
     private val dailyMixManager: DailyMixManager,
+    private val aiClientFactory: AiClientFactory,
     private val json: Json
 ) {
     companion object {
-        private const val DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
+        // Removed DEFAULT_GEMINI_MODEL - now handled by provider implementations
     }
 
     private val promptCache: MutableMap<String, List<String>> = object : LinkedHashMap<String, List<String>>(16, 0.75f, true) {
@@ -32,10 +32,22 @@ class AiPlaylistGenerator @Inject constructor(
         candidateSongs: List<Song>? = null
     ): Result<List<Song>> {
         return try {
-            val apiKey = userPreferencesRepository.geminiApiKey.first()
-            if (apiKey.isBlank()) {
-                return Result.failure(Exception("API Key not configured."))
+            // Get AI provider and create client
+            val providerName = userPreferencesRepository.aiProvider.first()
+            val provider = AiProvider.fromString(providerName)
+            
+            // Get API key based on provider
+            val apiKey = when (provider) {
+                AiProvider.GEMINI -> userPreferencesRepository.geminiApiKey.first()
+                AiProvider.DEEPSEEK -> userPreferencesRepository.deepseekApiKey.first()
             }
+            
+            if (apiKey.isBlank()) {
+                return Result.failure(Exception("API Key not configured for ${provider.displayName}."))
+            }
+            
+            // Create AI client
+            val aiClient = aiClientFactory.createClient(provider, apiKey)
 
             val normalizedPrompt = userPrompt.trim().lowercase()
             promptCache[normalizedPrompt]?.let { cachedIds ->
@@ -46,10 +58,12 @@ class AiPlaylistGenerator @Inject constructor(
                 }
             }
 
-            val selectedModel = userPreferencesRepository.geminiModel.first()
-            val modelName = selectedModel.ifBlank { DEFAULT_GEMINI_MODEL }
-
-            val client = Client.builder().apiKey(apiKey).build()
+            // Get model based on provider
+            val selectedModel = when (provider) {
+                AiProvider.GEMINI -> userPreferencesRepository.geminiModel.first()
+                AiProvider.DEEPSEEK -> userPreferencesRepository.deepseekModel.first()
+            }
+            val modelName = selectedModel.ifBlank { aiClient.getDefaultModel() }
 
             val samplingPool = when {
                 candidateSongs.isNullOrEmpty().not() -> candidateSongs ?: allSongs
@@ -82,8 +96,11 @@ class AiPlaylistGenerator @Inject constructor(
                 """.trimIndent()
             }
 
-            // Get the custom system prompt from user preferences
-            val customSystemPrompt = userPreferencesRepository.geminiSystemPrompt.first()
+            // Get provider-specific custom system prompt from user preferences
+            val customSystemPrompt = when (provider) {
+                AiProvider.GEMINI -> userPreferencesRepository.geminiSystemPrompt.first()
+                AiProvider.DEEPSEEK -> userPreferencesRepository.deepseekSystemPrompt.first()
+            }
 
             // Build the task-specific instructions
             val taskInstructions = """
@@ -116,11 +133,7 @@ class AiPlaylistGenerator @Inject constructor(
             ]
             """.trimIndent()
 
-            val response = withContext(Dispatchers.IO) {
-                client.models.generateContent(modelName, fullPrompt, null)
-            }
-            val responseText = response.text()
-                ?: return Result.failure(Exception("AI returned an empty response."))
+            val responseText = aiClient.generateContent(modelName, fullPrompt)
 
             val songIds = extractPlaylistSongIds(responseText)
 

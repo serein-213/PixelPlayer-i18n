@@ -211,6 +211,12 @@ constructor(
         // ReplayGain
         val REPLAYGAIN_ENABLED = booleanPreferencesKey("replaygain_enabled")
         val REPLAYGAIN_USE_ALBUM_GAIN = booleanPreferencesKey("replaygain_use_album_gain")
+        
+        // AI Provider Settings
+        val AI_PROVIDER = stringPreferencesKey("ai_provider")
+        val DEEPSEEK_API_KEY = stringPreferencesKey("deepseek_api_key")
+        val DEEPSEEK_MODEL = stringPreferencesKey("deepseek_model")
+        val DEEPSEEK_SYSTEM_PROMPT = stringPreferencesKey("deepseek_system_prompt")
     }
 
     val appRebrandDialogShownFlow: Flow<Boolean> =
@@ -1370,6 +1376,8 @@ constructor(
     companion object {
         const val DEFAULT_SYSTEM_PROMPT =
                 "You are a helpful AI assistant integrated into a music player app. You help users create perfect playlists based on their request."
+        const val DEFAULT_DEEPSEEK_SYSTEM_PROMPT =
+            "You are a helpful AI assistant integrated into a music player app. You help users create perfect playlists based on their request."
 
         /** Default delimiters for splitting multi-artist tags */
         val DEFAULT_ARTIST_DELIMITERS = listOf("/", ";", ",", "+", "&")
@@ -1387,6 +1395,57 @@ constructor(
     suspend fun resetGeminiSystemPrompt() {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.GEMINI_SYSTEM_PROMPT] = DEFAULT_SYSTEM_PROMPT
+        }
+    }
+
+    // AI Provider Settings
+    val aiProvider: Flow<String> =
+        dataStore.data.map { preferences -> 
+            preferences[PreferencesKeys.AI_PROVIDER] ?: "GEMINI"
+        }
+    
+    suspend fun setAiProvider(provider: String) {
+        dataStore.edit { preferences -> 
+            preferences[PreferencesKeys.AI_PROVIDER] = provider 
+        }
+    }
+    
+    val deepseekApiKey: Flow<String> =
+        dataStore.data.map { preferences -> 
+            preferences[PreferencesKeys.DEEPSEEK_API_KEY] ?: "" 
+        }
+    
+    suspend fun setDeepseekApiKey(apiKey: String) {
+        dataStore.edit { preferences -> 
+            preferences[PreferencesKeys.DEEPSEEK_API_KEY] = apiKey 
+        }
+    }
+    
+    val deepseekModel: Flow<String> =
+        dataStore.data.map { preferences -> 
+            preferences[PreferencesKeys.DEEPSEEK_MODEL] ?: "" 
+        }
+    
+    suspend fun setDeepseekModel(model: String) {
+        dataStore.edit { preferences -> 
+            preferences[PreferencesKeys.DEEPSEEK_MODEL] = model 
+        }
+    }
+
+    val deepseekSystemPrompt: Flow<String> =
+        dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.DEEPSEEK_SYSTEM_PROMPT] ?: DEFAULT_DEEPSEEK_SYSTEM_PROMPT
+        }
+
+    suspend fun setDeepseekSystemPrompt(prompt: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.DEEPSEEK_SYSTEM_PROMPT] = prompt
+        }
+    }
+
+    suspend fun resetDeepseekSystemPrompt() {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.DEEPSEEK_SYSTEM_PROMPT] = DEFAULT_DEEPSEEK_SYSTEM_PROMPT
         }
     }
 

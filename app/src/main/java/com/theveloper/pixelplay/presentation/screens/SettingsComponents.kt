@@ -772,6 +772,11 @@ fun GeminiSystemPromptItem(
     val hasChanges = localPrompt != systemPrompt
     val isDefault = systemPrompt == defaultPrompt
     var showSaved by remember { mutableStateOf(false) }
+    val presets = listOf(
+        stringResource(R.string.settings_prompt_preset_balanced_label) to stringResource(R.string.settings_prompt_preset_balanced_text),
+        stringResource(R.string.settings_prompt_preset_creative_label) to stringResource(R.string.settings_prompt_preset_creative_text),
+        stringResource(R.string.settings_prompt_preset_precise_label) to stringResource(R.string.settings_prompt_preset_precise_text)
+    )
 
     LaunchedEffect(showSaved) {
         if (showSaved) {
@@ -795,6 +800,26 @@ fun GeminiSystemPromptItem(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = stringResource(R.string.settings_prompt_presets_title),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                presets.forEach { preset ->
+                    OutlinedButton(
+                        onClick = { localPrompt = preset.second },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(text = preset.first, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
+                }
+            }
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = localPrompt,

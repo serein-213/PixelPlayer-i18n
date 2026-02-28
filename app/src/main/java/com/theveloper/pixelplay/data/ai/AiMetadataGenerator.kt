@@ -1,12 +1,11 @@
 package com.theveloper.pixelplay.data.ai
 
-import com.google.genai.Client
 import com.theveloper.pixelplay.data.model.Song
 import kotlinx.serialization.SerializationException
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
-import kotlinx.coroutines.Dispatchers
+import com.theveloper.pixelplay.data.ai.provider.AiClientFactory
+import com.theveloper.pixelplay.data.ai.provider.AiProvider
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import timber.log.Timber
@@ -22,10 +21,11 @@ data class SongMetadata(
 
 class AiMetadataGenerator @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
+    private val aiClientFactory: AiClientFactory,
     private val json: Json
 ) {
     companion object {
-        private const val DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
+        // Removed DEFAULT_GEMINI_MODEL - now handled by provider implementations
     }
 
     private fun cleanJson(jsonString: String): String {
@@ -37,15 +37,34 @@ class AiMetadataGenerator @Inject constructor(
         fieldsToComplete: List<String>
     ): Result<SongMetadata> {
         return try {
-            val apiKey = userPreferencesRepository.geminiApiKey.first()
-            if (apiKey.isBlank()) {
-                return Result.failure(Exception("API Key not configured."))
+            // Get AI provider and create client
+            val providerName = userPreferencesRepository.aiProvider.first()
+            val provider = AiProvider.fromString(providerName)
+            
+            // Get API key based on provider
+            val apiKey = when (provider) {
+                AiProvider.GEMINI -> userPreferencesRepository.geminiApiKey.first()
+                AiProvider.DEEPSEEK -> userPreferencesRepository.deepseekApiKey.first()
             }
+            
+            if (apiKey.isBlank()) {
+                return Result.failure(Exception("API Key not configured for ${provider.displayName}."))
+            }
+            
+            // Create AI client
+            val aiClient = aiClientFactory.createClient(provider, apiKey)
+            
+            // Get model based on provider
+            val selectedModel = when (provider) {
+                AiProvider.GEMINI -> userPreferencesRepository.geminiModel.first()
+                AiProvider.DEEPSEEK -> userPreferencesRepository.deepseekModel.first()
+            }
+            val modelName = selectedModel.ifBlank { aiClient.getDefaultModel() }
 
-            val selectedModel = userPreferencesRepository.geminiModel.first()
-            val modelName = selectedModel.ifBlank { DEFAULT_GEMINI_MODEL }
-
-            val client = Client.builder().apiKey(apiKey).build()
+            val customSystemPrompt = when (provider) {
+                AiProvider.GEMINI -> userPreferencesRepository.geminiSystemPrompt.first()
+                AiProvider.DEEPSEEK -> userPreferencesRepository.deepseekSystemPrompt.first()
+            }
 
             val fieldsJson = fieldsToComplete.joinToString(separator = ", ") { "\"$it\"" }
 
@@ -68,6 +87,8 @@ class AiMetadataGenerator @Inject constructor(
 
             val fullPrompt = """
             $systemPrompt
+            Additional guidance:
+            $customSystemPrompt
 
             Song title: "${song.title}"
             Song artist: "${song.displayArtist}"
@@ -75,11 +96,8 @@ class AiMetadataGenerator @Inject constructor(
             Fields to complete: [$fieldsJson]
             """.trimIndent()
 
-            val response = withContext(Dispatchers.IO) {
-                client.models.generateContent(modelName, fullPrompt, null)
-            }
-            val responseText = response.text()
-            if (responseText.isNullOrBlank()) {
+            val responseText = aiClient.generateContent(modelName, fullPrompt)
+            if (responseText.isBlank()) {
                 Timber.e("AI returned an empty or null response.")
                 return Result.failure(Exception("AI returned an empty response."))
             }

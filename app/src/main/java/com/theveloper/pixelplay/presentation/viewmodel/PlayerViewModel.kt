@@ -391,6 +391,21 @@ class PlayerViewModel @Inject constructor(
             initialValue = CarouselStyle.NO_PEEK
         )
 
+    val hasActiveAiProviderApiKey: StateFlow<Boolean> = combine(
+        userPreferencesRepository.aiProvider,
+        userPreferencesRepository.geminiApiKey,
+        userPreferencesRepository.deepseekApiKey
+    ) { provider, geminiKey, deepseekKey ->
+        when (provider) {
+            "DEEPSEEK" -> deepseekKey.isNotBlank()
+            else -> geminiKey.isNotBlank()
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = false
+    )
+
     val hasGeminiApiKey: StateFlow<Boolean> = userPreferencesRepository.geminiApiKey
         .map { it.isNotBlank() }
         .stateIn(
