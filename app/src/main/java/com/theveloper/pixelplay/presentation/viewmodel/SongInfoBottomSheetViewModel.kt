@@ -81,6 +81,7 @@ class SongInfoBottomSheetViewModel @Inject constructor(
         val uri = song.contentUriString
         val isCloudSong = uri.startsWith("telegram://") ||
             uri.startsWith("netease://") ||
+               uri.startsWith("qqmusic://") ||
             uri.startsWith("gdrive://")
         if (isCloudSong) return false
 

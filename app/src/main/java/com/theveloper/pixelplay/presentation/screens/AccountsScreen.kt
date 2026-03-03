@@ -73,6 +73,7 @@ import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.presentation.components.CollapsibleCommonTopBar
 import com.theveloper.pixelplay.presentation.components.MiniPlayerHeight
 import com.theveloper.pixelplay.presentation.netease.auth.NeteaseLoginActivity
+import com.theveloper.pixelplay.presentation.qqmusic.auth.QqMusicLoginActivity
 import com.theveloper.pixelplay.presentation.telegram.auth.TelegramLoginActivity
 import com.theveloper.pixelplay.presentation.viewmodel.AccountsViewModel
 import com.theveloper.pixelplay.presentation.viewmodel.ExternalAccountUiModel
@@ -85,6 +86,7 @@ import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
 fun AccountsScreen(
     onBackClick: () -> Unit,
     onOpenNeteaseDashboard: () -> Unit = {},
+    onOpenQqMusicDashboard: () -> Unit = {},
     viewModel: AccountsViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -197,6 +199,7 @@ fun AccountsScreen(
                                 context = context,
                                 service = account.service,
                                 onOpenNeteaseDashboard = onOpenNeteaseDashboard,
+                                onOpenQqMusicDashboard = onOpenQqMusicDashboard,
                                 preferNeteaseDashboard = true
                             )
                         },
@@ -212,6 +215,7 @@ fun AccountsScreen(
                                 context = context,
                                 service = service,
                                 onOpenNeteaseDashboard = onOpenNeteaseDashboard,
+                                onOpenQqMusicDashboard = onOpenQqMusicDashboard,
                                 preferNeteaseDashboard = false
                             )
                         }
@@ -551,6 +555,14 @@ private fun servicePalette(service: ExternalServiceAccount): ServicePalette {
             primaryActionContainer = MaterialTheme.colorScheme.tertiaryContainer,
             primaryActionTint = MaterialTheme.colorScheme.onTertiaryContainer
         )
+        ExternalServiceAccount.QQ_MUSIC -> ServicePalette(
+            iconContainer = MaterialTheme.colorScheme.errorContainer,
+            iconTint = MaterialTheme.colorScheme.onErrorContainer,
+            statusContainer = Color(0xFFFFE3E1),
+            statusTint = Color(0xFF7A1D16),
+            primaryActionContainer = MaterialTheme.colorScheme.errorContainer,
+            primaryActionTint = MaterialTheme.colorScheme.onErrorContainer
+        )
     }
 }
 
@@ -559,6 +571,7 @@ private fun accountIcon(service: ExternalServiceAccount): ImageVector {
         ExternalServiceAccount.TELEGRAM -> Icons.AutoMirrored.Rounded.Send
         ExternalServiceAccount.GOOGLE_DRIVE -> Icons.Rounded.CloudQueue
         ExternalServiceAccount.NETEASE -> Icons.Rounded.LibraryMusic
+        ExternalServiceAccount.QQ_MUSIC -> Icons.Rounded.LibraryMusic
     }
 }
 
@@ -567,6 +580,7 @@ private fun serviceTitle(context: Context, service: ExternalServiceAccount): Str
         ExternalServiceAccount.TELEGRAM -> context.getString(R.string.accounts_service_telegram)
         ExternalServiceAccount.GOOGLE_DRIVE -> context.getString(R.string.accounts_service_google_drive)
         ExternalServiceAccount.NETEASE -> context.getString(R.string.accounts_service_netease)
+        ExternalServiceAccount.QQ_MUSIC -> context.getString(R.string.accounts_service_qq_music)
     }
 }
 
@@ -574,6 +588,7 @@ private fun openService(
     context: Context,
     service: ExternalServiceAccount,
     onOpenNeteaseDashboard: () -> Unit,
+    onOpenQqMusicDashboard: () -> Unit,
     preferNeteaseDashboard: Boolean
 ) {
     when (service) {
@@ -595,6 +610,16 @@ private fun openService(
                 safeStartActivity(
                     context = context,
                     intent = Intent(context, NeteaseLoginActivity::class.java)
+                )
+            }
+        }
+        ExternalServiceAccount.QQ_MUSIC -> {
+            if (preferNeteaseDashboard) {
+                onOpenQqMusicDashboard()
+            } else {
+                safeStartActivity(
+                    context = context,
+                    intent = Intent(context, QqMusicLoginActivity::class.java)
                 )
             }
         }
