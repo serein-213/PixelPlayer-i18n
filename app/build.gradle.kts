@@ -169,6 +169,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    // Keep debug-only Compose tooling on the same version line as the runtime stack.
+    debugImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
@@ -228,7 +230,14 @@ dependencies {
     implementation(libs.coil.compose)
 
     //Capturable
-    implementation(libs.capturable) // Verifica la última versión en GitHub
+    implementation(libs.capturable) {
+        // Capturable brings its own loose Compose graph; keep it on the app's Compose line.
+        exclude(group = "androidx.compose.animation")
+        exclude(group = "androidx.compose.foundation")
+        exclude(group = "androidx.compose.material")
+        exclude(group = "androidx.compose.runtime")
+        exclude(group = "androidx.compose.ui")
+    }
 
     //Reorderable List/Drag and Drop
     // compose.dnd (mohamedrejeb) 未被使用，已删除

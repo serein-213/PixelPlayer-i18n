@@ -93,7 +93,7 @@ fun PlaylistBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        contentWindowInsets = { BottomSheetDefaults.modalWindowInsets } // Manejo de insets como el teclado
+        contentWindowInsets = { BottomSheetDefaults.windowInsets } // Manejo de insets como el teclado
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
 
