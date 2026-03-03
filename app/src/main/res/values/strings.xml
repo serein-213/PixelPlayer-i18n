@@ -1468,6 +1468,7 @@
     <string name="accounts_service_telegram">Telegram</string>
     <string name="accounts_service_google_drive">Google Drive</string>
     <string name="accounts_service_netease">Netease Cloud Music</string>
+    <string name="accounts_service_qq_music">QQ Music</string>
     <string name="accounts_telegram_session_active">Active Telegram session</string>
     <string name="accounts_google_account_connected">Google account connected</string>
     <string name="accounts_netease_account_connected">Netease account connected</string>
