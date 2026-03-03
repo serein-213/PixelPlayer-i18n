@@ -40,6 +40,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.resume
 
 import com.theveloper.pixelplay.data.netease.NeteaseStreamProxy
+import com.theveloper.pixelplay.data.qqmusic.QqMusicStreamProxy
 import com.theveloper.pixelplay.data.telegram.TelegramRepository
 import androidx.media3.datasource.ResolvingDataSource
 import androidx.media3.datasource.DefaultDataSource
@@ -62,6 +63,7 @@ class DualPlayerEngine @Inject constructor(
     private val telegramRepository: TelegramRepository,
     private val telegramStreamProxy: com.theveloper.pixelplay.data.telegram.TelegramStreamProxy,
     private val neteaseStreamProxy: NeteaseStreamProxy,
+    private val qqMusicStreamProxy: QqMusicStreamProxy,
     private val telegramCacheManager: com.theveloper.pixelplay.data.telegram.TelegramCacheManager,
     private val connectivityStateHolder: com.theveloper.pixelplay.presentation.viewmodel.ConnectivityStateHolder
 ) {
@@ -157,6 +159,8 @@ class DualPlayerEngine @Inject constructor(
                         val nextUri = nextItem.localConfiguration?.uri
                         if (nextUri?.scheme == "telegram") {
                             telegramRepository.preResolveTelegramUri(nextUri.toString())
+                        } else if (nextUri?.scheme == "netease" || nextUri?.scheme == "qqmusic") {
+                            scope.launch { resolveCloudUri(nextUri) }
                         }
                     }
                     // 2. Pre-resolver ANTERIOR (para rapidez al retroceder)
@@ -165,6 +169,8 @@ class DualPlayerEngine @Inject constructor(
                         val prevUri = prevItem.localConfiguration?.uri
                         if (prevUri?.scheme == "telegram") {
                             telegramRepository.preResolveTelegramUri(prevUri.toString())
+                        } else if (prevUri?.scheme == "netease" || prevUri?.scheme == "qqmusic") {
+                            scope.launch { resolveCloudUri(prevUri) }
                         }
                     }
                 }
@@ -321,7 +327,7 @@ class DualPlayerEngine @Inject constructor(
         val resolver = object : ResolvingDataSource.Resolver {
             override fun resolveDataSpec(dataSpec: DataSpec): DataSpec {
                 val scheme = dataSpec.uri.scheme
-                if (scheme == "telegram" || scheme == "netease") {
+                if (scheme == "telegram" || scheme == "netease" || scheme == "qqmusic") {
                     val originalUri = dataSpec.uri.toString()
                     val resolved = resolvedUriCache[originalUri]
                     if (resolved != null) {
@@ -398,6 +404,7 @@ class DualPlayerEngine @Inject constructor(
         val resolved: Uri? = when (uri.scheme) {
             "telegram" -> resolveTelegramUriAsync(uri, uriString)
             "netease" -> resolveNeteaseUriAsync(uriString)
+            "qqmusic" -> resolveQqMusicUriAsync(uriString)
             else -> null
         }
 
@@ -478,6 +485,31 @@ class DualPlayerEngine @Inject constructor(
         return null
     }
 
+    private suspend fun resolveQqMusicUriAsync(uriString: String): Uri? {
+        Timber.tag("DualPlayerEngine").d("Async resolving QQ Music URI: $uriString")
+
+        if (!qqMusicStreamProxy.isReady()) {
+            Timber.tag("DualPlayerEngine").w("QqMusicStreamProxy not ready, awaiting...")
+            val proxyReady = qqMusicStreamProxy.awaitReady(5_000L)
+            if (!proxyReady) {
+                Timber.tag("DualPlayerEngine").e("QqMusicStreamProxy not ready after timeout")
+                return null
+            }
+        }
+
+        // Pre-fetch the real stream URL now (network call) so the proxy cache is
+        // warm by the time ExoPlayer makes its HTTP request to the local proxy.
+        qqMusicStreamProxy.warmUpStreamUrl(uriString)
+
+        val proxyUrl = qqMusicStreamProxy.resolveQqMusicUri(uriString)
+        if (!proxyUrl.isNullOrBlank()) {
+            return Uri.parse(proxyUrl)
+        }
+
+        Timber.tag("DualPlayerEngine").w("Failed to resolve QQ Music URI: $uriString")
+        return null
+    }
+
     /**
      * Resolves a MediaItem's cloud URI (if any) and returns a copy with the resolved URI.
      * For non-cloud URIs, returns the original MediaItem unchanged.
@@ -485,7 +517,7 @@ class DualPlayerEngine @Inject constructor(
     suspend fun resolveMediaItem(mediaItem: MediaItem): MediaItem {
         val uri = mediaItem.localConfiguration?.uri ?: return mediaItem
         val scheme = uri.scheme
-        if (scheme != "telegram" && scheme != "netease") return mediaItem
+        if (scheme != "telegram" && scheme != "netease" && scheme != "qqmusic") return mediaItem
 
         val resolvedUri = resolveCloudUri(uri)
         if (resolvedUri == uri) return mediaItem // Resolution failed or not needed

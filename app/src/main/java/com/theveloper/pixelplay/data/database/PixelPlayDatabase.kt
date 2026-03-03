@@ -24,9 +24,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         GDriveSongEntity::class,
         GDriveFolderEntity::class,
         PlaylistEntity::class,
-        PlaylistSongEntity::class
+        PlaylistSongEntity::class,
+        QqMusicSongEntity::class,
+        QqMusicPlaylistEntity::class
     ],
-    version = 27, // Incremented for playlist schema repair migration
+    version = 28, // Incremented for QQ Music tables after playlist schema repair
 
     exportSchema = true
 )
@@ -42,6 +44,7 @@ abstract class PixelPlayDatabase : RoomDatabase() {
     abstract fun neteaseDao(): NeteaseDao
     abstract fun gdriveDao(): GDriveDao
     abstract fun localPlaylistDao(): LocalPlaylistDao
+    abstract fun qqmusicDao(): QqMusicDao
 
     companion object {
         // Gap-bridging no-op migrations for missing version ranges.
@@ -712,6 +715,43 @@ abstract class PixelPlayDatabase : RoomDatabase() {
                     END
                 """.trimIndent()
             )
+        }
+
+        /**
+         * Add QQ Music support tables.
+         */
+        val MIGRATION_27_28 = object : Migration(27, 28) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS qqmusic_playlists (
+                        id INTEGER NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        cover_url TEXT,
+                        song_count INTEGER NOT NULL,
+                        last_sync_time INTEGER NOT NULL
+                    )
+                """.trimIndent())
+
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS qqmusic_songs (
+                        id TEXT NOT NULL PRIMARY KEY,
+                        song_mid TEXT NOT NULL,
+                        playlist_id INTEGER NOT NULL,
+                        title TEXT NOT NULL,
+                        artist TEXT NOT NULL,
+                        album TEXT NOT NULL,
+                        album_mid TEXT,
+                        duration INTEGER NOT NULL,
+                        album_art_url TEXT,
+                        mime_type TEXT NOT NULL,
+                        bitrate INTEGER,
+                        date_added INTEGER NOT NULL
+                    )
+                """.trimIndent())
+
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_qqmusic_songs_song_mid ON qqmusic_songs(song_mid)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_qqmusic_songs_playlist_id ON qqmusic_songs(playlist_id)")
+            }
         }
     }
 }

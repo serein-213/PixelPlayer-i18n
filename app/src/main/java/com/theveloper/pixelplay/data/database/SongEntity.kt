@@ -99,6 +99,9 @@ private fun SongEntity.toSongInternal(artists: List<ArtistRef>): Song {
         gdriveFileId = if (this.contentUriString.startsWith("gdrive://")) {
             this.contentUriString.removePrefix("gdrive://")
         } else null,
+        qqMusicMid = if (this.contentUriString.startsWith("qqmusic://")) {
+            this.contentUriString.removePrefix("qqmusic://")
+        } else null,
         mimeType = this.mimeType,
         bitrate = this.bitrate,
         sampleRate = this.sampleRate

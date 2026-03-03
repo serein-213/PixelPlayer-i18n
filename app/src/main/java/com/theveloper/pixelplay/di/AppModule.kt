@@ -24,6 +24,7 @@ import com.theveloper.pixelplay.data.database.LyricsDao
 import com.theveloper.pixelplay.data.database.LocalPlaylistDao
 import com.theveloper.pixelplay.data.database.MusicDao
 import com.theveloper.pixelplay.data.database.PixelPlayDatabase
+import com.theveloper.pixelplay.data.database.QqMusicDao
 import com.theveloper.pixelplay.data.database.SearchHistoryDao
 import com.theveloper.pixelplay.data.database.TransitionDao
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
@@ -131,7 +132,8 @@ object AppModule {
             PixelPlayDatabase.MIGRATION_23_24,
             PixelPlayDatabase.MIGRATION_24_25,
             PixelPlayDatabase.MIGRATION_25_26,
-            PixelPlayDatabase.MIGRATION_26_27
+                PixelPlayDatabase.MIGRATION_26_27,
+                PixelPlayDatabase.MIGRATION_27_28
         )
             .addCallback(
                 object : RoomDatabase.Callback() {
@@ -197,6 +199,12 @@ object AppModule {
     @Provides
     fun provideLocalPlaylistDao(database: PixelPlayDatabase): LocalPlaylistDao {
         return database.localPlaylistDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideQqMusicDao(database: PixelPlayDatabase): QqMusicDao {
+        return database.qqmusicDao()
     }
 
     @Provides
