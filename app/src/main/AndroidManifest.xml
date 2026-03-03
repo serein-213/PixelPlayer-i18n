@@ -80,6 +80,12 @@
             android:label="Google Drive Login"
             android:theme="@style/Theme.PixelPlay" />
 
+        <activity
+            android:name=".presentation.qqmusic.auth.QqMusicLoginActivity"
+            android:exported="false"
+            android:label="QQ Music Login"
+            android:theme="@style/Theme.PixelPlay" />
+
 
         <activity
             android:name=".ExternalPlayerActivity"

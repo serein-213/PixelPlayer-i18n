@@ -132,6 +132,7 @@ interface MusicDao {
         SELECT id FROM songs
         WHERE content_uri_string NOT LIKE 'telegram://%'
         AND content_uri_string NOT LIKE 'netease://%'
+        AND content_uri_string NOT LIKE 'qqmusic://%'
     """)
     suspend fun getAllMediaStoreSongIds(): List<Long>
 
@@ -163,6 +164,9 @@ interface MusicDao {
     @Query("SELECT id FROM songs WHERE content_uri_string LIKE 'gdrive://%'")
     suspend fun getAllGDriveSongIds(): List<Long>
 
+    @Query("SELECT id FROM songs WHERE content_uri_string LIKE 'qqmusic://%'")
+    suspend fun getAllQqMusicSongIds(): List<Long>
+
     @Transaction
     suspend fun deleteSongsAndRelatedData(songIds: List<Long>) {
         if (songIds.isEmpty()) return
@@ -188,6 +192,13 @@ interface MusicDao {
         val gdriveSongIds = getAllGDriveSongIds()
         if (gdriveSongIds.isEmpty()) return
         deleteSongsAndRelatedData(gdriveSongIds)
+    }
+
+    @Transaction
+    suspend fun clearAllQqMusicSongs() {
+        val qqMusicSongIds = getAllQqMusicSongIds()
+        if (qqMusicSongIds.isEmpty()) return
+        deleteSongsAndRelatedData(qqMusicSongIds)
     }
 
     @Transaction
