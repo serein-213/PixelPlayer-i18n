@@ -1472,6 +1472,7 @@
     <string name="accounts_telegram_session_active">Active Telegram session</string>
     <string name="accounts_google_account_connected">Google account connected</string>
     <string name="accounts_netease_account_connected">Netease account connected</string>
+    <string name="accounts_qq_music_account_connected">QQ Music account connected</string>
     <string name="accounts_synced_channel">synced channel</string>
     <string name="accounts_synced_channels">synced channels</string>
     <string name="accounts_synced_folder">synced folder</string>

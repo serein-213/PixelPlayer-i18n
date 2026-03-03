@@ -1502,6 +1502,7 @@
     <string name="accounts_telegram_session_active">Telegram 会话已激活</string>
     <string name="accounts_google_account_connected">Google 账户已连接</string>
     <string name="accounts_netease_account_connected">网易账户已连接</string>
+    <string name="accounts_qq_music_account_connected">QQ 音乐账户已连接</string>
     <string name="accounts_synced_channel">个已同步频道</string>
     <string name="accounts_synced_channels">个已同步频道</string>
     <string name="accounts_synced_folder">个已同步文件夹</string>

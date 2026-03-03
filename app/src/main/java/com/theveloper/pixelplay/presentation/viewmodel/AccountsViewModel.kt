@@ -152,14 +152,14 @@ class AccountsViewModel @Inject constructor(
                 add(
                     ExternalAccountUiModel(
                         service = ExternalServiceAccount.QQ_MUSIC,
-                        title = "QQ Music",
+                        title = application.getString(R.string.accounts_service_qq_music),
                         accountLabel = qqMusicRepository.userNickname
                             ?.takeIf { it.isNotBlank() }
-                            ?: "QQ Music account connected",
+                            ?: application.getString(R.string.accounts_qq_music_account_connected),
                         syncedContentLabel = formatCount(
                             count = qqPlaylistCount,
-                            singular = "synced playlist",
-                            plural = "synced playlists"
+                            singularResId = R.string.accounts_synced_playlist,
+                            pluralResId = R.string.accounts_synced_playlists
                         ),
                         isLoggingOut = ExternalServiceAccount.QQ_MUSIC in activeLogouts
                     )
