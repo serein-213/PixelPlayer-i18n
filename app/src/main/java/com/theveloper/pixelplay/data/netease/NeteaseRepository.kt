@@ -14,14 +14,20 @@ import com.theveloper.pixelplay.data.database.toSong
 import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.data.network.netease.NeteaseApiService
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
+import com.theveloper.pixelplay.data.stream.BulkSyncResult
+import com.theveloper.pixelplay.data.stream.CloudMusicUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import timber.log.Timber
@@ -37,12 +43,6 @@ class NeteaseRepository @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
     @ApplicationContext private val context: Context
 ) {
-    data class BulkSyncResult(
-        val playlistCount: Int,
-        val syncedSongCount: Int,
-        val failedPlaylistCount: Int
-    )
-
     private companion object {
         private const val NETEASE_SONG_ID_OFFSET = 3_000_000_000_000L
         private const val NETEASE_ALBUM_ID_OFFSET = 4_000_000_000_000L
@@ -57,6 +57,14 @@ class NeteaseRepository @Inject constructor(
 
     private val _isLoggedInFlow = MutableStateFlow(false)
     val isLoggedInFlow: StateFlow<Boolean> = _isLoggedInFlow.asStateFlow()
+
+    private val inFlightSongUrlRequests = java.util.concurrent.ConcurrentHashMap<Long, CompletableDeferred<Result<String>>>()
+    private val lastSongUrlAttemptAtMs = java.util.concurrent.ConcurrentHashMap<Long, Long>()
+    private val songUrlRequestCooldownMs = 1500L
+    private val neteaseSongUrlRequestMutex = Mutex()
+    @Volatile
+    private var lastGlobalSongUrlRequestAtMs = 0L
+    private val globalSongUrlRequestIntervalMs = 1100L
 
     init {
         // Auto-load saved cookies on creation so API client is ready
@@ -381,13 +389,31 @@ class NeteaseRepository @Inject constructor(
     // ─── Song URL Resolution ───────────────────────────────────────────
 
     suspend fun getSongUrl(songId: Long, quality: String = "exhigh"): Result<String> {
-        return withContext(Dispatchers.IO) {
-            try {
+        val now = System.currentTimeMillis()
+        val lastAttempt = lastSongUrlAttemptAtMs[songId]
+        if (lastAttempt != null && now - lastAttempt < songUrlRequestCooldownMs) {
+            Timber.d("Skip Netease song URL retry due to cooldown: songId=$songId")
+            return Result.failure(IllegalStateException("Netease song URL request throttled"))
+        }
+        lastSongUrlAttemptAtMs[songId] = now
+
+        inFlightSongUrlRequests[songId]?.let {
+            return it.await()
+        }
+
+        val requestDeferred = CompletableDeferred<Result<String>>()
+        val existing = inFlightSongUrlRequests.putIfAbsent(songId, requestDeferred)
+        if (existing != null) {
+            return existing.await()
+        }
+
+        val result = withContext(Dispatchers.IO) {
+            runCatching {
                 val qualityFallbacks = linkedSetOf(quality, "higher", "standard")
                 var lastFailure: String? = null
 
                 for (level in qualityFallbacks) {
-                    val raw = api.getSongDownloadUrl(songId, level)
+                    val raw = requestSongUrl(songId, level)
                     val root = JSONObject(raw)
                     val code = root.optInt("code", -1)
                     if (code != 200) {
@@ -400,19 +426,33 @@ class NeteaseRepository @Inject constructor(
                     val url = urlObj?.optString("url", "")
                     if (!url.isNullOrBlank() && url != "null") {
                         Timber.d("Resolved Netease URL for songId=$songId with level=$level")
-                        return@withContext Result.success(url)
+                        return@runCatching url
                     }
 
                     val freeTrialInfo = urlObj?.opt("freeTrialInfo")
                     lastFailure = "Empty URL at level=$level, freeTrialInfo=$freeTrialInfo"
                 }
 
-                Result.failure(Exception("No URL available for song $songId ($lastFailure)"))
-            } catch (e: Exception) {
-                Timber.e(e, "Failed to get URL for song $songId")
-                Result.failure(e)
+                throw Exception("No URL available for song $songId ($lastFailure)")
             }
         }
+
+        requestDeferred.complete(result)
+        inFlightSongUrlRequests.remove(songId, requestDeferred)
+        return result
+    }
+
+    /**
+     * Make a single song URL request with global rate-limit guard.
+     */
+    private suspend fun requestSongUrl(songId: Long, level: String): String {
+        neteaseSongUrlRequestMutex.withLock {
+            val now = System.currentTimeMillis()
+            val waitMs = globalSongUrlRequestIntervalMs - (now - lastGlobalSongUrlRequestAtMs)
+            if (waitMs > 0) delay(waitMs)
+            lastGlobalSongUrlRequestAtMs = System.currentTimeMillis()
+        }
+        return api.getSongDownloadUrl(songId, level)
     }
 
     // ─── Lyrics ────────────────────────────────────────────────────────
@@ -608,14 +648,8 @@ class NeteaseRepository @Inject constructor(
         )
     }
 
-    private fun parseArtistNames(rawArtist: String): List<String> {
-        if (rawArtist.isBlank()) return listOf("Unknown Artist")
-        val parsed = rawArtist.split(Regex("\\s*[,/&;+、]\\s*"))
-            .map { it.trim() }
-            .filter { it.isNotBlank() }
-            .distinct()
-        return if (parsed.isEmpty()) listOf("Unknown Artist") else parsed
-    }
+    private fun parseArtistNames(rawArtist: String): List<String> =
+        CloudMusicUtils.parseArtistNames(rawArtist)
 
     private fun toUnifiedSongId(neteaseId: Long): Long {
         return -(NETEASE_SONG_ID_OFFSET + neteaseId.absoluteValue)
@@ -705,12 +739,6 @@ class NeteaseRepository @Inject constructor(
 
     // ─── Utility ───────────────────────────────────────────────────────
 
-    private fun jsonToMap(json: String): Map<String, String> {
-        val obj = JSONObject(json)
-        val result = mutableMapOf<String, String>()
-        for (key in obj.keys()) {
-            result[key] = obj.optString(key, "")
-        }
-        return result
-    }
+    private fun jsonToMap(json: String): Map<String, String> =
+        CloudMusicUtils.jsonToMap(json)
 }
