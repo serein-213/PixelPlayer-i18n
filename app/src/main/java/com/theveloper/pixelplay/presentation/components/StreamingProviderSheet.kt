@@ -23,10 +23,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.theveloper.pixelplay.R
-import com.theveloper.pixelplay.data.netease.NeteaseRepository
 import com.theveloper.pixelplay.presentation.netease.auth.NeteaseLoginActivity
+import com.theveloper.pixelplay.presentation.qqmusic.auth.QqMusicLoginActivity
 import com.theveloper.pixelplay.presentation.telegram.auth.TelegramLoginActivity
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
@@ -44,6 +46,8 @@ fun StreamingProviderSheet(
     onDismissRequest: () -> Unit,
     isNeteaseLoggedIn: Boolean = false,
     onNavigateToNeteaseDashboard: () -> Unit = {},
+    isQqMusicLoggedIn: Boolean = false,
+    onNavigateToQqMusicDashboard: () -> Unit = {},
     sheetState: SheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
@@ -55,6 +59,20 @@ fun StreamingProviderSheet(
         cornerRadiusBR = 20.dp, cornerRadiusBL = 20.dp,
         smoothnessAsPercentTR = 60, smoothnessAsPercentTL = 60,
         smoothnessAsPercentBR = 60, smoothnessAsPercentBL = 60
+    )
+
+    val neteaseCardShape = AbsoluteSmoothCornerShape(
+        cornerRadiusTL = 20.dp, cornerRadiusBL = 20.dp,
+        cornerRadiusTR = 6.dp, cornerRadiusBR = 6.dp, // 中间一侧圆角变小
+        smoothnessAsPercentTL = 60, smoothnessAsPercentBL = 60,
+        smoothnessAsPercentTR = 10, smoothnessAsPercentBR = 10
+    )
+
+    val qqCardShape = AbsoluteSmoothCornerShape(
+        cornerRadiusTR = 20.dp, cornerRadiusBR = 20.dp,
+        cornerRadiusTL = 6.dp, cornerRadiusBL = 6.dp, // 中间一侧圆角变小
+        smoothnessAsPercentTR = 60, smoothnessAsPercentBR = 60,
+        smoothnessAsPercentTL = 10, smoothnessAsPercentBL = 10
     )
 
     ModalBottomSheet(
@@ -125,34 +143,64 @@ fun StreamingProviderSheet(
 
             Spacer(Modifier.height(12.dp))
 
-            // Netease Cloud Music Provider
-            ProviderCard(
-                icon = Icons.Rounded.MusicNote,
-                iconPainter = painterResource(R.drawable.netease_cloud_music_logo_icon_206716__1_),
-                title = "Netease Cloud Music",
-                subtitle = if (isNeteaseLoggedIn)
-                    "✓ Connected – Open dashboard"
-                else
-                    "网易云音乐 – Sign in to stream",
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                iconColor = MaterialTheme.colorScheme.tertiaryContainer,
-                shape = cardShape,
-                onClick = {
-                    if (isNeteaseLoggedIn) {
-                        onNavigateToNeteaseDashboard()
-                    } else {
-                        context.startActivity(Intent(context, NeteaseLoginActivity::class.java))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                // Netease Cloud Music Provider
+                ProviderCard(
+                    modifier = Modifier.weight(1f),
+                    icon = Icons.Rounded.MusicNote,
+                    iconPainter = painterResource(R.drawable.netease_cloud_music_logo_icon_206716__1_),
+                    title = "Netease",
+                    subtitle = if (isNeteaseLoggedIn)
+                        "✓ Connected"
+                    else
+                        "Sign in",
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                    iconColor = MaterialTheme.colorScheme.errorContainer,
+                    shape = neteaseCardShape,
+                    onClick = {
+                        if (isNeteaseLoggedIn) {
+                            onNavigateToNeteaseDashboard()
+                        } else {
+                            context.startActivity(Intent(context, NeteaseLoginActivity::class.java))
+                        }
+                        onDismissRequest()
                     }
-                    onDismissRequest()
-                }
-            )
+                )
+
+                // QQ Music Provider
+                 ProviderCard(
+                    modifier = Modifier.weight(1f),
+                    icon = Icons.Rounded.MusicNote,
+                    title = "QQ",
+                    subtitle = if (isQqMusicLoggedIn)
+                        "✓ Connected"
+                    else
+                        "Sign in",
+                    containerColor = Color(0xFFE8F5E9), // 浅绿色背景
+                    contentColor = Color(0xFF2E7D32), // QQ 音乐深绿色文字
+                    iconColor = Color(0xFFC8E6C9), // 图标辅助色
+                    shape = qqCardShape,
+                    onClick = {
+                        if (isQqMusicLoggedIn) {
+                            onNavigateToQqMusicDashboard()
+                        } else {
+                            context.startActivity(Intent(context, QqMusicLoginActivity::class.java))
+                        }
+                        onDismissRequest()
+                    }
+                )
+            }
         }
     }
 }
 
 @Composable
 private fun ProviderCard(
+    modifier: Modifier = Modifier,
     icon: ImageVector,
     iconPainter: Painter? = null,
     title: String,
@@ -165,7 +213,7 @@ private fun ProviderCard(
     onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .alpha(if (enabled) 1f else 0.62f)
             .clip(shape = shape)
@@ -175,54 +223,60 @@ private fun ProviderCard(
             containerColor = containerColor
         )
     ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
+            Row(
                 modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(contentColor),
-                contentAlignment = Alignment.Center
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                if (iconPainter != null){
-                    Icon(
-                        painter = iconPainter,
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = iconColor
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(contentColor),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (iconPainter != null){
+                        Icon(
+                            painter = iconPainter,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                            tint = iconColor
+                        )
+                    } else {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                            tint = iconColor
+                        )
+                    }
+                }
+
+                Spacer(Modifier.width(12.dp))
+
+                Column {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleMedium.copy(fontSize = 14.sp),
+                        fontFamily = GoogleSansRounded,
+                        lineHeight = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = contentColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
-                } else {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = iconColor
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                        fontFamily = GoogleSansRounded,
+                        lineHeight = 14.sp,
+                        color = contentColor.copy(alpha = 0.7f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
-
-            Spacer(Modifier.width(16.dp))
-
-            Column {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontFamily = GoogleSansRounded,
-                    fontWeight = FontWeight.Bold,
-                    color = contentColor
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    fontFamily = GoogleSansRounded,
-                    color = contentColor.copy(alpha = 0.7f)
-                )
-            }
-        }
     }
 }

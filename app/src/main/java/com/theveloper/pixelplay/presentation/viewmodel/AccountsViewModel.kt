@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.theveloper.pixelplay.data.gdrive.GDriveRepository
 import com.theveloper.pixelplay.data.netease.NeteaseRepository
+import com.theveloper.pixelplay.data.qqmusic.QqMusicRepository
 import com.theveloper.pixelplay.data.repository.MusicRepository
 import com.theveloper.pixelplay.data.telegram.TelegramRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,8 @@ import org.drinkless.tdlib.TdApi
 enum class ExternalServiceAccount {
     TELEGRAM,
     GOOGLE_DRIVE,
-    NETEASE
+    NETEASE,
+    QQ_MUSIC
 }
 
 data class ExternalAccountUiModel(
@@ -43,7 +45,8 @@ class AccountsViewModel @Inject constructor(
     private val telegramRepository: TelegramRepository,
     private val musicRepository: MusicRepository,
     private val gDriveRepository: GDriveRepository,
-    private val neteaseRepository: NeteaseRepository
+    private val neteaseRepository: NeteaseRepository,
+    private val qqMusicRepository: QqMusicRepository
 ) : ViewModel() {
 
     private val loggingOutServices = MutableStateFlow<Set<ExternalServiceAccount>>(emptySet())
@@ -71,15 +74,24 @@ class AccountsViewModel @Inject constructor(
         connected to playlistCount
     }
 
+    private val qqMusicStateFlow = combine(
+        qqMusicRepository.isLoggedInFlow,
+        qqMusicRepository.getPlaylists().map { it.size }
+    ) { connected, playlistCount ->
+        connected to playlistCount
+    }
+
     val uiState: StateFlow<AccountsUiState> = combine(
         telegramStateFlow,
         gDriveStateFlow,
         neteaseStateFlow,
+        qqMusicStateFlow,
         loggingOutServices
-    ) { telegramState, gDriveState, neteaseState, activeLogouts ->
+    ) { telegramState, gDriveState, neteaseState, qqMusicState, activeLogouts ->
         val (telegramConnected, telegramChannelCount) = telegramState
         val (gDriveConnected, gDriveFolderCount) = gDriveState
         val (neteaseConnected, neteasePlaylistCount) = neteaseState
+        val (qqConnected, qqPlaylistCount) = qqMusicState
 
         val connectedAccounts = buildList {
             if (telegramConnected) {
@@ -133,12 +145,30 @@ class AccountsViewModel @Inject constructor(
                     )
                 )
             }
+            if (qqConnected) {
+                add(
+                    ExternalAccountUiModel(
+                        service = ExternalServiceAccount.QQ_MUSIC,
+                        title = "QQ Music",
+                        accountLabel = qqMusicRepository.userNickname
+                            ?.takeIf { it.isNotBlank() }
+                            ?: "QQ Music account connected",
+                        syncedContentLabel = formatCount(
+                            count = qqPlaylistCount,
+                            singular = "synced playlist",
+                            plural = "synced playlists"
+                        ),
+                        isLoggingOut = ExternalServiceAccount.QQ_MUSIC in activeLogouts
+                    )
+                )
+            }
         }
 
         val disconnectedServices = buildList {
             if (!telegramConnected) add(ExternalServiceAccount.TELEGRAM)
             if (!gDriveConnected) add(ExternalServiceAccount.GOOGLE_DRIVE)
             if (!neteaseConnected) add(ExternalServiceAccount.NETEASE)
+            if (!qqConnected) add(ExternalServiceAccount.QQ_MUSIC)
         }
 
         AccountsUiState(
@@ -162,6 +192,7 @@ class AccountsViewModel @Inject constructor(
                         }
                         ExternalServiceAccount.GOOGLE_DRIVE -> gDriveRepository.logout()
                         ExternalServiceAccount.NETEASE -> neteaseRepository.logout()
+                        ExternalServiceAccount.QQ_MUSIC -> qqMusicRepository.logout()
                     }
                 }
             } finally {

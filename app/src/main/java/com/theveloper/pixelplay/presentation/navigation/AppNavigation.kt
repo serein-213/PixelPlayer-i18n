@@ -225,6 +225,9 @@ fun AppNavigation(
                         onBackClick = { navController.popBackStack() },
                         onOpenNeteaseDashboard = {
                             navController.navigateSafely(Screen.NeteaseDashboard.route)
+                        },
+                        onOpenQqMusicDashboard = {
+                            navController.navigateSafely(Screen.QqMusicDashboard.route)
                         }
                     )
                 }
@@ -513,6 +516,19 @@ fun AppNavigation(
             ) {
                 ScreenWrapper(navController = navController, playerViewModel = playerViewModel) {
                     com.theveloper.pixelplay.presentation.netease.dashboard.NeteaseDashboardScreen(
+                        onBack = { navController.popBackStack() }
+                    )
+                }
+            }
+            composable(
+                Screen.QqMusicDashboard.route,
+                enterTransition = { enterTransition() },
+                exitTransition = { exitTransition() },
+                popEnterTransition = { popEnterTransition() },
+                popExitTransition = { popExitTransition() },
+            ) {
+                ScreenWrapper(navController = navController, playerViewModel = playerViewModel) {
+                    com.theveloper.pixelplay.presentation.qqmusic.dashboard.QqMusicDashboardScreen(
                         onBack = { navController.popBackStack() }
                     )
                 }
