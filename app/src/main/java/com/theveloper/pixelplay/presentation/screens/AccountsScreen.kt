@@ -33,7 +33,7 @@ import androidx.compose.material.icons.automirrored.rounded.OpenInNew
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.rounded.CloudQueue
 import androidx.compose.material.icons.rounded.Link
-import androidx.compose.material.icons.rounded.LibraryMusic
+import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -548,20 +548,20 @@ private fun servicePalette(service: ExternalServiceAccount): ServicePalette {
             primaryActionTint = MaterialTheme.colorScheme.onSecondaryContainer
         )
         ExternalServiceAccount.NETEASE -> ServicePalette(
-            iconContainer = MaterialTheme.colorScheme.tertiaryContainer,
-            iconTint = MaterialTheme.colorScheme.onTertiaryContainer,
-            statusContainer = Color(0xFFFFF0C7),
-            statusTint = Color(0xFF704900),
-            primaryActionContainer = MaterialTheme.colorScheme.tertiaryContainer,
-            primaryActionTint = MaterialTheme.colorScheme.onTertiaryContainer
-        )
-        ExternalServiceAccount.QQ_MUSIC -> ServicePalette(
             iconContainer = MaterialTheme.colorScheme.errorContainer,
             iconTint = MaterialTheme.colorScheme.onErrorContainer,
             statusContainer = Color(0xFFFFE3E1),
             statusTint = Color(0xFF7A1D16),
             primaryActionContainer = MaterialTheme.colorScheme.errorContainer,
             primaryActionTint = MaterialTheme.colorScheme.onErrorContainer
+        )
+        ExternalServiceAccount.QQ_MUSIC -> ServicePalette(
+            iconContainer = MaterialTheme.colorScheme.tertiaryContainer,
+            iconTint = MaterialTheme.colorScheme.onTertiaryContainer,
+            statusContainer = Color(0xFFFFF0C7),
+            statusTint = Color(0xFF704900),
+            primaryActionContainer = MaterialTheme.colorScheme.tertiaryContainer,
+            primaryActionTint = MaterialTheme.colorScheme.onTertiaryContainer
         )
     }
 }
@@ -570,8 +570,8 @@ private fun accountIcon(service: ExternalServiceAccount): ImageVector {
     return when (service) {
         ExternalServiceAccount.TELEGRAM -> Icons.AutoMirrored.Rounded.Send
         ExternalServiceAccount.GOOGLE_DRIVE -> Icons.Rounded.CloudQueue
-        ExternalServiceAccount.NETEASE -> Icons.Rounded.LibraryMusic
-        ExternalServiceAccount.QQ_MUSIC -> Icons.Rounded.LibraryMusic
+        ExternalServiceAccount.NETEASE -> Icons.Rounded.MusicNote
+        ExternalServiceAccount.QQ_MUSIC -> Icons.Rounded.MusicNote
     }
 }
 
