@@ -158,9 +158,9 @@ fun StreamingProviderSheet(
                         stringResource(R.string.cloud_streaming_provider_netease_subtitle_connected)
                     else
                         stringResource(R.string.cloud_streaming_provider_netease_subtitle_sign_in),
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                    iconColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                    iconColor = MaterialTheme.colorScheme.errorContainer,
                     shape = neteaseCardShape,
                     onClick = {
                         if (isNeteaseLoggedIn) {

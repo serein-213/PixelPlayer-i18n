@@ -63,6 +63,8 @@ import com.theveloper.pixelplay.data.preferences.LibraryNavigationMode
 import com.theveloper.pixelplay.data.preferences.NavBarStyle
 import com.theveloper.pixelplay.data.preferences.FullPlayerLoadingTweaks
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
+import com.theveloper.pixelplay.data.preferences.ThemePreferencesRepository
+import com.theveloper.pixelplay.data.preferences.PlaylistPreferencesRepository
 import com.theveloper.pixelplay.data.preferences.AlbumArtQuality
 import com.theveloper.pixelplay.data.preferences.ThemePreference
 import com.theveloper.pixelplay.data.repository.LyricsSearchResult
@@ -159,6 +161,8 @@ class PlayerViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val musicRepository: MusicRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
+    private val themePreferencesRepository: ThemePreferencesRepository,
+    private val playlistPreferencesRepository: PlaylistPreferencesRepository,
     private val albumArtThemeDao: AlbumArtThemeDao,
     val syncManager: SyncManager, // Inyectar SyncManager
 
@@ -361,7 +365,7 @@ class PlayerViewModel @Inject constructor(
     val activePlayerColorSchemePair: StateFlow<ColorSchemePair?> = themeStateHolder.activePlayerColorSchemePair
     val currentThemedAlbumArtUri: StateFlow<String?> = themeStateHolder.currentAlbumArtUri
 
-    val playerThemePreference: StateFlow<String> = userPreferencesRepository.playerThemePreferenceFlow
+    val playerThemePreference: StateFlow<String> = themePreferencesRepository.playerThemePreferenceFlow
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -3066,7 +3070,7 @@ class PlayerViewModel @Inject constructor(
         libraryStateHolder.removeSong(song.id)
         _isSheetVisible.value = false
         musicRepository.deleteById(song.id.toLong())
-        userPreferencesRepository.removeSongFromAllPlaylists(song.id)
+        playlistPreferencesRepository.removeSongFromAllPlaylists(song.id)
     }
 
     private fun removeFromMediaControllerQueue(songId: String) {

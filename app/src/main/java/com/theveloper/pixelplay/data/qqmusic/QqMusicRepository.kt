@@ -13,7 +13,7 @@ import com.theveloper.pixelplay.data.database.SongArtistCrossRef
 import com.theveloper.pixelplay.data.database.SongEntity
 import com.theveloper.pixelplay.data.database.toSong
 import com.theveloper.pixelplay.data.network.qqmusic.QqMusicApiService
-import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
+import com.theveloper.pixelplay.data.preferences.PlaylistPreferencesRepository
 import com.theveloper.pixelplay.data.stream.BulkSyncResult
 import com.theveloper.pixelplay.data.stream.CloudMusicUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -40,7 +40,7 @@ class QqMusicRepository @Inject constructor(
     private val api: QqMusicApiService,
     private val dao: QqMusicDao,
     private val musicDao: MusicDao,
-    private val userPreferencesRepository: UserPreferencesRepository,
+    private val playlistPreferencesRepository: PlaylistPreferencesRepository,
     @ApplicationContext private val context: Context
 ) {
 
@@ -557,7 +557,7 @@ class QqMusicRepository @Inject constructor(
             }
 
             val appPlaylistId = getAppPlaylistIdForQqMusic(qqPlaylistId)
-            val allPlaylists = userPreferencesRepository.userPlaylistsFlow
+            val allPlaylists = playlistPreferencesRepository.userPlaylistsFlow
             val existingPlaylist = withContext(Dispatchers.IO) {
                 allPlaylists.map { playlists ->
                     playlists.find { it.id == appPlaylistId }
@@ -565,7 +565,7 @@ class QqMusicRepository @Inject constructor(
             }
 
             if (existingPlaylist != null) {
-                userPreferencesRepository.updatePlaylist(
+                playlistPreferencesRepository.updatePlaylist(
                     existingPlaylist.copy(
                         name = playlistName,
                         songIds = unifiedSongIds,
@@ -575,7 +575,7 @@ class QqMusicRepository @Inject constructor(
                 )
                 Timber.d("Updated app playlist for QQ Music playlist $qqPlaylistId: $playlistName")
             } else {
-                userPreferencesRepository.createPlaylist(
+                playlistPreferencesRepository.createPlaylist(
                     name = playlistName,
                     songIds = unifiedSongIds,
                     customId = appPlaylistId,
@@ -591,7 +591,7 @@ class QqMusicRepository @Inject constructor(
     private suspend fun deleteAppPlaylistForQqMusicPlaylist(qqPlaylistId: Long) {
         try {
             val appPlaylistId = getAppPlaylistIdForQqMusic(qqPlaylistId)
-            userPreferencesRepository.deletePlaylist(appPlaylistId)
+            playlistPreferencesRepository.deletePlaylist(appPlaylistId)
             Timber.d("Deleted app playlist for QQ Music playlist $qqPlaylistId")
         } catch (e: Exception) {
             Timber.w(e, "Failed to delete app playlist for QQ Music playlist $qqPlaylistId")

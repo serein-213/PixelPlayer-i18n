@@ -749,8 +749,6 @@ abstract class PixelPlayDatabase : RoomDatabase() {
                     )
                 """.trimIndent())
 
-                db.execSQL("CREATE INDEX IF NOT EXISTS index_qqmusic_songs_song_mid ON qqmusic_songs(song_mid)")
-                db.execSQL("CREATE INDEX IF NOT EXISTS index_qqmusic_songs_playlist_id ON qqmusic_songs(playlist_id)")
             }
         }
     }

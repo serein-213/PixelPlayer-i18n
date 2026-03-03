@@ -17,6 +17,7 @@ import com.theveloper.pixelplay.data.preferences.CarouselStyle
 import com.theveloper.pixelplay.data.preferences.LibraryNavigationMode
 import com.theveloper.pixelplay.data.preferences.ThemePreference
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
+import com.theveloper.pixelplay.data.preferences.ThemePreferencesRepository
 import com.theveloper.pixelplay.data.preferences.AlbumArtQuality
 import com.theveloper.pixelplay.data.preferences.AlbumArtPaletteStyle
 import com.theveloper.pixelplay.data.preferences.CollagePattern
@@ -147,6 +148,7 @@ private sealed interface SettingsUiUpdate {
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
+    private val themePreferencesRepository: ThemePreferencesRepository,
     private val syncManager: SyncManager,
     private val aiClientFactory: AiClientFactory,
     private val lyricsRepository: LyricsRepository,
@@ -241,9 +243,9 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             combine<Any?, SettingsUiUpdate.Group1>(
                 userPreferencesRepository.appRebrandDialogShownFlow,
-                userPreferencesRepository.appThemeModeFlow,
-                userPreferencesRepository.playerThemePreferenceFlow,
-                userPreferencesRepository.albumArtPaletteStyleFlow,
+                themePreferencesRepository.appThemeModeFlow,
+                themePreferencesRepository.playerThemePreferenceFlow,
+                themePreferencesRepository.albumArtPaletteStyleFlow,
                 userPreferencesRepository.mockGenresEnabledFlow,
                 userPreferencesRepository.navBarCornerRadiusFlow,
                 userPreferencesRepository.navBarStyleFlow,
@@ -453,13 +455,13 @@ class SettingsViewModel @Inject constructor(
     // Método para guardar la preferencia de tema del reproductor
     fun setPlayerThemePreference(preference: String) {
         viewModelScope.launch {
-            userPreferencesRepository.setPlayerThemePreference(preference)
+            themePreferencesRepository.setPlayerThemePreference(preference)
         }
     }
 
     fun setAlbumArtPaletteStyle(style: AlbumArtPaletteStyle) {
         viewModelScope.launch {
-            userPreferencesRepository.setAlbumArtPaletteStyle(style)
+            themePreferencesRepository.setAlbumArtPaletteStyle(style)
         }
     }
 
@@ -477,7 +479,7 @@ class SettingsViewModel @Inject constructor(
 
     fun setAppThemeMode(mode: String) {
         viewModelScope.launch {
-            userPreferencesRepository.setAppThemeMode(mode)
+            themePreferencesRepository.setAppThemeMode(mode)
         }
     }
 
