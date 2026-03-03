@@ -33,6 +33,9 @@ class PixelPlayApplication : Application(), ImageLoaderFactory, Configuration.Pr
     lateinit var neteaseStreamProxy: com.theveloper.pixelplay.data.netease.NeteaseStreamProxy
 
     @Inject
+    lateinit var qqMusicStreamProxy: com.theveloper.pixelplay.data.qqmusic.QqMusicStreamProxy
+
+    @Inject
     lateinit var telegramCacheManager: dagger.Lazy<com.theveloper.pixelplay.data.telegram.TelegramCacheManager>
 
     @Inject
@@ -71,6 +74,9 @@ class PixelPlayApplication : Application(), ImageLoaderFactory, Configuration.Pr
         
         // Start Netease proxy immediately (no heavy native deps)
         neteaseStreamProxy.start()
+
+        // Start QQ Music proxy immediately (no heavy native deps)
+        qqMusicStreamProxy.start()
 
         // Start Telegram proxy and schedule cache cleanup on IO thread to avoid blocking
         // Application.onCreate() with TDLib native library loading (System.loadLibrary("tdjni")).

@@ -22,9 +22,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         NeteaseSongEntity::class,
         NeteasePlaylistEntity::class,
         GDriveSongEntity::class,
-        GDriveFolderEntity::class
+        GDriveFolderEntity::class,
+        QqMusicSongEntity::class,
+        QqMusicPlaylistEntity::class
     ],
-    version = 24, // Incremented for query performance indexes
+    version = 25, // Incremented for QQ Music support
 
     exportSchema = false
 )
@@ -39,6 +41,7 @@ abstract class PixelPlayDatabase : RoomDatabase() {
     abstract fun lyricsDao(): LyricsDao
     abstract fun neteaseDao(): NeteaseDao
     abstract fun gdriveDao(): GDriveDao
+    abstract fun qqmusicDao(): QqMusicDao
 
     companion object {
         // Gap-bridging no-op migrations for missing version ranges.
@@ -457,6 +460,40 @@ abstract class PixelPlayDatabase : RoomDatabase() {
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_songs_duration ON songs(duration)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_favorites_timestamp ON favorites(timestamp)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_song_engagements_play_count ON song_engagements(play_count)")
+            }
+        }
+
+        /**
+         * Add QQ Music support tables.
+         */
+        val MIGRATION_24_25 = object : Migration(24, 25) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS qqmusic_playlists (
+                        id INTEGER NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        cover_url TEXT,
+                        song_count INTEGER NOT NULL,
+                        last_sync_time INTEGER NOT NULL
+                    )
+                """.trimIndent())
+
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS qqmusic_songs (
+                        id TEXT NOT NULL PRIMARY KEY,
+                        song_mid TEXT NOT NULL,
+                        playlist_id INTEGER NOT NULL,
+                        title TEXT NOT NULL,
+                        artist TEXT NOT NULL,
+                        album TEXT NOT NULL,
+                        album_mid TEXT,
+                        duration INTEGER NOT NULL,
+                        album_art_url TEXT,
+                        mime_type TEXT NOT NULL,
+                        bitrate INTEGER,
+                        date_added INTEGER NOT NULL
+                    )
+                """.trimIndent())
             }
         }
     }

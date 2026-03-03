@@ -482,7 +482,7 @@ class WearCommandReceiver : WearableListenerService() {
     private suspend fun ensureStartSongCloudUriResolved(song: Song): Boolean {
         val originalUri = runCatching { song.contentUriString.toUri() }.getOrNull() ?: return true
         val scheme = originalUri.scheme?.lowercase()
-        if (scheme != "telegram" && scheme != "netease") return true
+        if (scheme != "telegram" && scheme != "netease" && scheme != "qqmusic") return true
 
         return runCatching {
             val resolvedUri = dualPlayerEngine.resolveCloudUri(originalUri)
@@ -767,6 +767,7 @@ class WearCommandReceiver : WearableListenerService() {
         if (
             contentUri.startsWith("telegram://") ||
             contentUri.startsWith("netease://") ||
+            contentUri.startsWith("qqmusic://") ||
             contentUri.startsWith("gdrive://")
         ) {
             return false

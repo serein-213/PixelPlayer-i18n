@@ -126,6 +126,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.quickjs)
     implementation(libs.androidx.profileinstaller)
     implementation(libs.androidx.paging.common)
     "baselineProfile"(project(":baselineprofile"))

@@ -124,7 +124,8 @@ object AppModule {
             PixelPlayDatabase.MIGRATION_20_21,
             PixelPlayDatabase.MIGRATION_21_22,
             PixelPlayDatabase.MIGRATION_22_23,
-            PixelPlayDatabase.MIGRATION_23_24
+            PixelPlayDatabase.MIGRATION_23_24,
+            PixelPlayDatabase.MIGRATION_24_25
         )
             .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
@@ -176,6 +177,12 @@ object AppModule {
     @Provides
     fun provideGDriveDao(database: PixelPlayDatabase): GDriveDao {
         return database.gdriveDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideQqMusicDao(database: PixelPlayDatabase): com.theveloper.pixelplay.data.database.QqMusicDao {
+        return database.qqmusicDao()
     }
 
     @Provides
