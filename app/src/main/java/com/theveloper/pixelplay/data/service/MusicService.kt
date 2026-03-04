@@ -181,6 +181,20 @@ class MusicService : MediaLibraryService() {
         private const val WIDGET_ART_FAILURE_RETRY_MS = 30_000L
     }
 
+    private val playerSwapListener: (Player) -> Unit = { newPlayer ->
+        serviceScope.launch(Dispatchers.Main) {
+            val oldPlayer = mediaSession?.player
+            oldPlayer?.removeListener(playerListener)
+
+            mediaSession?.player = newPlayer
+            newPlayer.addListener(playerListener)
+
+            Timber.tag("MusicService").d("Swapped MediaSession player to new instance.")
+            requestWidgetFullUpdate(force = true)
+            mediaSession?.let { refreshMediaSessionUi(it) }
+        }
+    }
+
     override fun onCreate() {
         // Media3's Cast SDK callback path (MediaSessionImpl$$ExternalSyntheticLambda →
         // Util.postOrRun → MediaNotificationManager.updateNotificationInternal) calls
@@ -209,19 +223,7 @@ class MusicService : MediaLibraryService() {
         engine.masterPlayer.addListener(playerListener)
 
         // Handle player swaps (crossfade) to keep MediaSession in sync
-        engine.addPlayerSwapListener { newPlayer ->
-            serviceScope.launch(Dispatchers.Main) {
-                val oldPlayer = mediaSession?.player
-                oldPlayer?.removeListener(playerListener)
-
-                mediaSession?.player = newPlayer
-                newPlayer.addListener(playerListener)
-
-                Timber.tag("MusicService").d("Swapped MediaSession player to new instance.")
-                requestWidgetFullUpdate(force = true)
-                mediaSession?.let { refreshMediaSessionUi(it) }
-            }
-        }
+        engine.addPlayerSwapListener(playerSwapListener)
 
         controller.initialize()
         initializeCastWearSync()
@@ -1123,6 +1125,9 @@ class MusicService : MediaLibraryService() {
         wearStatePublisher.clearState()
         replayGainJob?.cancel()
 
+        engine.removePlayerSwapListener(playerSwapListener)
+        engine.masterPlayer.removeListener(playerListener)
+
         mediaSession?.run {
             release()
             mediaSession = null
@@ -1252,12 +1257,35 @@ class MusicService : MediaLibraryService() {
         return withContext(Dispatchers.Main) { player.currentMediaItem?.mediaId }
     }
 
+    private var lastWidgetPlayerInfo: PlayerInfo? = null
+
+    private fun shouldUpdateWidget(old: PlayerInfo, new: PlayerInfo): Boolean {
+        if (old.songTitle != new.songTitle) return true
+        if (old.artistName != new.artistName) return true
+        if (old.isPlaying != new.isPlaying) return true
+        if (old.albumArtUri != new.albumArtUri) return true
+        if (old.isFavorite != new.isFavorite) return true
+        if (old.themeColors != new.themeColors) return true
+        if (old.isShuffleEnabled != new.isShuffleEnabled) return true
+        if (old.repeatMode != new.repeatMode) return true
+        if (old.totalDurationMs != new.totalDurationMs) return true
+        if (old.wearThemePalette != new.wearThemePalette) return true
+        
+        val drift = kotlin.math.abs(old.currentPositionMs - new.currentPositionMs)
+        return drift > 3000L
+    }
+
     private suspend fun processWidgetUpdateInternal() {
         val playerInfo = buildPlayerInfo()
-        val currentMediaId = resolveCurrentMediaIdForWear()
-        updateGlanceWidgets(playerInfo)
-        // Publish state to Wear OS watch
-        wearStatePublisher.publishState(currentMediaId, playerInfo)
+        val oldInfo = lastWidgetPlayerInfo
+        
+        if (oldInfo == null || shouldUpdateWidget(oldInfo, playerInfo)) {
+            lastWidgetPlayerInfo = playerInfo
+            val currentMediaId = resolveCurrentMediaIdForWear()
+            updateGlanceWidgets(playerInfo)
+            // Publish state to Wear OS watch
+            wearStatePublisher.publishState(currentMediaId, playerInfo)
+        }
     }
 
     private suspend fun buildPlayerInfo(): PlayerInfo {
