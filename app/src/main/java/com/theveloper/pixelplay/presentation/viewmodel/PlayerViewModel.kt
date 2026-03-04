@@ -2853,7 +2853,7 @@ class PlayerViewModel @Inject constructor(
             val deletableSongs = songs.filter { it.id != currentSongId }
 
             if (deletableSongs.isEmpty()) {
-                _toastEvents.emit("Cannot delete currently playing song")
+                _toastEvents.emit(activity.getString(R.string.toast_cannot_delete_playing_song))
                 return@launch
             }
 
@@ -2901,12 +2901,12 @@ class PlayerViewModel @Inject constructor(
                 val userChoice = CompletableDeferred<Boolean>()
 
                 val dialog = MaterialAlertDialogBuilder(activity)
-                    .setTitle("Delete $count songs?")
-                    .setMessage("These songs will be permanently deleted from your device and cannot be recovered.")
-                    .setPositiveButton("Delete") { _, _ ->
+                    .setTitle(activity.getString(R.string.delete_songs_title, count))
+                    .setMessage(activity.getString(R.string.delete_song_message))
+                    .setPositiveButton(activity.getString(R.string.delete)) { _, _ ->
                         userChoice.complete(true)
                     }
-                    .setNegativeButton("Cancel") { _, _ ->
+                    .setNegativeButton(activity.getString(R.string.cancel)) { _, _ ->
                         userChoice.complete(false)
                     }
                     .setOnCancelListener {
@@ -2927,7 +2927,7 @@ class PlayerViewModel @Inject constructor(
         viewModelScope.launch {
             // Failsafe: Prevent deleting the currently playing song
             if (playbackStateHolder.stablePlayerState.value.currentSong?.id == song.id) {
-                _toastEvents.emit("Cannot delete currently playing song")
+                _toastEvents.emit(activity.getString(R.string.toast_cannot_delete_playing_song))
                 onResult(false)
                 return@launch
             }
@@ -2940,12 +2940,12 @@ class PlayerViewModel @Inject constructor(
 
             val success = songRemovalStateHolder.deleteSongFile(song)
             if (success) {
-                _toastEvents.emit("File deleted")
+                _toastEvents.emit(activity.getString(R.string.toast_file_deleted))
                 removeFromMediaControllerQueue(song.id)
                 removeSong(song)
                 onResult(true)
             } else {
-                _toastEvents.emit("Can't delete the file or file not found")
+                _toastEvents.emit(activity.getString(R.string.toast_file_delete_failed))
                 onResult(false)
             }
         }

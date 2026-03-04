@@ -1,7 +1,9 @@
 package com.theveloper.pixelplay.presentation.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.gdrive.GDriveRepository
 import com.theveloper.pixelplay.data.navidrome.NavidromeRepository
 import com.theveloper.pixelplay.data.netease.NeteaseRepository
@@ -44,6 +46,7 @@ data class AccountsUiState(
 
 @HiltViewModel
 class AccountsViewModel @Inject constructor(
+    private val application: Application,
     private val telegramRepository: TelegramRepository,
     private val musicRepository: MusicRepository,
     private val gDriveRepository: GDriveRepository,
@@ -114,12 +117,12 @@ class AccountsViewModel @Inject constructor(
                 add(
                     ExternalAccountUiModel(
                         service = ExternalServiceAccount.TELEGRAM,
-                        title = "Telegram",
-                        accountLabel = "Active Telegram session",
+                        title = application.getString(R.string.accounts_service_telegram),
+                        accountLabel = application.getString(R.string.accounts_telegram_session_active),
                         syncedContentLabel = formatCount(
                             count = telegramChannelCount,
-                            singular = "synced channel",
-                            plural = "synced channels"
+                            singularResId = R.string.accounts_synced_channel,
+                            pluralResId = R.string.accounts_synced_channels
                         ),
                         isLoggingOut = ExternalServiceAccount.TELEGRAM in activeLogouts
                     )
@@ -129,16 +132,16 @@ class AccountsViewModel @Inject constructor(
                 add(
                     ExternalAccountUiModel(
                         service = ExternalServiceAccount.GOOGLE_DRIVE,
-                        title = "Google Drive",
+                        title = application.getString(R.string.accounts_service_google_drive),
                         accountLabel = gDriveRepository.userDisplayName
                             ?.takeIf { it.isNotBlank() }
                             ?: gDriveRepository.userEmail
                                 ?.takeIf { it.isNotBlank() }
-                            ?: "Google account connected",
+                            ?: application.getString(R.string.accounts_google_account_connected),
                         syncedContentLabel = formatCount(
                             count = gDriveFolderCount,
-                            singular = "synced folder",
-                            plural = "synced folders"
+                            singularResId = R.string.accounts_synced_folder,
+                            pluralResId = R.string.accounts_synced_folders
                         ),
                         isLoggingOut = ExternalServiceAccount.GOOGLE_DRIVE in activeLogouts
                     )
@@ -148,14 +151,14 @@ class AccountsViewModel @Inject constructor(
                 add(
                     ExternalAccountUiModel(
                         service = ExternalServiceAccount.NETEASE,
-                        title = "Netease Cloud Music",
+                        title = application.getString(R.string.accounts_service_netease),
                         accountLabel = neteaseRepository.userNickname
                             ?.takeIf { it.isNotBlank() }
-                            ?: "Netease account connected",
+                            ?: application.getString(R.string.accounts_netease_account_connected),
                         syncedContentLabel = formatCount(
                             count = neteasePlaylistCount,
-                            singular = "synced playlist",
-                            plural = "synced playlists"
+                            singularResId = R.string.accounts_synced_playlist,
+                            pluralResId = R.string.accounts_synced_playlists
                         ),
                         isLoggingOut = ExternalServiceAccount.NETEASE in activeLogouts
                     )
@@ -171,8 +174,8 @@ class AccountsViewModel @Inject constructor(
                             ?: "QQ Music account connected",
                         syncedContentLabel = formatCount(
                             count = qqPlaylistCount,
-                            singular = "synced playlist",
-                            plural = "synced playlists"
+                            singularResId = R.string.accounts_synced_playlist,
+                            pluralResId = R.string.accounts_synced_playlists
                         ),
                         isLoggingOut = ExternalServiceAccount.QQ_MUSIC in activeLogouts
                     )
@@ -236,11 +239,11 @@ class AccountsViewModel @Inject constructor(
         }
     }
 
-    private fun formatCount(count: Int, singular: String, plural: String): String {
+    private fun formatCount(count: Int, singularResId: Int, pluralResId: Int): String {
         return if (count == 1) {
-            "1 $singular"
+            "1 ${application.getString(singularResId)}"
         } else {
-            "$count $plural"
+            "$count ${application.getString(pluralResId)}"
         }
     }
 }
