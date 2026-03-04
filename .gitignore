@@ -3,6 +3,7 @@
 .gradle-local/
 .gradle-temp/
 .kotlin/
+.vscode/
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -11,6 +12,7 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
+/scripts
 /build
 /captures
 .externalNativeBuild
@@ -22,12 +24,10 @@ local.properties
 misc.xml
 markdown.xml
 *.salive
-<<<<<<< HEAD
 *.apk
 *.aab
 app/release/
 app/build/
-=======
 AGENTS.md
 app/src/main/java/com/theveloper/pixelplay/data/AGENTS.md
 app/src/main/java/com/theveloper/pixelplay/presentation/AGENTS.md
