@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -69,7 +70,7 @@ fun BetaInfoBottomSheet(modifier: Modifier = Modifier) {
             item(key = "header") {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "Beta 0.6.0",
+                        text = stringResource(R.string.beta_info_title),
                         fontFamily = GoogleSansRounded,
                         style = ExpTitleTypography.displaySmall,
                         color = MaterialTheme.colorScheme.onSurface
@@ -139,12 +140,12 @@ fun BetaInfoBottomSheet(modifier: Modifier = Modifier) {
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = "Welcome to the first 0.6.0 beta!",
+                                text = stringResource(R.string.beta_info_welcome_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = "This huge update brings a complete UI overhaul, 10-band Equalizer, and AI powers.",
+                                text = stringResource(R.string.beta_info_welcome_desc),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -183,28 +184,28 @@ fun BetaInfoBottomSheet(modifier: Modifier = Modifier) {
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "What to expect",
+                                text = stringResource(R.string.beta_info_expect_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold
                             )
                         }
                         Text(
-                            text = "Material 3 Expressive UI refresh across Settings, Player, and Bottom Sheets.",
+                            text = stringResource(R.string.beta_info_expect_item_1),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "New 10-band Equalizer with effects, plus AI integration for smarter playlists.",
+                            text = stringResource(R.string.beta_info_expect_item_2),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "Rebuilt Library Sync for reliability and linear progress reporting.",
+                            text = stringResource(R.string.beta_info_expect_item_3),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "Major fixes for Casting, Queue stability, and lyrics synchronization.",
+                            text = stringResource(R.string.beta_info_expect_item_4),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -242,13 +243,13 @@ fun BetaInfoBottomSheet(modifier: Modifier = Modifier) {
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Report an issue",
+                                text = stringResource(R.string.beta_info_report_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold
                             )
                         }
                         Text(
-                            text = "Share steps to reproduce, what you expected, what happened, and your device/OS. A quick clip or screenshot helps a ton.",
+                            text = stringResource(R.string.beta_info_report_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -283,7 +284,7 @@ fun BetaInfoBottomSheet(modifier: Modifier = Modifier) {
                                     modifier = Modifier.size(18.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text(text = "Open GitHub issues")
+                                Text(text = stringResource(R.string.beta_info_open_github_issues))
                             }
                             FilledTonalButton(
                                 onClick = { launchUrl(context, reportUrl) },
@@ -307,7 +308,7 @@ fun BetaInfoBottomSheet(modifier: Modifier = Modifier) {
                                     tint = MaterialTheme.colorScheme.primary
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
-                                Text(text = "Report a bug")
+                                Text(text = stringResource(R.string.beta_info_report_bug))
                             }
                         }
                     }

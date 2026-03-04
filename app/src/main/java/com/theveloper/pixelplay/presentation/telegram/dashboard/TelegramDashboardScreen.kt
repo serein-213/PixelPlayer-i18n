@@ -72,6 +72,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -234,7 +235,7 @@ fun TelegramDashboardScreen(
         }
 
         CollapsibleCommonTopBar(
-            title = "Telegram Channels",
+            title = stringResource(id = com.theveloper.pixelplay.R.string.telegram_dashboard_title),
             collapseFraction = collapseFraction,
             headerHeight = currentTopBarHeightDp,
             onBackClick = onBack,
@@ -259,7 +260,7 @@ fun TelegramDashboardScreen(
                 onClick = onAddChannel,
                 text = {
                     Text(
-                        "Add Channel",
+                        stringResource(id = com.theveloper.pixelplay.R.string.telegram_add_channel),
                         fontFamily = GoogleSansRounded,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -344,7 +345,7 @@ private fun ExpressiveChannelItem(
             ?.takeIf { it.isNotEmpty() }
             ?.let { if (it.startsWith("@")) it else "@$it" }
     }
-    val lastSyncLabel = remember(channel.lastSyncTime) { formatLastSyncLabel(channel.lastSyncTime) }
+    val lastSyncLabel = formatLastSyncLabel(channel.lastSyncTime)
 
     Surface(
         shape = cardShape,
@@ -410,7 +411,7 @@ private fun ExpressiveChannelItem(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = usernameLabel ?: "Public Telegram channel",
+                        text = usernameLabel ?: stringResource(id = com.theveloper.pixelplay.R.string.telegram_public_channel),
                         style = MaterialTheme.typography.bodyMedium,
                         fontFamily = GoogleSansRounded,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -426,7 +427,7 @@ private fun ExpressiveChannelItem(
             ) {
                 ChannelMetaPill(
                     icon = Icons.Rounded.MusicNote,
-                    label = "${channel.songCount} songs"
+                    label = stringResource(id = com.theveloper.pixelplay.R.string.common_songs_count, channel.songCount)
                 )
                 ChannelMetaPill(
                     icon = Icons.Rounded.AccessTime,
@@ -455,7 +456,7 @@ private fun ExpressiveChannelItem(
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                         Spacer(modifier = Modifier.size(8.dp))
-                        Text("Syncing")
+                        Text(stringResource(id = com.theveloper.pixelplay.R.string.telegram_status_syncing))
                     } else {
                         Icon(
                             imageVector = Icons.Rounded.Sync,
@@ -463,7 +464,7 @@ private fun ExpressiveChannelItem(
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.size(8.dp))
-                        Text("Sync now")
+                        Text(stringResource(com.theveloper.pixelplay.R.string.telegram_status_sync_now))
                     }
                 }
 
@@ -477,7 +478,7 @@ private fun ExpressiveChannelItem(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.MoreVert,
-                            contentDescription = "Channel options"
+                            contentDescription = stringResource(id = com.theveloper.pixelplay.R.string.telegram_channel_options_cd)
                         )
                     }
                 }
@@ -525,7 +526,7 @@ private fun ChannelActionsBottomSheet(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = usernameLabel ?: "Public Telegram channel",
+                text = usernameLabel ?: stringResource(id = com.theveloper.pixelplay.R.string.telegram_public_channel),
                 style = MaterialTheme.typography.bodyMedium,
                 fontFamily = GoogleSansRounded,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -534,11 +535,11 @@ private fun ChannelActionsBottomSheet(
             )
             Spacer(modifier = Modifier.height(14.dp))
             ChannelActionCard(
-                title = if (isSyncing) "Syncing channel" else "Sync now",
+                title = if (isSyncing) stringResource(com.theveloper.pixelplay.R.string.telegram_action_sync_channel) else stringResource(com.theveloper.pixelplay.R.string.telegram_status_sync_now),
                 subtitle = if (isSyncing) {
-                    "Updating songs from Telegram"
+                    stringResource(com.theveloper.pixelplay.R.string.telegram_action_sync_desc)
                 } else {
-                    "Fetch latest songs from this channel"
+                    stringResource(com.theveloper.pixelplay.R.string.telegram_action_sync_now_desc)
                 },
                 icon = Icons.Rounded.Sync,
                 onClick = onSync,
@@ -559,8 +560,8 @@ private fun ChannelActionsBottomSheet(
             )
             Spacer(modifier = Modifier.height(14.dp))
             ChannelActionCard(
-                title = "Remove channel",
-                subtitle = "Stop syncing and remove cached songs",
+                title = stringResource(com.theveloper.pixelplay.R.string.telegram_action_remove),
+                subtitle = stringResource(com.theveloper.pixelplay.R.string.telegram_action_remove_desc),
                 icon = Icons.Rounded.Delete,
                 onClick = onDelete,
                 containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -725,7 +726,7 @@ private fun ExpressiveEmptyState(
         Spacer(modifier = Modifier.height(28.dp))
 
         Text(
-            text = "No Channels Synced",
+            text = stringResource(id = com.theveloper.pixelplay.R.string.telegram_empty_title),
             style = MaterialTheme.typography.headlineSmall,
             fontFamily = GoogleSansRounded,
             fontWeight = FontWeight.Bold,
@@ -735,7 +736,7 @@ private fun ExpressiveEmptyState(
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "Add public Telegram channels to sync\nyour music library",
+            text = stringResource(id = com.theveloper.pixelplay.R.string.telegram_empty_desc),
             style = MaterialTheme.typography.bodyLarge,
             fontFamily = GoogleSansRounded,
             textAlign = TextAlign.Center,
@@ -751,18 +752,19 @@ private fun ExpressiveEmptyState(
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.size(8.dp))
-            Text("Add channel")
+            Text(stringResource(id = com.theveloper.pixelplay.R.string.telegram_add_channel))
         }
     }
 }
 
+@Composable
 private fun formatLastSyncLabel(lastSyncTime: Long): String {
-    if (lastSyncTime <= 0L) return "Never synced"
+    if (lastSyncTime <= 0L) return stringResource(id = com.theveloper.pixelplay.R.string.telegram_last_synced_never)
     val relative = DateUtils.getRelativeTimeSpanString(
         lastSyncTime,
         System.currentTimeMillis(),
         DateUtils.MINUTE_IN_MILLIS,
         DateUtils.FORMAT_ABBREV_RELATIVE
     )
-    return "Synced $relative"
+    return stringResource(id = com.theveloper.pixelplay.R.string.telegram_last_synced_relative, relative)
 }

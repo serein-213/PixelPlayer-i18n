@@ -64,6 +64,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -90,6 +91,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -287,14 +289,14 @@ fun StatsScreen(
         ) {
             val solidAlpha = (collapseFraction * 2f).coerceIn(0f, 1f)
             val backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = solidAlpha)
-            
+
             Column(
                 modifier = Modifier
                     .background(backgroundColor)
-                    .padding(bottom = 8.dp) // Reduced padding below tabs
+                    .padding(bottom = 8.dp)
             ) {
                 CollapsibleCommonTopBar(
-                    title = "Listening Stats",
+                    title = stringResource(R.string.stats_listening_stats),
                     collapseFraction = collapseFraction,
                     headerHeight = currentTopBarHeightDp,
                     onBackClick = { navController.popBackStack() },
@@ -313,8 +315,6 @@ fun StatsScreen(
     }
 }
 
-// StatsTopBar removed, replaced by CollapsibleCommonTopBar
-
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun StatsHeroSection(
@@ -331,7 +331,7 @@ private fun StatsHeroSection(
     ) {
         // Time Card - Primary Container
         HeroCard(
-            title = "Listening",
+            title = stringResource(R.string.stats_listening),
             value = if (hasData) formatListeningDurationCompact(summary?.totalDurationMs ?: 0L) else "--",
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -342,7 +342,7 @@ private fun StatsHeroSection(
 
         // Plays Card - Tertiary Container
         HeroCard(
-            title = "Plays",
+            title = stringResource(R.string.stats_plays),
             value = if (hasData) "${summary?.totalPlayCount ?: 0}" else "--",
             containerColor = MaterialTheme.colorScheme.tertiaryContainer,
             contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
@@ -630,15 +630,15 @@ private fun ListeningHabitsCard(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
-                text = "Listening habits",
+                text = stringResource(R.string.stats_listening_habits),
                 style = MaterialTheme.typography.titleLargeEmphasized,
                 color = MaterialTheme.colorScheme.onSurface
             )
             if (summary == null) {
                 StatsEmptyState(
                     icon = Icons.Outlined.History,
-                    title = "No habits yet",
-                    subtitle = "We will surface your listening habits once we know you better."
+                    title = stringResource(R.string.stats_no_habits_yet),
+                    subtitle = stringResource(R.string.stats_no_habits_subtitle)
                 )
             } else {
                 Column(
@@ -647,17 +647,17 @@ private fun ListeningHabitsCard(
                 ) {
                     HabitMetric(
                         icon = Icons.Outlined.History,
-                        label = "Total sessions",
+                        label = stringResource(R.string.stats_total_sessions),
                         value = summary.totalSessions.toString()
                     )
                     HabitMetric(
                         icon = Icons.Outlined.Hearing,
-                        label = "Avg session",
+                        label = stringResource(R.string.stats_avg_session),
                         value = formatListeningDurationCompact(summary.averageSessionDurationMs)
                     )
                     HabitMetric(
                         icon = Icons.Outlined.Bolt,
-                        label = "Longest session",
+                        label = stringResource(R.string.stats_longest_session),
                         value = if (summary.longestSessionDurationMs > 0L) {
                             formatListeningDurationCompact(summary.longestSessionDurationMs)
                         } else {
@@ -666,24 +666,24 @@ private fun ListeningHabitsCard(
                     )
                     HabitMetric(
                         icon = Icons.Outlined.AutoGraph,
-                        label = "Sessions/day",
+                        label = stringResource(R.string.stats_sessions_per_day),
                         value = String.format(Locale.US, "%.1f", summary.averageSessionsPerDay)
                     )
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
                 HighlightRow(
-                    title = "Most active day",
+                    title = stringResource(R.string.stats_most_active_day),
                     value = summary.peakDayLabel ?: "—",
                     supporting = if (summary.peakDayDurationMs > 0L) {
                         formatListeningDurationCompact(summary.peakDayDurationMs)
                     } else {
-                        "No playback yet"
+                        stringResource(R.string.stats_no_playback_yet)
                     },
                     icon = Icons.Outlined.CalendarMonth
                 )
                 summary.peakTimeline?.let { peak ->
                     HighlightRow(
-                        title = "Peak timeline slot",
+                        title = stringResource(R.string.stats_peak_timeline_slot),
                         value = peak.label,
                         supporting = formatListeningDurationCompact(peak.totalDurationMs),
                         icon = Icons.Outlined.AutoGraph
@@ -822,28 +822,28 @@ private enum class TimelineMetric(
 
 private enum class CategoryDimension(
     val displayName: String,
-    val cardTitle: String,
-    val highlightTitle: String
+    val cardTitleRes: Int,
+    val highlightTitleRes: Int
 ) {
     Genre(
         displayName = "Genre",
-        cardTitle = "Listening by genre",
-        highlightTitle = "Top genre"
+        cardTitleRes = R.string.stats_listening_by_genre,
+        highlightTitleRes = R.string.stats_top_genre
     ),
     Artist(
         displayName = "Artist",
-        cardTitle = "Listening by artist",
-        highlightTitle = "Top artist"
+        cardTitleRes = R.string.stats_listening_by_artist,
+        highlightTitleRes = R.string.stats_top_artist
     ),
     Album(
         displayName = "Album",
-        cardTitle = "Listening by album",
-        highlightTitle = "Top album"
+        cardTitleRes = R.string.stats_listening_by_album,
+        highlightTitleRes = R.string.stats_top_album
     ),
     Song(
         displayName = "Song",
-        cardTitle = "Listening by song",
-        highlightTitle = "Top song"
+        cardTitleRes = R.string.stats_listening_by_song,
+        highlightTitleRes = R.string.stats_top_song
     )
 }
 
@@ -880,6 +880,45 @@ private data class TrackShareSlice(
     val durationMs: Long,
     val color: Color
 )
+
+// Composable extension functions for localized enum strings
+@Composable
+private fun TimelineMetric.getDisplayName(): String = when (this) {
+    TimelineMetric.ListeningTime -> stringResource(R.string.stats_metric_listening_time)
+    TimelineMetric.PlayCount -> stringResource(R.string.stats_metric_play_count)
+    TimelineMetric.AverageSession -> stringResource(R.string.stats_metric_avg_session)
+}
+
+@Composable
+private fun TimelineMetric.getDescription(): String = when (this) {
+    TimelineMetric.ListeningTime -> stringResource(R.string.stats_metric_listening_time_desc)
+    TimelineMetric.PlayCount -> stringResource(R.string.stats_metric_play_count_desc)
+    TimelineMetric.AverageSession -> stringResource(R.string.stats_metric_avg_session_desc)
+}
+
+@Composable
+private fun TimelineMetric.formatValueLocalized(entry: PlaybackStatsRepository.TimelineEntry): String = when (this) {
+    TimelineMetric.ListeningTime -> formatListeningDurationCompact(entry.totalDurationMs)
+    TimelineMetric.PlayCount -> stringResource(R.string.stats_plays_format, entry.playCount)
+    TimelineMetric.AverageSession -> {
+        val average = if (entry.playCount > 0) entry.totalDurationMs / entry.playCount else 0L
+        formatListeningDurationCompact(average)
+    }
+}
+
+@Composable
+private fun CategoryDimension.getDisplayName(): String = when (this) {
+    CategoryDimension.Genre -> stringResource(R.string.stats_dimension_genre)
+    CategoryDimension.Artist -> stringResource(R.string.stats_dimension_artist)
+    CategoryDimension.Album -> stringResource(R.string.stats_dimension_album)
+    CategoryDimension.Song -> stringResource(R.string.stats_dimension_song)
+}
+
+@Composable
+private fun CategoryDimension.getCardTitle(): String = stringResource(this.cardTitleRes)
+
+@Composable
+private fun CategoryDimension.getHighlightTitle(): String = stringResource(this.highlightTitleRes)
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -972,7 +1011,7 @@ private fun ListeningTimelineSection(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = "Listening timeline",
+                text = stringResource(R.string.stats_listening_timeline),
                 style = sectionTitleStyle,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -994,7 +1033,7 @@ private fun ListeningTimelineSection(
                     onClick = { onMetricSelected(metric) },
                     label = {
                         Text(
-                            text = metric.displayName,
+                            text = metric.getDisplayName(),
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                         )
@@ -1019,8 +1058,8 @@ private fun ListeningTimelineSection(
         if (!hasTimeline) {
             StatsEmptyState(
                 icon = Icons.Outlined.PlayCircleOutline,
-                title = "No listening data yet",
-                subtitle = "Press play to start building your listening timeline"
+                title = stringResource(R.string.stats_no_listening_data),
+                subtitle = stringResource(R.string.stats_no_listening_data_subtitle)
             )
         } else {
             val cardColor = when (range) {
@@ -1050,11 +1089,11 @@ private fun ListeningTimelineSection(
                         ) {
                             Text(
                                 text = when (range) {
-                                    StatsTimeRange.DAY -> "Daily rhythm"
-                                    StatsTimeRange.WEEK -> "Weekly rhythm"
-                                    StatsTimeRange.MONTH -> "Monthly rhythm"
-                                    StatsTimeRange.YEAR -> "Year at a glance"
-                                    StatsTimeRange.ALL -> "All-time progression"
+                                    StatsTimeRange.DAY -> stringResource(R.string.stats_daily_rhythm)
+                                    StatsTimeRange.WEEK -> stringResource(R.string.stats_weekly_rhythm)
+                                    StatsTimeRange.MONTH -> stringResource(R.string.stats_monthly_rhythm)
+                                    StatsTimeRange.YEAR -> stringResource(R.string.stats_year_glance)
+                                    StatsTimeRange.ALL -> stringResource(R.string.stats_all_time_progression)
                                 },
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.SemiBold,
@@ -1062,11 +1101,11 @@ private fun ListeningTimelineSection(
                             )
                             Text(
                                 text = when (range) {
-                                    StatsTimeRange.DAY -> "Grouped into 4-hour segments"
-                                    StatsTimeRange.WEEK -> "Grouped by day of week"
-                                    StatsTimeRange.MONTH -> "Grouped by week of month"
-                                    StatsTimeRange.YEAR -> "Grouped by month"
-                                    StatsTimeRange.ALL -> "Grouped by year"
+                                    StatsTimeRange.DAY -> stringResource(R.string.stats_grouped_4hour)
+                                    StatsTimeRange.WEEK -> stringResource(R.string.stats_grouped_day_of_week)
+                                    StatsTimeRange.MONTH -> stringResource(R.string.stats_grouped_week_of_month)
+                                    StatsTimeRange.YEAR -> stringResource(R.string.stats_grouped_by_month)
+                                    StatsTimeRange.ALL -> stringResource(R.string.stats_grouped_by_year)
                                 },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -1085,11 +1124,11 @@ private fun ListeningTimelineSection(
 
             summary?.peakTimeline?.let { peak ->
                 HighlightRow(
-                    title = "Peak segment",
+                    title = stringResource(R.string.stats_peak_segment),
                     value = formatTimelineLabelForRange(peak.label, range),
                     supporting = when (selectedMetric) {
                         TimelineMetric.ListeningTime -> formatListeningDurationCompact(peak.totalDurationMs)
-                        TimelineMetric.PlayCount -> "${peak.playCount} plays"
+                        TimelineMetric.PlayCount -> stringResource(R.string.stats_plays_format, peak.playCount)
                         TimelineMetric.AverageSession -> {
                             val average = if (peak.playCount > 0) peak.totalDurationMs / peak.playCount else 0L
                             formatListeningDurationCompact(average)
@@ -1121,12 +1160,12 @@ private fun CategoryMetricsSection(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = "Top categories",
+                text = stringResource(R.string.stats_top_categories),
                 style = sectionTitleStyle,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Compare how you listen across genres, artists, albums, and songs.",
+                text = stringResource(R.string.stats_categories_description),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -1144,7 +1183,7 @@ private fun CategoryMetricsSection(
                     onClick = { onDimensionSelected(dimension) },
                     label = {
                         Text(
-                            text = dimension.displayName,
+                            text = dimension.getDisplayName(),
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                         )
@@ -1166,13 +1205,17 @@ private fun CategoryMetricsSection(
             }
         }
 
-        val entries = remember(summary, selectedDimension) {
+        val playsAndArtistsFormat = stringResource(R.string.stats_plays_and_artists, 0, 0)
+        val playsAndTracksFormat = stringResource(R.string.stats_plays_and_tracks, 0, 0)
+        val playsFormat = stringResource(R.string.stats_plays_format, 0)
+
+        val entries = remember(summary, selectedDimension, playsAndArtistsFormat, playsAndTracksFormat, playsFormat) {
             val base = when (selectedDimension) {
                 CategoryDimension.Genre -> summary?.topGenres.orEmpty().map {
                     CategoryMetricEntry(
                         label = it.genre,
                         durationMs = it.totalDurationMs,
-                        supporting = "${it.playCount} plays • ${it.uniqueArtists} artists"
+                        supporting = playsAndArtistsFormat.format(it.playCount, it.uniqueArtists)
                     )
                 }
 
@@ -1180,7 +1223,7 @@ private fun CategoryMetricsSection(
                     CategoryMetricEntry(
                         label = it.artist,
                         durationMs = it.totalDurationMs,
-                        supporting = "${it.playCount} plays • ${it.uniqueSongs} tracks"
+                        supporting = playsAndTracksFormat.format(it.playCount, it.uniqueSongs)
                     )
                 }
 
@@ -1188,13 +1231,13 @@ private fun CategoryMetricsSection(
                     CategoryMetricEntry(
                         label = it.album,
                         durationMs = it.totalDurationMs,
-                        supporting = "${it.playCount} plays • ${it.uniqueSongs} tracks"
+                        supporting = playsAndTracksFormat.format(it.playCount, it.uniqueSongs)
                     )
                 }
 
                 CategoryDimension.Song -> summary?.topSongs.orEmpty().map {
                     val supportingParts = buildList {
-                        add("${it.playCount} plays")
+                        add(playsFormat.format(it.playCount))
                         if (it.artist.isNotBlank()) {
                             add(it.artist)
                         }
@@ -1212,8 +1255,8 @@ private fun CategoryMetricsSection(
         if (entries.isEmpty()) {
             StatsEmptyState(
                 icon = Icons.Outlined.MusicNote,
-                title = "No category data yet",
-                subtitle = "Press play to surface your listening highlights"
+                title = stringResource(R.string.stats_no_category_data),
+                subtitle = stringResource(R.string.stats_no_category_data_subtitle)
             )
         } else {
             Card(
@@ -1225,7 +1268,7 @@ private fun CategoryMetricsSection(
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                     Text(
-                        text = selectedDimension.cardTitle,
+                        text = selectedDimension.getCardTitle(),
                         style = MaterialTheme.typography.titleLargeEmphasized,
                         color = palette.contentColor
                     )
@@ -1376,7 +1419,7 @@ private fun TimelineMetricBadge(
         contentColor = contentColor
     ) {
         Text(
-            text = metric.displayName,
+            text = metric.getDisplayName(),
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.SemiBold
@@ -1473,7 +1516,7 @@ private fun VerticalTimelineBarChart(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
-                                text = metric.formatValue(entry),
+                                text = metric.formatValueLocalized(entry),
                                 style = metricValueStyle,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 1,
@@ -1577,7 +1620,7 @@ private fun HorizontalTimelineBarChart(
                         )
                     }
                     Text(
-                        text = metric.formatValue(entry),
+                        text = metric.formatValueLocalized(entry),
                         modifier = Modifier.widthIn(min = 58.dp),
                         style = metricValueStyle,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1591,18 +1634,19 @@ private fun HorizontalTimelineBarChart(
     }
 }
 
+@Composable
 private fun timelineSupportingCopy(
     selectedMetric: TimelineMetric,
     range: StatsTimeRange
 ): String {
     val rangeCopy = when (range) {
-        StatsTimeRange.DAY -> "Split into 4-hour windows to reveal your daily rhythm."
-        StatsTimeRange.WEEK -> "Daily bars make week-to-week habits easy to compare."
-        StatsTimeRange.MONTH -> "Weekly bars show how the month is trending."
-        StatsTimeRange.YEAR -> "Monthly bars show seasonality across the year."
-        StatsTimeRange.ALL -> "Yearly bars summarize your full history."
+        StatsTimeRange.DAY -> stringResource(R.string.stats_timeline_day_copy)
+        StatsTimeRange.WEEK -> stringResource(R.string.stats_timeline_week_copy)
+        StatsTimeRange.MONTH -> stringResource(R.string.stats_timeline_month_copy)
+        StatsTimeRange.YEAR -> stringResource(R.string.stats_timeline_year_copy)
+        StatsTimeRange.ALL -> stringResource(R.string.stats_timeline_all_copy)
     }
-    return "${selectedMetric.description} $rangeCopy"
+    return "${selectedMetric.getDescription()} $rangeCopy"
 }
 
 private fun formatTimelineLabelForRange(
@@ -1743,7 +1787,7 @@ private fun TopArtistsCard(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
-                text = "Top artists",
+                text = stringResource(R.string.stats_top_artists),
                 style = MaterialTheme.typography.titleLargeEmphasized,
                 color = contentColor
             )
@@ -1751,8 +1795,8 @@ private fun TopArtistsCard(
             if (artists.isEmpty()) {
                 StatsEmptyState(
                     icon = Icons.Outlined.MusicNote,
-                    title = "No top artists",
-                    subtitle = "Keep listening and your favorite artists will show up here."
+                    title = stringResource(R.string.stats_no_top_artists),
+                    subtitle = stringResource(R.string.stats_no_top_artists_subtitle)
                 )
             } else {
                 val maxDuration = artists.maxOf { it.totalDurationMs }.coerceAtLeast(1L)
@@ -1777,7 +1821,7 @@ private fun TopArtistsCard(
                                         overflow = TextOverflow.Ellipsis
                                     )
                                     Text(
-                                        text = "${artistSummary.playCount} plays • ${artistSummary.uniqueSongs} tracks",
+                                        text = stringResource(R.string.stats_plays_and_tracks, artistSummary.playCount, artistSummary.uniqueSongs),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = supportingColor,
                                         maxLines = 1,
@@ -1851,7 +1895,7 @@ private fun TopAlbumsCard(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
-                text = "Top albums",
+                text = stringResource(R.string.stats_top_albums),
                 style = MaterialTheme.typography.titleLargeEmphasized,
                 color = contentColor
             )
@@ -1859,8 +1903,8 @@ private fun TopAlbumsCard(
             if (albums.isEmpty()) {
                 StatsEmptyState(
                     icon = Icons.Outlined.Album,
-                    title = "No top albums",
-                    subtitle = "Albums you revisit often will appear here."
+                    title = stringResource(R.string.stats_no_top_albums),
+                    subtitle = stringResource(R.string.stats_no_top_albums_subtitle)
                 )
             } else {
                 val maxDuration = albums.maxOf { it.totalDurationMs }.coerceAtLeast(1L)
@@ -1888,7 +1932,7 @@ private fun TopAlbumsCard(
                                         overflow = TextOverflow.Ellipsis
                                     )
                                     Text(
-                                        text = "${albumSummary.playCount} plays • ${albumSummary.uniqueSongs} tracks",
+                                        text = stringResource(R.string.stats_plays_and_tracks, albumSummary.playCount, albumSummary.uniqueSongs),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = supportingColor,
                                         maxLines = 1,
@@ -1944,13 +1988,13 @@ private fun SongStatsCard(
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
-                    text = "Tracks in this range",
+                    text = stringResource(R.string.stats_tracks_in_range),
                     style = MaterialTheme.typography.titleLargeEmphasized,
                     fontWeight = FontWeight.SemiBold,
                     color = contentColor
                 )
                 Text(
-                    text = "Most played tracks for the selected time range.",
+                    text = stringResource(R.string.stats_tracks_in_range_subtitle),
                     style = MaterialTheme.typography.bodySmall,
                     color = supportingColor
                 )
@@ -1959,8 +2003,8 @@ private fun SongStatsCard(
             if (songs.isEmpty()) {
                 StatsEmptyState(
                     icon = Icons.Outlined.MusicNote,
-                    title = "No top tracks",
-                    subtitle = "Listen to your favorites to see them highlighted here."
+                    title = stringResource(R.string.stats_no_top_tracks),
+                    subtitle = stringResource(R.string.stats_no_top_tracks_subtitle)
                 )
             } else {
                 Column(
@@ -2025,7 +2069,7 @@ private fun SongStatsCard(
                                             overflow = TextOverflow.Ellipsis
                                         )
                                         Text(
-                                            text = "${songSummary.playCount} plays",
+                                            text = stringResource(R.string.stats_plays_format, songSummary.playCount),
                                             style = MaterialTheme.typography.labelSmall,
                                             color = supportingColor
                                         )
@@ -2064,7 +2108,7 @@ private fun SongStatsCard(
                             .clip(RoundedCornerShape(16.dp))
                     ) {
                         Text(
-                            text = if (showAll) "Collapse tracks" else "Show all tracks",
+                            text = if (showAll) stringResource(R.string.stats_collapse_tracks) else stringResource(R.string.stats_show_all_tracks),
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.primary
@@ -2096,14 +2140,14 @@ private fun TrackConcentrationCard(
             ) {
                 Text(
                     modifier = Modifier.padding(start = 6.dp),
-                    text = "Track concentration",
+                    text = stringResource(R.string.stats_track_concentration),
                     style = MaterialTheme.typography.titleLargeEmphasized,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     modifier = Modifier.padding(start = 6.dp),
-                    text = "How your listening time is distributed across your top tracks.",
+                    text = stringResource(R.string.stats_track_concentration_subtitle),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.78f)
                 )
@@ -2112,8 +2156,8 @@ private fun TrackConcentrationCard(
             if (songs.isEmpty()) {
                 StatsEmptyState(
                     icon = Icons.Outlined.AutoGraph,
-                    title = "No concentration data yet",
-                    subtitle = "Play more tracks to see how focused your listening is."
+                    title = stringResource(R.string.stats_no_concentration_data),
+                    subtitle = stringResource(R.string.stats_no_concentration_data_subtitle)
                 )
             } else {
                 val totalDuration = songs.sumOf { it.totalDurationMs }.coerceAtLeast(1L)
@@ -2131,7 +2175,7 @@ private fun TrackConcentrationCard(
                     if (topOneDuration > 0L) {
                         add(
                             TrackShareSlice(
-                                label = "Top 1",
+                                label = stringResource(R.string.stats_top_1),
                                 durationMs = topOneDuration,
                                 color = topOneColor
                             )
@@ -2141,7 +2185,7 @@ private fun TrackConcentrationCard(
                     if (topTwoToThree > 0L) {
                         add(
                             TrackShareSlice(
-                                label = "Top 2-3",
+                                label = stringResource(R.string.stats_top_2_3),
                                 durationMs = topTwoToThree,
                                 color = topTwoThreeColor
                             )
@@ -2151,7 +2195,7 @@ private fun TrackConcentrationCard(
                     if (remaining > 0L) {
                         add(
                             TrackShareSlice(
-                                label = "Others",
+                                label = stringResource(R.string.stats_others),
                                 durationMs = remaining,
                                 color = othersColor
                             )
@@ -2291,12 +2335,12 @@ private fun TrackDistributionStats(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Text(
-            text = "Listening concentration",
+            text = stringResource(R.string.stats_listening_concentration),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurface
         )
         Text(
-            text = "Top 3 tracks account for ${(topThreeShare * 100f).roundToInt()}% of your listening time.",
+            text = stringResource(R.string.stats_top_3_share_format, (topThreeShare * 100f).roundToInt()),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -2316,7 +2360,7 @@ private fun TrackDistributionStats(
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     Text(
-                        text = "Avg plays/track",
+                        text = stringResource(R.string.stats_avg_plays_per_track),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.76f)
                     )
@@ -2337,7 +2381,7 @@ private fun TrackDistributionStats(
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                     Text(
-                        text = "Unique tracks",
+                        text = stringResource(R.string.stats_unique_tracks),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.76f)
                     )
@@ -2430,7 +2474,7 @@ private fun TrackDistributionDonut(
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Top 3 share",
+                text = stringResource(R.string.stats_top_3_share),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
