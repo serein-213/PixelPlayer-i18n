@@ -659,7 +659,7 @@ fun LibraryScreen(
         playlistViewModel.playlistCreationEvent.collect { success ->
             if (success) {
                 showCreatePlaylistDialog = false
-                Toast.makeText(context, "Playlist created successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.playlist_created_successfully), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -773,7 +773,7 @@ fun LibraryScreen(
                     } else {
                         Text(
                             modifier = Modifier.padding(start = 8.dp),
-                            text = "Library",
+                            text = stringResource(R.string.nav_library),
                             fontFamily = GoogleSansRounded,
                             //style = ExpTitleTypography.titleMedium,
                             fontWeight = FontWeight.ExtraBold,
@@ -918,7 +918,7 @@ fun LibraryScreen(
                                 }
                             ) {
                                 Text(
-                                    text = tabId.title,
+                                    text = stringResource(tabId.titleResId),
                                     style = MaterialTheme.typography.labelLarge,
                                     fontWeight = if (currentTabIndex == index) FontWeight.Bold else FontWeight.Medium
                                 )
@@ -927,13 +927,13 @@ fun LibraryScreen(
                         TabAnimation(
 //                        modifier = Modifier.aspectRatio(1f),
                             index = -1, // A non-matching index to keep it unselected
-                            title = "Edit",
+                            title = stringResource(R.string.library_tab_edit),
                             selectedIndex = currentTabIndex,
                             onClick = { showReorderTabsSheet = true }
                         ) {
                             Icon(
                                 Icons.Default.Edit,
-                                contentDescription = "Reorder tabs",
+                                contentDescription = stringResource(R.string.library_tab_reorder_cd),
                                 tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f)
                             )
                         }
@@ -1174,7 +1174,7 @@ fun LibraryScreen(
                             val isPlaylistsTab = currentTabId == LibraryTabId.PLAYLISTS
 
                             LibrarySortBottomSheet(
-                                title = "Sort by",
+                                title = stringResource(R.string.library_sort_title),
                                 options = sanitizedSortOptions,
                                 selectedOption = selectedOptionForSheet,
                                 onDismiss = { playerViewModel.hideSortingSheet() },
@@ -1259,7 +1259,7 @@ fun LibraryScreen(
                                                 inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 activeCornerRadius = 32.dp,
                                                 onClick = { playerViewModel.setFoldersSource(FolderSource.INTERNAL) },
-                                                text = "Internal"
+                                                text = stringResource(R.string.storage_internal)
                                             )
                                             ToggleSegmentButton(
                                                 modifier = Modifier
@@ -1276,12 +1276,12 @@ fun LibraryScreen(
                                                         playerViewModel.setFoldersSource(FolderSource.SD_CARD)
                                                     }
                                                 },
-                                                text = "SD Card"
+                                                text = stringResource(R.string.storage_sd_card)
                                             )
                                         }
                                         if (!playerUiState.isSdCardAvailable) {
                                             Text(
-                                                text = "SD card is not available right now.",
+                                                text = stringResource(R.string.storage_sd_card_unavailable),
                                                 style = MaterialTheme.typography.bodySmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 modifier = Modifier.padding(top = 8.dp, start = 2.dp)
@@ -1480,14 +1480,14 @@ fun LibraryScreen(
                                                 horizontalAlignment = Alignment.CenterHorizontally,
                                                 verticalArrangement = Arrangement.Center
                                             ) {
-                                                Text("All files access is required to browse folders.")
+                                                Text(stringResource(R.string.browse_folders_permission_required))
                                                 Spacer(modifier = Modifier.height(8.dp))
                                                 Button(onClick = {
                                                     val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
                                                     intent.data = Uri.fromParts("package", context.packageName, null)
                                                     launcher.launch(intent)
                                                 }) {
-                                                    Text("Grant Permission")
+                                                    Text(stringResource(R.string.grant_permission_button))
                                                 }
                                             }
                                         }
@@ -1623,7 +1623,7 @@ fun LibraryScreen(
                 playerViewModel.clearAiPlaylistError()
                 showCreateAiPlaylistDialog = true
             } else {
-                Toast.makeText(context, "Set your Gemini API key first", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.gemini_api_key_required), Toast.LENGTH_SHORT).show()
             }
         },
         onCreate = { name, imageUri, color, icon, songIds, cropScale, cropPanX, cropPanY, shapeType, d1, d2, d3, d4 ->
@@ -1703,12 +1703,12 @@ fun LibraryScreen(
                 onAddToQueue = {
                     playerViewModel.addSongToQueue(currentSong) // Assumes such a method exists or will be added
                     showSongInfoBottomSheet = false
-                    playerViewModel.sendToast("Added to the queue")
+                    playerViewModel.sendToast(context.getString(R.string.playlist_detail_toast_added_to_queue))
                 },
                 onAddNextToQueue = {
                     playerViewModel.addSongNextToQueue(currentSong)
                     showSongInfoBottomSheet = false
-                    playerViewModel.sendToast("Will play next")
+                    playerViewModel.sendToast(context.getString(R.string.playlist_detail_toast_play_next))
                 },
                 onAddToPlayList = {
                     playlistSheetSongs = listOf(currentSong)
@@ -1891,21 +1891,21 @@ fun LibraryScreen(
                 pendingMergePlaylistIds = emptyList()
                 mergePlaylistName = ""
             },
-            title = { Text("Merge Playlists") },
+            title = { Text(stringResource(R.string.merge_playlists_title)) },
             text = {
                 Column {
-                    Text("Enter a name for the merged playlist:")
+                    Text(stringResource(R.string.merge_playlists_enter_name))
                     Spacer(modifier = Modifier.height(12.dp))
                     OutlinedTextField(
                         value = mergePlaylistName,
                         onValueChange = { mergePlaylistName = it },
-                        placeholder = { Text("Merged Playlist") },
+                        placeholder = { Text(stringResource(R.string.merge_playlists_placeholder)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "This will merge ${pendingMergePlaylistIds.size} selected playlists into one.",
+                        text = stringResource(R.string.merge_playlists_description, pendingMergePlaylistIds.size),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -1926,7 +1926,7 @@ fun LibraryScreen(
                         }
                     }
                 ) {
-                    Text("Merge")
+                    Text(stringResource(R.string.common_merge))
                 }
             },
             dismissButton = {
@@ -1935,7 +1935,7 @@ fun LibraryScreen(
                     pendingMergePlaylistIds = emptyList()
                     mergePlaylistName = ""
                 }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.common_cancel))
                 }
             }
         )
@@ -2282,12 +2282,12 @@ private fun LibraryTabSwitcherSheet(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Library tabs",
+                text = stringResource(R.string.library_tabs_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontFamily = GoogleSansRounded
             )
             Text(
-                text = "Jump directly to any tab or reorder them.",
+                text = stringResource(R.string.library_tabs_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -2336,7 +2336,7 @@ private fun LibraryTabSwitcherSheet(
                                 contentDescription = null
                             )
                             Spacer(modifier = Modifier.width(10.dp))
-                            Text("Reorder tabs")
+                            Text(stringResource(R.string.library_reorder_tabs))
                         }
                     }
                 }
@@ -2381,7 +2381,7 @@ private fun LibraryTabGridItem(
             ) {
                 Icon(
                     painter = painterResource(id = tabId.iconRes()),
-                    contentDescription = tabId.title,
+                    contentDescription = stringResource(tabId.titleResId),
                     tint = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
@@ -2442,10 +2442,8 @@ private fun LibraryTabId.iconRes(): Int = when (this) {
     LibraryTabId.LIKED -> R.drawable.rounded_favorite_24
 }
 
-private fun LibraryTabId.displayTitle(): String =
-    title.lowercase().replaceFirstChar { char ->
-        if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
-    }
+@Composable
+private fun LibraryTabId.displayTitle(): String = stringResource(titleResId)
 
 internal fun resolveFolderNavigationDirection(initialPath: String?, targetPath: String?): Int =
     when {
@@ -2753,7 +2751,7 @@ fun FolderListItem(folder: MusicFolder, onClick: () -> Unit) {
         Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_folder),
-                contentDescription = "Folder",
+                contentDescription = stringResource(R.string.common_folder),
                 modifier = Modifier
                     .size(48.dp)
                     .background(MaterialTheme.colorScheme.primaryContainer, CircleShape)

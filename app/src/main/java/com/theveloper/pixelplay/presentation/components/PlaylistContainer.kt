@@ -67,6 +67,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -146,12 +147,12 @@ fun PlaylistContainer(
                     )
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "No playlist has been created.",
+                        stringResource(R.string.playlist_empty_title),
                         style = MaterialTheme.typography.titleMedium
                     )
                     Spacer(Modifier.height(6.dp))
                     Text(
-                        "Touch the 'New Playlist' button to start.",
+                        stringResource(R.string.playlist_empty_subtitle),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -405,7 +406,7 @@ fun PlaylistItem(
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
                             painter = painterResource(R.drawable.gemini_ai),
-                            contentDescription = "AI Generated",
+                            contentDescription = stringResource(R.string.playlist_ai_generated_cd),
                             tint = MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier.size(20.dp)
                         )
@@ -439,7 +440,7 @@ fun PlaylistItem(
                     }
                 }
                 Text(
-                    text = "${playlist.songIds.size} Songs",
+                    text = stringResource(R.string.playlist_songs_count, playlist.songIds.size),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -509,7 +510,7 @@ fun CreatePlaylistDialogRedesigned(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "New playlist",
+                    text = stringResource(R.string.playlist_new_title),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     fontFamily = GoogleSansRounded,
@@ -519,8 +520,8 @@ fun CreatePlaylistDialogRedesigned(
                 OutlinedTextField(
                     value = playlistName,
                     onValueChange = { playlistName = it },
-                    label = { Text("Playlist Name") },
-                    placeholder = { Text("My playlist") },
+                    label = { Text(stringResource(R.string.playlist_name_label)) },
+                    placeholder = { Text(stringResource(R.string.playlist_name_placeholder)) },
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -555,7 +556,7 @@ fun CreatePlaylistDialogRedesigned(
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(Modifier.width(8.dp))
-                        Text("Generate with AI")
+                        Text(stringResource(R.string.playlist_generate_ai))
                     }
 
                     Row(
@@ -567,7 +568,7 @@ fun CreatePlaylistDialogRedesigned(
                             onClick = onDismiss,
                             modifier = Modifier.padding(end = 8.dp)
                         ) {
-                            Text("Cancel", fontWeight = FontWeight.SemiBold)
+                            Text(stringResource(R.string.cancel), fontWeight = FontWeight.SemiBold)
                         }
 
                         Button(
@@ -579,7 +580,7 @@ fun CreatePlaylistDialogRedesigned(
                                 contentColor = MaterialTheme.colorScheme.onPrimary
                             )
                         ) {
-                            Text("Create", fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.create), fontWeight = FontWeight.Bold)
                         }
                     }
                 }

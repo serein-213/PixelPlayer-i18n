@@ -94,11 +94,13 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.automirrored.rounded.PlaylistPlay
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavHostController
 import com.theveloper.pixelplay.R
@@ -243,7 +245,7 @@ fun SearchScreen(
                             onExpandedChange = {},
                             placeholder = {
                                 Text(
-                                    "Search...",
+                                    stringResource(R.string.search_placeholder),
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.primary
                                 )
@@ -251,7 +253,7 @@ fun SearchScreen(
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Rounded.Search,
-                                    contentDescription = "Buscar",
+                                    contentDescription = stringResource(R.string.search),
                                     tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(24.dp)
                                 )
@@ -273,7 +275,7 @@ fun SearchScreen(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Rounded.Close,
-                                            contentDescription = "Limpiar",
+                                            contentDescription = stringResource(R.string.search_clear_cd),
                                             tint = MaterialTheme.colorScheme.primary
                                         )
                                     }
@@ -500,13 +502,13 @@ fun SearchHistoryList(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "Recent Searches",
+                stringResource(R.string.search_recent_title),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
             if (historyItems.isNotEmpty()) {
                 TextButton(onClick = onClearAllHistory) {
-                    Text("Clear All")
+                    Text(stringResource(R.string.search_clear_all))
                 }
             }
         }
@@ -545,7 +547,7 @@ fun SearchHistoryListItem(
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
             Icon(
                 imageVector = Icons.Rounded.History,
-                contentDescription = "History Icon",
+                contentDescription = stringResource(R.string.search_history_icon_cd),
                 modifier = Modifier.size(20.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -560,7 +562,7 @@ fun SearchHistoryListItem(
         IconButton(onClick = { onHistoryDelete(item.query) }) {
             Icon(
                 imageVector = Icons.Rounded.DeleteForever,
-                contentDescription = "Delete history item",
+                contentDescription = stringResource(R.string.search_delete_history_cd),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )
         }
@@ -578,7 +580,7 @@ fun EmptySearchResults(searchQuery: String, colorScheme: ColorScheme) {
     ) {
         Icon(
             imageVector = Icons.Rounded.Search,
-            contentDescription = "No results",
+            contentDescription = stringResource(R.string.search_no_results_cd),
             modifier = Modifier
                 .size(80.dp)
                 .padding(bottom = 16.dp),
@@ -586,7 +588,7 @@ fun EmptySearchResults(searchQuery: String, colorScheme: ColorScheme) {
         )
 
         Text(
-            text = if (searchQuery.isNotBlank()) "No results for \"$searchQuery\"" else "Nothing found",
+            text = if (searchQuery.isNotBlank()) stringResource(R.string.search_no_results_for_format, searchQuery) else stringResource(R.string.search_nothing_found),
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold
@@ -595,7 +597,7 @@ fun EmptySearchResults(searchQuery: String, colorScheme: ColorScheme) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Try a different search term or check your filters.",
+            text = stringResource(R.string.search_try_different),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             textAlign = TextAlign.Center
@@ -616,6 +618,7 @@ fun SearchResultsList(
     navController: NavHostController
 ) {
     val localDensity = LocalDensity.current
+    val context = LocalContext.current
     val playerStableState by playerViewModel.stablePlayerState.collectAsStateWithLifecycle()
     val allSongs by playerViewModel.allSongsFlow.collectAsStateWithLifecycle()
 
@@ -626,7 +629,7 @@ fun SearchResultsList(
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text("No results found.", style = MaterialTheme.typography.bodyLarge)
+            Text(stringResource(R.string.search_no_results_found), style = MaterialTheme.typography.bodyLarge)
         }
         return
     }
@@ -664,11 +667,11 @@ fun SearchResultsList(
                 item(key = "header_${filterType.name}") {
                     SearchResultSectionHeader(
                         title = when (filterType) {
-                            SearchFilterType.SONGS -> "Songs"
-                            SearchFilterType.ALBUMS -> "Albums"
-                            SearchFilterType.ARTISTS -> "Artists"
-                            SearchFilterType.PLAYLISTS -> "Playlists"
-                            else -> "Results"
+                            SearchFilterType.SONGS -> stringResource(R.string.library_tab_songs)
+                            SearchFilterType.ALBUMS -> stringResource(R.string.library_tab_albums)
+                            SearchFilterType.ARTISTS -> stringResource(R.string.library_tab_artists)
+                            SearchFilterType.PLAYLISTS -> stringResource(R.string.library_tab_playlists)
+                            else -> stringResource(R.string.search_results)
                         }
                     )
                 }
@@ -770,7 +773,7 @@ fun SearchResultsList(
                                             )
                                             if (playerStableState.isShuffleEnabled) playerViewModel.toggleShuffle()
                                         } else {
-                                            playerViewModel.sendToast("Empty playlist")
+                                            playerViewModel.sendToast(context.getString(R.string.common_empty_playlist))
                                         }
                                         onItemSelected()
                                     }
@@ -835,7 +838,7 @@ fun SearchResultAlbumItem(
         ) {
             SmartImage(
                 model = album.albumArtUriString,
-                contentDescription = "Album Art: ${album.title}",
+                contentDescription = stringResource(R.string.search_album_art_cd),
                 modifier = Modifier
                     .size(56.dp)
                     .clip(itemShape)
