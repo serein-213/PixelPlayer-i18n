@@ -36,7 +36,7 @@ class QQMusicEncryptInterceptor(
         val plaintextJson = requestBuffer.readUtf8()
         Timber.d("QQMusicEncryptInterceptor: Plain request json: $plaintextJson")
 
-        // 2. Generate sign using QuickJS
+        // 2. Generate sign using the shared WebView-based signer
         val sign = signGenerator.generateSign(plaintextJson) ?: ""
         Timber.d("QQMusicEncryptInterceptor: Generated sign: $sign")
 

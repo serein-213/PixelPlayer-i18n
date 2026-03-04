@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 /**
  * Android implementation of QQ Music Signature (sign) generation.
- * Uses QuickJS to execute the obfuscated logic from Assets.
+ * Uses an off-screen WebView to execute the obfuscated logic from Assets.
  */
 class QQSignGenerator(private val context: Context) {
     private val appContext = context.applicationContext
