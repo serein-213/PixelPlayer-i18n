@@ -40,6 +40,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.ui.res.stringResource
 import androidx.compose.material3.Checkbox
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -120,6 +121,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -231,6 +233,12 @@ fun QueueBottomSheet(
     var isFabExpanded by rememberSaveable { mutableStateOf(false) }
 
     val infrequentPlayerState by viewModel.stablePlayerState.collectAsStateWithLifecycle()
+
+    val queueDefaultName = if (currentQueueSourceName.isNotBlank()) {
+        stringResource(R.string.queue_suffix, currentQueueSourceName)
+    } else {
+        stringResource(R.string.current_queue)
+    }
 
     val albumColorSchemePair by viewModel.currentAlbumArtColorSchemePair.collectAsStateWithLifecycle()
     val isDark = isSystemInDarkTheme()
@@ -701,7 +709,7 @@ fun QueueBottomSheet(
                             .padding(32.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Queue is empty.", color = colors.onSurface)
+                        Text(stringResource(R.string.queue_empty), color = colors.onSurface)
                     }
                 } else {
                     Box(
@@ -967,7 +975,7 @@ fun QueueBottomSheet(
                             verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             QueueToolbarMenuButton(
-                                text = "Clear Queue",
+                                text = stringResource(R.string.queue_clear_title),
                                 icon = Icons.Filled.ClearAll,
                                 containerColor = MaterialTheme.colorScheme.errorContainer,
                                 contentColor = MaterialTheme.colorScheme.onErrorContainer,
@@ -977,20 +985,15 @@ fun QueueBottomSheet(
                                 }
                             )
                             QueueToolbarMenuButton(
-                                text = "Save as Playlist",
+                                text = stringResource(R.string.save_as_playlist),
                                 icon = Icons.Filled.LibraryAdd,
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                                 onClick = {
                                     isFabExpanded = false
-                                    val defaultName = if (currentQueueSourceName.isNotBlank()) {
-                                        "${currentQueueSourceName} Queue"
-                                    } else {
-                                        "Current Queue"
-                                    }
                                     onRequestSaveAsPlaylist(
                                         queue,
-                                        defaultName
+                                        queueDefaultName
                                     ) { name, selectedIds ->
                                         val orderedSelection = queue
                                             .filter { selectedIds.contains(it.id) }
@@ -1044,7 +1047,7 @@ fun QueueBottomSheet(
                         )
                         Spacer(Modifier.width(4.dp))
                         Text(
-                            text = "removed",
+                            text = stringResource(R.string.queue_item_removed),
                             style = MaterialTheme.typography.bodyMedium,
                             color = colors.inverseOnSurface.copy(alpha = 0.7f),
                         )
@@ -1052,7 +1055,7 @@ fun QueueBottomSheet(
                             onClick = { viewModel.undoRemoveSongFromQueue() }
                         ) {
                             Text(
-                                text = "Undo",
+                                text = stringResource(R.string.undo),
                                 color = colors.inversePrimary,
                                 fontWeight = FontWeight.Bold
                             )
@@ -1080,8 +1083,8 @@ fun QueueBottomSheet(
         if (showClearQueueDialog) {
             AlertDialog(
                 onDismissRequest = { showClearQueueDialog = false },
-                title = { Text("Clear Queue") },
-                text = { Text("Are you sure you want to clear all songs from the queue except the current one?") },
+                title = { Text(stringResource(R.string.queue_clear_title)) },
+                text = { Text(stringResource(R.string.queue_clear_message)) },
                 confirmButton = {
                     TextButton(
                         onClick = {
@@ -1089,14 +1092,14 @@ fun QueueBottomSheet(
                             showClearQueueDialog = false
                         }
                     ) {
-                        Text("Clear")
+                        Text(stringResource(R.string.queue_clear_confirm))
                     }
                 },
                 dismissButton = {
                     TextButton(
                         onClick = { showClearQueueDialog = false }
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel))
                     }
                 }
             )
@@ -1167,7 +1170,7 @@ private fun QueueHeader(
         horizontalArrangement = Arrangement.Absolute.SpaceBetween
     ) {
         Text(
-            text = "Next Up",
+            text = stringResource(R.string.queue_next_up),
             style = MaterialTheme.typography.displayMedium,
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 8.dp)
@@ -1355,7 +1358,7 @@ fun SaveQueueAsPlaylistSheet(
                             title = {
                                 Text(
                                     modifier = Modifier.padding(start = 4.dp),
-                                    text = "Save as playlist",
+                                    text = stringResource(R.string.save_as_playlist),
                                     style = MaterialTheme.typography.headlineMedium,
                                     fontFamily = GoogleSansRounded,
                                     fontWeight = FontWeight.SemiBold,
@@ -1419,7 +1422,7 @@ fun SaveQueueAsPlaylistSheet(
                                             modifier = Modifier.size(18.dp)
                                         )
                                         Text(
-                                            text = if (allSelected) "Deselect All" else "Select All",
+                                            text = if (allSelected) stringResource(R.string.selection_deselect_all) else stringResource(R.string.selection_select_all),
                                             style = MaterialTheme.typography.labelLarge,
                                             fontWeight = FontWeight.Bold
                                         )
@@ -1443,7 +1446,7 @@ fun SaveQueueAsPlaylistSheet(
                             OutlinedTextField(
                                 value = playlistName,
                                 onValueChange = { playlistName = it },
-                                label = { Text("Playlist Name") },
+                                label = { Text(stringResource(R.string.playlist_name_label)) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .focusRequester(focusRequester),
@@ -1461,7 +1464,7 @@ fun SaveQueueAsPlaylistSheet(
                             OutlinedTextField(
                                 value = searchQuery,
                                 onValueChange = { searchQuery = it },
-                                placeholder = { Text("Search songs to include...") },
+                                placeholder = { Text(stringResource(R.string.playlist_search_songs_placeholder)) },
                                 leadingIcon = {
                                     Icon(
                                         Icons.Rounded.Search,
@@ -1473,7 +1476,7 @@ fun SaveQueueAsPlaylistSheet(
                                         IconButton(onClick = { searchQuery = "" }) {
                                             Icon(
                                                 Icons.Filled.Clear,
-                                                contentDescription = "Clear search"
+                                                contentDescription = stringResource(R.string.edit_song_reset)
                                             )
                                         }
                                     }
@@ -1523,12 +1526,12 @@ fun SaveQueueAsPlaylistSheet(
                                         .padding(start = 12.dp)
                                 ) {
                                     Text(
-                                        text = "${selectedSongIds.count { it.value }} songs selected",
+                                        text = stringResource(R.string.selected_songs_format, selectedSongIds.count { it.value }),
                                         style = MaterialTheme.typography.labelLarge,
                                         color = MaterialTheme.colorScheme.onSecondaryContainer
                                     )
                                     Text(
-                                        text = if (playlistName.text.isNotBlank()) "Save as: ${playlistName.text}" else "Enter a playlist name",
+                                        text = if (playlistName.text.isNotBlank()) stringResource(R.string.save_as_format, playlistName.text) else stringResource(R.string.enter_playlist_name),
                                         style = MaterialTheme.typography.bodySmall,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
@@ -1565,7 +1568,7 @@ fun SaveQueueAsPlaylistSheet(
                                         modifier = Modifier.size(18.dp)
                                     )
                                     Spacer(Modifier.width(8.dp))
-                                    Text("Save")
+                                    Text(stringResource(R.string.common_save))
                                 }
                             }
                         }
@@ -1600,7 +1603,7 @@ fun SaveQueueAsPlaylistSheet(
                                     modifier = Modifier.size(48.dp)
                                 )
                                 Text(
-                                    text = "No songs match \"$searchQuery\"",
+                                    text = stringResource(R.string.queue_no_songs_match, searchQuery),
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -1735,7 +1738,7 @@ private fun QueueMiniPlayer(
             SmartImage(
                 model = song.albumArtUriString ?: R.drawable.rounded_album_24,
                 shape = albumShape,
-                contentDescription = "Carátula",
+                contentDescription = stringResource(R.string.album_art_cd),
                 modifier = Modifier
                     .size(56.dp)
                     .clip(albumShape),
@@ -1776,7 +1779,7 @@ private fun QueueMiniPlayer(
             ) {
                 Icon(
                     painter = if (isPlaying) painterResource(R.drawable.rounded_pause_24) else painterResource(R.drawable.rounded_play_arrow_24),
-                    contentDescription = if (isPlaying) "Pausar" else "Reproducir",
+                    contentDescription = if (isPlaying) stringResource(R.string.pause_playback) else stringResource(R.string.play_playback),
                 )
             }
 
@@ -1793,7 +1796,7 @@ private fun QueueMiniPlayer(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.rounded_skip_next_24),
-                    contentDescription = "Siguiente",
+                    contentDescription = stringResource(R.string.next_track),
                 )
             }
         }
