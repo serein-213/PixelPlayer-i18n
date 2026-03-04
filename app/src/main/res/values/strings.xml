@@ -441,7 +441,7 @@
     <string name="settings_category_behavior_title">Behavior</string>
     <string name="settings_category_behavior_subtitle">Gestures, haptics, and navigation behavior</string>
     <string name="settings_category_ai_title">AI Integration (Beta)</string>
-    <string name="settings_category_ai_subtitle">Gemini API key and AI features</string>
+    <string name="settings_category_ai_subtitle">Configure AI providers (Gemini, DeepSeek)</string>
     <string name="settings_category_backup_title">Backup &amp; Restore</string>
     <string name="settings_category_backup_subtitle">Export and recover your personal app data</string>
     <string name="settings_category_developer_title">Developer Options</string>
@@ -1117,6 +1117,12 @@
     <string name="settings_ai_models_error">Error loading models</string>
     <string name="settings_system_prompt_title">System Prompt</string>
     <string name="settings_system_prompt_subtitle">Customize how the AI behaves.</string>
+
+    <string name="settings_ai_provider_title">AI Provider</string>
+    <string name="settings_ai_provider_subtitle">Select the AI service provider to use.</string>
+    <string name="settings_deepseek_api_key_title">DeepSeek API Key</string>
+    <string name="settings_deepseek_api_key_subtitle">Get from DeepSeek Platform (api.deepseek.com)</string>
+    <string name="settings_deepseek_model_subtitle">Select the DeepSeek model to use.</string>
 
     
     <string name="artist_settings_multi_parsing_title">Multi-Artist Parsing</string>

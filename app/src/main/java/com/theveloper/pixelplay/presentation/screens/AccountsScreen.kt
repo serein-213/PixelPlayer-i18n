@@ -69,6 +69,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -186,7 +187,7 @@ fun AccountsScreen(
             if (uiState.connectedAccounts.isNotEmpty()) {
                 item {
                     Text(
-                        text = "Linked Services",
+                        text = stringResource(R.string.accounts_linked_services),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -240,7 +241,7 @@ fun AccountsScreen(
         }
 
         CollapsibleCommonTopBar(
-            title = "Accounts",
+            title = stringResource(R.string.accounts_title),
             collapseFraction = collapseFraction,
             headerHeight = currentTopBarHeightDp,
             onBackClick = onBackClick,
@@ -267,13 +268,13 @@ private fun AccountsHeroSection(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = "Connected Accounts",
+                text = stringResource(R.string.accounts_connected_accounts),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Manage linked providers and keep each integration under your control.",
+                text = stringResource(R.string.accounts_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -282,12 +283,12 @@ private fun AccountsHeroSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 HeroStatTile(
-                    title = "Active",
+                    title = stringResource(R.string.accounts_active_title),
                     value = connectedCount.toString(),
                     modifier = Modifier.weight(1f)
                 )
                 HeroStatTile(
-                    title = "Available",
+                    title = stringResource(R.string.accounts_available_title),
                     value = (connectedCount + disconnectedCount).toString(),
                     modifier = Modifier.weight(1f)
                 )
@@ -348,84 +349,81 @@ private fun ConnectedAccountCard(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(
-    modifier = Modifier.fillMaxWidth(),
-    verticalAlignment = Alignment.CenterVertically
-) {
-    if (account.service == ExternalServiceAccount.NAVIDROME) {
-        ServiceIcon(
-            service = account.service,
-            tint = palette.iconTint,
-            modifier = Modifier
-                .width(48.dp)
-                .height(40.dp)
-        )
-    } else {
-        Surface(
-            shape = AbsoluteSmoothCornerShape(16.dp, 60),
-            color = palette.iconContainer
-        ) {
-            if (painter != null) {
-                Icon(
-                    painter = painter,
-                    contentDescription = null,
-                    tint = palette.iconTint,
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .size(20.dp)
-                )
-            } else {
-                ServiceIcon(
-                    service = account.service,
-                    tint = palette.iconTint,
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .size(20.dp)
-                )
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (account.service == ExternalServiceAccount.NAVIDROME) {
+                    ServiceIcon(
+                        service = account.service,
+                        tint = palette.iconTint,
+                        modifier = Modifier
+                            .width(48.dp)
+                            .height(40.dp)
+                    )
+                } else {
+                    Surface(
+                        shape = AbsoluteSmoothCornerShape(16.dp, 60),
+                        color = palette.iconContainer
+                    ) {
+                        if (painter != null) {
+                            Icon(
+                                painter = painter,
+                                contentDescription = null,
+                                tint = palette.iconTint,
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .size(20.dp)
+                            )
+                        } else {
+                            ServiceIcon(
+                                service = account.service,
+                                tint = palette.iconTint,
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .size(20.dp)
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.size(12.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = account.title,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = account.accountLabel,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                Surface(
+                    shape = AbsoluteSmoothCornerShape(12.dp, 60),
+                    color = if (isComingSoon) {
+                        MaterialTheme.colorScheme.secondaryContainer
+                    } else {
+                        palette.statusContainer
+                    }
+                ) {
+                    Text(
+                        text = if (isComingSoon) stringResource(R.string.accounts_status_soon) else stringResource(R.string.accounts_status_connected),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (isComingSoon) {
+                            MaterialTheme.colorScheme.onSecondaryContainer
+                        } else {
+                            palette.statusTint
+                        },
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                    )
+                }
             }
-        }
-    }
-
-    Spacer(Modifier.size(12.dp))
-
-    Column(modifier = Modifier.weight(1f)) {
-        Text(
-            text = account.title,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(
-            text = account.accountLabel,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-
-    Surface(
-        shape = AbsoluteSmoothCornerShape(12.dp, 60),
-        color = if (isComingSoon) {
-            MaterialTheme.colorScheme.secondaryContainer
-        } else {
-            palette.statusContainer
-        }
-    ) {
-        Text(
-            text = if (isComingSoon) "Soon" else "Connected",
-            style = MaterialTheme.typography.labelMedium,
-            color = if (isComingSoon) {
-                MaterialTheme.colorScheme.onSecondaryContainer
-            } else {
-                palette.statusTint
-            },
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
-        )
-    }
-}
 
             Surface(
                 shape = AbsoluteSmoothCornerShape(14.dp, 60),
@@ -470,7 +468,7 @@ private fun ConnectedAccountCard(
                 )
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(
-                    text = if (isComingSoon) "Coming soon" else "Open Service",
+                    text = if (isComingSoon) stringResource(R.string.accounts_coming_soon) else stringResource(R.string.accounts_open_service),
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -495,7 +493,7 @@ private fun ConnectedAccountCard(
                 }
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(
-                    text = if (account.isLoggingOut) "Logging out..." else "Log out",
+                    text = if (account.isLoggingOut) stringResource(R.string.accounts_logging_out) else stringResource(R.string.accounts_log_out),
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -508,6 +506,7 @@ private fun EmptyAccountsCard(
     disconnectedServices: List<ExternalServiceAccount>,
     onConnect: (ExternalServiceAccount) -> Unit
 ) {
+    val context = LocalContext.current
     Card(
         shape = AbsoluteSmoothCornerShape(28.dp, 60),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
@@ -519,12 +518,12 @@ private fun EmptyAccountsCard(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "No linked accounts yet",
+                text = stringResource(R.string.accounts_no_linked_yet),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Connect a provider to manage it from this screen.",
+                text = stringResource(R.string.accounts_connect_provider_prompt),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -562,9 +561,9 @@ private fun EmptyAccountsCard(
                     Spacer(modifier = Modifier.size(8.dp))
                     Text(
                         text = if (isComingSoon) {
-                            "${serviceTitle(service)} (Coming soon)"
+                            context.getString(R.string.accounts_coming_soon_format, serviceTitle(context, service))
                         } else {
-                            "Connect ${serviceTitle(service)}"
+                            context.getString(R.string.accounts_connect_format, serviceTitle(context, service))
                         }
                     )
                 }
@@ -674,11 +673,11 @@ private fun ServiceIcon(service: ExternalServiceAccount, tint: Color, modifier: 
     }
 }
 
-private fun serviceTitle(service: ExternalServiceAccount): String {
+private fun serviceTitle(context: Context, service: ExternalServiceAccount): String {
     return when (service) {
-        ExternalServiceAccount.TELEGRAM -> "Telegram"
-        ExternalServiceAccount.GOOGLE_DRIVE -> "Google Drive"
-        ExternalServiceAccount.NETEASE -> "Netease"
+        ExternalServiceAccount.TELEGRAM -> context.getString(R.string.accounts_service_telegram)
+        ExternalServiceAccount.GOOGLE_DRIVE -> context.getString(R.string.accounts_service_google_drive)
+        ExternalServiceAccount.NETEASE -> context.getString(R.string.accounts_service_netease)
         ExternalServiceAccount.QQ_MUSIC -> "QQ Music"
         ExternalServiceAccount.NAVIDROME -> "Subsonic"
     }
@@ -700,7 +699,9 @@ private fun openService(
             )
         }
         ExternalServiceAccount.GOOGLE_DRIVE -> {
-            Toast.makeText(context, "Google Drive is coming soon.", Toast.LENGTH_SHORT).show()
+            val serviceName = context.getString(R.string.accounts_service_google_drive)
+            val message = context.getString(R.string.accounts_coming_soon_format, serviceName)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
         ExternalServiceAccount.NETEASE -> {
             if (preferNeteaseDashboard) {
@@ -741,6 +742,6 @@ private fun safeStartActivity(
 ) {
     runCatching { context.startActivity(intent) }
         .onFailure {
-            Toast.makeText(context, "Unable to open this screen right now.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.accounts_unable_to_open_toast), Toast.LENGTH_SHORT).show()
         }
 }
