@@ -1394,6 +1394,13 @@
     <string name="experimental_step_2_placeholders">Step 2: Smooth transition with placeholders</string>
     <string name="experimental_step_3_trigger">Step 3: Choose your trigger</string>
     <string name="experimental_trigger_modes_desc">Decide if elements appear based on expansion percentage or only after you let go of the sheet.</string>
+    <string name="experimental_animated_lyrics_title">Animated Lyrics (High-end devices)</string>
+    <string name="experimental_animated_lyrics_desc">Uses spring animations and visual effects for lyrics. May cause frame drops on low-end devices.</string>
+    <string name="experimental_lyric_blur_effect">Lyric Blur Effect</string>
+    <string name="experimental_lyric_blur_effect_desc">Applies a depth-of-field blur to inactive lyrics.</string>
+    <string name="experimental_blur_strength">Blur Strength</string>
+    <string name="experimental_blur_strength_desc">Adjust the intensity of the blur effect.</string>
+    <string name="experimental_step_1_choose_delay">Step 1 · Choose what to delay</string>
     <string name="experimental_trigger_unlock_msg">Enable at least one delay option above to unlock trigger settings.</string>
     <string name="experimental_threshold_mode">Threshold</string>
     <string name="experimental_threshold_uses_expansion">Uses expansion %</string>
