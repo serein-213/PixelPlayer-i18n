@@ -37,6 +37,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -372,7 +373,7 @@ fun GenreDetailScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.MoreVert,
-                        contentDescription = "Options",
+                        contentDescription = stringResource(id = R.string.selection_options),
                         modifier = Modifier.size(28.dp)
                     )
                 }
@@ -410,7 +411,7 @@ fun GenreDetailScreen(
                                 Icon(Icons.Rounded.AutoFixHigh, contentDescription = null)
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "Quick Fill Genre",
+                                    text = stringResource(id = R.string.quick_fill_button),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold
                                 )
