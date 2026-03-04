@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.DecoderCounters
+import com.theveloper.pixelplay.R
 
 data class CodecInfo(
     val name: String,
@@ -147,7 +148,8 @@ class DeviceCapabilitiesViewModel @Inject constructor(
         
         val version = androidx.media3.common.MediaLibraryInfo.VERSION
         val exoPlayer = player as? androidx.media3.exoplayer.ExoPlayer
-        val renderers = "${exoPlayer?.rendererCount ?: 0} Active Renderers"
+        val rendererCount = exoPlayer?.rendererCount ?: 0
+        val renderers = context.getString(R.string.device_capabilities_active_renderers_format, rendererCount)
         
         // We can't easily get internal decoder counters without a listener, 
         // but we can show what we know.
@@ -155,7 +157,7 @@ class DeviceCapabilitiesViewModel @Inject constructor(
         return ExoPlayerInfo(
             version = version,
             renderers = renderers,
-            decoderCounters = "N/A (Requires Debug Listener)"
+            decoderCounters = context.getString(R.string.device_capabilities_exo_decoders_na)
         )
     }
 }
