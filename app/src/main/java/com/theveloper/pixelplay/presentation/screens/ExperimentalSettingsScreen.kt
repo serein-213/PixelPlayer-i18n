@@ -226,8 +226,8 @@ fun ExperimentalSettingsScreen(
                             )
 
                             SwitchSettingItem(
-                                title = "Animated Lyrics (High-end devices)",
-                                subtitle = "Uses spring animations and visual effects for lyrics. May cause frame drops on low-end devices.",
+                                title = stringResource(R.string.experimental_animated_lyrics_title),
+                                subtitle = stringResource(R.string.experimental_animated_lyrics_desc),
                                 checked = uiState.useAnimatedLyrics,
                                 onCheckedChange = settingsViewModel::setUseAnimatedLyrics,
                                 leadingIcon = {
@@ -246,8 +246,8 @@ fun ExperimentalSettingsScreen(
                             ) {
                                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                     SwitchSettingItem(
-                                        title = "Lyric Blur Effect",
-                                        subtitle = "Applies a depth-of-field blur to inactive lyrics.",
+                                        title = stringResource(R.string.experimental_lyric_blur_effect),
+                                        subtitle = stringResource(R.string.experimental_lyric_blur_effect_desc),
                                         checked = uiState.animatedLyricsBlurEnabled,
                                         onCheckedChange = settingsViewModel::setAnimatedLyricsBlurEnabled,
                                         leadingIcon = {
@@ -289,7 +289,7 @@ fun ExperimentalSettingsScreen(
                                                     Column(modifier = Modifier.weight(1f)) {
                                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                                             Text(
-                                                                text = "Blur Strength",
+                                                                text = stringResource(R.string.experimental_blur_strength),
                                                                 style = MaterialTheme.typography.titleMedium,
                                                                 color = MaterialTheme.colorScheme.onSurface,
                                                                 modifier = Modifier.padding(end = 8.dp)
@@ -309,7 +309,7 @@ fun ExperimentalSettingsScreen(
                                                             }
                                                         }
                                                         Text(
-                                                            text = "Adjust the intensity of the blur effect.",
+                                                            text = stringResource(R.string.experimental_blur_strength_desc),
                                                             style = MaterialTheme.typography.bodyMedium,
                                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                                         )
@@ -335,7 +335,7 @@ fun ExperimentalSettingsScreen(
                                     .clip(RoundedCornerShape(10.dp))
                             ) {
                                 Text(
-                                    text = "Step 1 · Choose what to delay",
+                                    text = stringResource(R.string.experimental_step_1_choose_delay),
                                     style = MaterialTheme.typography.titleSmall,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
