@@ -88,6 +88,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
@@ -601,10 +602,10 @@ private fun RangeTabsHeader(
                     onSelectedColor = MaterialTheme.colorScheme.onPrimary,
                     unselectedColor = MaterialTheme.colorScheme.surfaceContainerLowest,
                     onUnselectedColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    title = range.displayName
+                    title = stringResource(range.displayNameResId)
                 ) {
                     Text(
-                        text = range.displayName,
+                        text = stringResource(range.displayNameResId),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = if (index == selectedIndex) FontWeight.Bold else FontWeight.Medium
                     )

@@ -64,10 +64,12 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.presentation.components.CollapsibleCommonTopBar
 import com.theveloper.pixelplay.presentation.components.MiniPlayerHeight
 import com.theveloper.pixelplay.presentation.netease.auth.NeteaseLoginActivity
@@ -178,7 +180,7 @@ fun AccountsScreen(
             if (uiState.connectedAccounts.isNotEmpty()) {
                 item {
                     Text(
-                        text = "Linked Services",
+                        text = stringResource(R.string.accounts_linked_services),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -223,7 +225,7 @@ fun AccountsScreen(
         }
 
         CollapsibleCommonTopBar(
-            title = "Accounts",
+            title = stringResource(R.string.accounts_title),
             collapseFraction = collapseFraction,
             headerHeight = currentTopBarHeightDp,
             onBackClick = onBackClick,
@@ -250,13 +252,13 @@ private fun AccountsHeroSection(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = "Connected Accounts",
+                text = stringResource(R.string.accounts_connected_accounts),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Manage linked providers and keep each integration under your control.",
+                text = stringResource(R.string.accounts_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -265,12 +267,12 @@ private fun AccountsHeroSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 HeroStatTile(
-                    title = "Active",
+                    title = stringResource(R.string.accounts_active_title),
                     value = connectedCount.toString(),
                     modifier = Modifier.weight(1f)
                 )
                 HeroStatTile(
-                    title = "Available",
+                    title = stringResource(R.string.accounts_available_title),
                     value = (connectedCount + disconnectedCount).toString(),
                     modifier = Modifier.weight(1f)
                 )
@@ -371,7 +373,7 @@ private fun ConnectedAccountCard(
                     }
                 ) {
                     Text(
-                        text = if (isComingSoon) "Soon" else "Connected",
+                        text = if (isComingSoon) stringResource(R.string.accounts_status_soon) else stringResource(R.string.accounts_status_connected),
                         style = MaterialTheme.typography.labelMedium,
                         color = if (isComingSoon) {
                             MaterialTheme.colorScheme.onSecondaryContainer
@@ -427,7 +429,7 @@ private fun ConnectedAccountCard(
                 )
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(
-                    text = if (isComingSoon) "Coming soon" else "Open Service",
+                    text = if (isComingSoon) stringResource(R.string.accounts_coming_soon) else stringResource(R.string.accounts_open_service),
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -452,7 +454,7 @@ private fun ConnectedAccountCard(
                 }
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(
-                    text = if (account.isLoggingOut) "Logging out..." else "Log out",
+                    text = if (account.isLoggingOut) stringResource(R.string.accounts_logging_out) else stringResource(R.string.accounts_log_out),
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -465,6 +467,7 @@ private fun EmptyAccountsCard(
     disconnectedServices: List<ExternalServiceAccount>,
     onConnect: (ExternalServiceAccount) -> Unit
 ) {
+    val context = LocalContext.current
     Card(
         shape = AbsoluteSmoothCornerShape(28.dp, 60),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
@@ -476,12 +479,12 @@ private fun EmptyAccountsCard(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "No linked accounts yet",
+                text = stringResource(R.string.accounts_no_linked_yet),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Connect a provider to manage it from this screen.",
+                text = stringResource(R.string.accounts_connect_provider_prompt),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -505,9 +508,9 @@ private fun EmptyAccountsCard(
                     Spacer(modifier = Modifier.size(8.dp))
                     Text(
                         text = if (isComingSoon) {
-                            "${serviceTitle(service)} (Coming soon)"
+                            context.getString(R.string.accounts_coming_soon_format, serviceTitle(context, service))
                         } else {
-                            "Connect ${serviceTitle(service)}"
+                            context.getString(R.string.accounts_connect_format, serviceTitle(context, service))
                         }
                     )
                 }
@@ -572,12 +575,12 @@ private fun accountIcon(service: ExternalServiceAccount): ImageVector {
     }
 }
 
-private fun serviceTitle(service: ExternalServiceAccount): String {
+private fun serviceTitle(context: Context, service: ExternalServiceAccount): String {
     return when (service) {
-        ExternalServiceAccount.TELEGRAM -> "Telegram"
-        ExternalServiceAccount.GOOGLE_DRIVE -> "Google Drive"
-        ExternalServiceAccount.NETEASE -> "Netease"
-        ExternalServiceAccount.QQ_MUSIC -> "QQ Music"
+        ExternalServiceAccount.TELEGRAM -> context.getString(R.string.accounts_service_telegram)
+        ExternalServiceAccount.GOOGLE_DRIVE -> context.getString(R.string.accounts_service_google_drive)
+        ExternalServiceAccount.NETEASE -> context.getString(R.string.accounts_service_netease)
+    ExternalServiceAccount.QQ_MUSIC -> "QQ Music"
     }
 }
 
@@ -596,7 +599,9 @@ private fun openService(
             )
         }
         ExternalServiceAccount.GOOGLE_DRIVE -> {
-            Toast.makeText(context, "Google Drive is coming soon.", Toast.LENGTH_SHORT).show()
+            val serviceName = context.getString(R.string.accounts_service_google_drive)
+            val message = context.getString(R.string.accounts_coming_soon_format, serviceName)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
         ExternalServiceAccount.NETEASE -> {
             if (preferNeteaseDashboard) {
@@ -627,6 +632,6 @@ private fun safeStartActivity(
 ) {
     runCatching { context.startActivity(intent) }
         .onFailure {
-            Toast.makeText(context, "Unable to open this screen right now.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.accounts_unable_to_open_toast), Toast.LENGTH_SHORT).show()
         }
 }
