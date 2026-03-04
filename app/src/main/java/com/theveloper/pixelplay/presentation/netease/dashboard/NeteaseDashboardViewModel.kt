@@ -2,6 +2,7 @@ package com.theveloper.pixelplay.presentation.netease.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.database.NeteasePlaylistEntity
 import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.data.netease.NeteaseRepository
@@ -19,14 +20,20 @@ class NeteaseDashboardViewModel @Inject constructor(
     private val repository: NeteaseRepository
 ) : ViewModel() {
 
+    sealed class SyncUiMessage {
+        data class Syncing(val resId: Int) : SyncUiMessage()
+        data class Success(val resId: Int, val args: List<Any> = emptyList()) : SyncUiMessage()
+        data class Error(val resId: Int, val errorMessage: String? = null) : SyncUiMessage()
+    }
+
     val playlists: StateFlow<List<NeteasePlaylistEntity>> = repository.getPlaylists()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val _isSyncing = MutableStateFlow(false)
     val isSyncing: StateFlow<Boolean> = _isSyncing.asStateFlow()
 
-    private val _syncMessage = MutableStateFlow<String?>(null)
-    val syncMessage: StateFlow<String?> = _syncMessage.asStateFlow()
+    private val _syncUiMessage = MutableStateFlow<SyncUiMessage?>(null)
+    val syncUiMessage: StateFlow<SyncUiMessage?> = _syncUiMessage.asStateFlow()
 
     private val _selectedPlaylistSongs = MutableStateFlow<List<Song>>(emptyList())
     val selectedPlaylistSongs: StateFlow<List<Song>> = _selectedPlaylistSongs.asStateFlow()
@@ -44,17 +51,17 @@ class NeteaseDashboardViewModel @Inject constructor(
     fun syncAllPlaylistsAndSongs() {
         viewModelScope.launch {
             _isSyncing.value = true
-            _syncMessage.value = "Syncing all playlists and songs..."
+            _syncUiMessage.value = SyncUiMessage.Syncing(R.string.sync_notification_playlists)
             val result = repository.syncAllPlaylistsAndSongs()
             result.fold(
                 onSuccess = { summary ->
-                    _syncMessage.value = if (summary.failedPlaylistCount == 0) {
-                        "Synced ${summary.playlistCount} playlists, ${summary.syncedSongCount} songs"
+                    _syncUiMessage.value = if (summary.failedPlaylistCount == 0) {
+                        SyncUiMessage.Success(R.string.synced_playlists_and_songs_format, listOf(summary.playlistCount, summary.syncedSongCount))
                     } else {
-                        "Synced ${summary.playlistCount} playlists, ${summary.syncedSongCount} songs (${summary.failedPlaylistCount} failed)"
+                        SyncUiMessage.Success(R.string.synced_playlists_and_songs_failed_format, listOf(summary.playlistCount, summary.syncedSongCount, summary.failedPlaylistCount))
                     }
                 },
-                onFailure = { _syncMessage.value = "Sync failed: ${it.message}" }
+                onFailure = { _syncUiMessage.value = SyncUiMessage.Error(R.string.sync_failed, it.message) }
             )
             _isSyncing.value = false
         }
@@ -63,11 +70,11 @@ class NeteaseDashboardViewModel @Inject constructor(
     fun syncPlaylists() {
         viewModelScope.launch {
             _isSyncing.value = true
-            _syncMessage.value = "Syncing playlists..."
+            _syncUiMessage.value = SyncUiMessage.Syncing(R.string.sync_notification_playlists)
             val result = repository.syncUserPlaylists()
             result.fold(
-                onSuccess = { _syncMessage.value = "Synced ${it.size} playlists" },
-                onFailure = { _syncMessage.value = "Sync failed: ${it.message}" }
+                onSuccess = { _syncUiMessage.value = SyncUiMessage.Success(R.string.synced_playlists_count_format, listOf(it.size)) },
+                onFailure = { _syncUiMessage.value = SyncUiMessage.Error(R.string.sync_failed, it.message) }
             )
             _isSyncing.value = false
         }
@@ -76,11 +83,11 @@ class NeteaseDashboardViewModel @Inject constructor(
     fun syncPlaylistSongs(playlistId: Long) {
         viewModelScope.launch {
             _isSyncing.value = true
-            _syncMessage.value = "Syncing songs..."
+            _syncUiMessage.value = SyncUiMessage.Syncing(R.string.sync_notification_songs)
             val result = repository.syncPlaylistSongs(playlistId)
             result.fold(
-                onSuccess = { _syncMessage.value = "Synced $it songs" },
-                onFailure = { _syncMessage.value = "Sync failed: ${it.message}" }
+                onSuccess = { _syncUiMessage.value = SyncUiMessage.Success(R.string.songs_synced_count_format, listOf(it)) },
+                onFailure = { _syncUiMessage.value = SyncUiMessage.Error(R.string.sync_failed, it.message) }
             )
             _isSyncing.value = false
         }
@@ -101,7 +108,7 @@ class NeteaseDashboardViewModel @Inject constructor(
     }
 
     fun clearSyncMessage() {
-        _syncMessage.value = null
+        _syncUiMessage.value = null
     }
 
     fun logout() {

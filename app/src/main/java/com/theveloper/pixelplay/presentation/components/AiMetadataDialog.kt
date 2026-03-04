@@ -7,7 +7,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.model.Song
 
 @Composable
@@ -29,10 +31,10 @@ fun AiMetadataDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Generate Metadata with AI") },
+        title = { Text(stringResource(R.string.ai_metadata_dialog_title)) },
         text = {
             Column {
-                Text("Select the fields you want to generate:")
+                Text(stringResource(R.string.ai_metadata_dialog_description))
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyColumn {
                     items(
@@ -56,7 +58,15 @@ fun AiMetadataDialog(
                                 }
                             )
                             Spacer(modifier = Modifier.width(16.dp))
-                            Text(field)
+                            Text(
+                                when (field) {
+                                    "Title" -> stringResource(R.string.edit_song_field_title)
+                                    "Artist" -> stringResource(R.string.edit_song_field_artist)
+                                    "Album" -> stringResource(R.string.edit_song_field_album)
+                                    "Genre" -> stringResource(R.string.edit_song_field_genre)
+                                    else -> field
+                                }
+                            )
                         }
                     }
                 }
@@ -67,12 +77,12 @@ fun AiMetadataDialog(
                 onClick = { onGenerate(selectedFields.toList()) },
                 enabled = selectedFields.isNotEmpty()
             ) {
-                Text("Generate")
+                Text(stringResource(R.string.generate))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

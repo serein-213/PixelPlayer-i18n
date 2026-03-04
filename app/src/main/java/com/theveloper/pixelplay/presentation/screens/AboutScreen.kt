@@ -82,6 +82,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -122,42 +123,44 @@ private data class Contributor(
     val contributions: Int? = null,
 )
 
-private val CoreMaintainer = Contributor(
+@Composable
+private fun getCoreMaintainer(context: Context) = Contributor(
     id = "theovilardo",
     displayName = "Theo Vilardo",
-    role = "Creator and maintainer",
-    detail = "Building PixelPlayer with direct community feedback.",
+    role = context.getString(R.string.about_contributor_role_maintainer),
+    detail = context.getString(R.string.about_contributor_detail_maintainer),
     avatarUrl = "https://avatars.githubusercontent.com/u/26845343?v=4",
     iconRes = R.drawable.round_developer_board_24,
     githubUrl = "https://github.com/theovilardo",
     telegramUrl = "https://t.me/thevelopersupport",
 )
 
-private val PinnedCommunityMembers = listOf(
+@Composable
+private fun getPinnedCommunityMembers(context: Context) = listOf(
     Contributor(
         id = "lostf1sh",
         displayName = "@lostf1sh",
-        role = "Most active contributor",
-        detail = "Has contributed enormously across core features, architecture and reliability.",
-        badge = "Top Impact",
+        role = context.getString(R.string.about_contributor_role_top),
+        detail = context.getString(R.string.about_contributor_detail_top),
+        badge = context.getString(R.string.about_contributor_badge_top),
         iconRes = R.drawable.rounded_celebration_24,
         githubUrl = "https://github.com/lostf1sh",
     ),
     Contributor(
         id = "cromaguy",
         displayName = "@cromaguy",
-        role = "Rhythm developer",
-        detail = "Developer of Rhythm (another music app) and key community supporter.",
-        badge = "Community Ally",
+        role = context.getString(R.string.about_contributor_role_rhythm),
+        detail = context.getString(R.string.about_contributor_detail_rhythm),
+        badge = context.getString(R.string.about_contributor_badge_ally),
         iconRes = R.drawable.round_developer_board_24,
         githubUrl = "https://github.com/cromaguy",
     ),
     Contributor(
         id = "colbycabrera",
         displayName = "@ColbyCabrera",
-        role = "Early contributor",
-        detail = "Helped shape PixelPlayer in the first stages of the app.",
-        badge = "Early Support",
+        role = context.getString(R.string.about_contributor_role_early),
+        detail = context.getString(R.string.about_contributor_detail_early),
+        badge = context.getString(R.string.about_contributor_badge_early),
         iconRes = R.drawable.round_newspaper_24,
         githubUrl = "https://github.com/ColbyCabrera",
     ),
@@ -182,6 +185,9 @@ fun AboutScreen(
     onNavigationIconClick: () -> Unit,
 ) {
     val context = LocalContext.current
+    val coreMaintainer = getCoreMaintainer(context)
+    val pinnedCommunityMembers = getPinnedCommunityMembers(context)
+    
     val versionName: String = try {
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
         packageInfo.versionName ?: "N/A"
@@ -198,12 +204,12 @@ fun AboutScreen(
             val result = githubService.fetchContributors()
             result.onSuccess { githubContributors ->
                 contributors = githubContributors
-                    .filter { normalizeHandle(it.login) != CoreMaintainer.id }
+                    .filter { normalizeHandle(it.login) != coreMaintainer.id }
                     .map { github ->
                         Contributor(
                             id = normalizeHandle(github.login),
                             displayName = "@${github.login}",
-                            role = "Community contributor",
+                            role = context.getString(R.string.about_contributor_role_community),
                             avatarUrl = github.avatar_url,
                             iconRes = R.drawable.rounded_person_24,
                             githubUrl = github.html_url,
@@ -224,8 +230,8 @@ fun AboutScreen(
         contributors.associateBy { it.id }
     }
 
-    val spotlightContributors = remember(contributorsById) {
-        PinnedCommunityMembers.map { pinned ->
+    val spotlightContributors = remember(contributorsById, pinnedCommunityMembers) {
+        pinnedCommunityMembers.map { pinned ->
             val primaryMatch = contributorsById[pinned.id]
             val aliasMatch = PinnedAliases[pinned.id]
                 ?.firstNotNullOfOrNull { alias -> contributorsById[alias] }
@@ -243,9 +249,9 @@ fun AboutScreen(
         }
     }
 
-    val excludedIds = remember(spotlightContributors) {
+    val excludedIds = remember(spotlightContributors, coreMaintainer) {
         buildSet {
-            add(CoreMaintainer.id)
+            add(coreMaintainer.id)
             spotlightContributors.forEach { spotlight ->
                 add(spotlight.id)
                 addAll(PinnedAliases[spotlight.id].orEmpty())
@@ -376,28 +382,28 @@ fun AboutScreen(
 
             item(key = "maintainer_title") {
                 AboutSectionHeader(
-                    title = "Maintainer",
-                    subtitle = "The person behind PixelPlayer.",
+                    title = stringResource(R.string.about_maintainer_title),
+                    subtitle = stringResource(R.string.about_maintainer_subtitle),
                     modifier = Modifier.padding(top = 24.dp),
                 )
             }
 
             item(key = "maintainer_card") {
                 ContributorCard(
-                    contributor = CoreMaintainer,
+                    contributor = coreMaintainer,
                     shape = expressiveListShape(index = 0, count = 1),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     showContributionCount = false,
-                    onCardClick = CoreMaintainer.githubUrl?.let { url -> { openUrl(context, url) } },
+                    onCardClick = coreMaintainer.githubUrl?.let { url -> { openUrl(context, url) } },
                 )
             }
 
             item(key = "spotlight_title") {
                 AboutSectionHeader(
-                    title = "Community Spotlight",
-                    subtitle = "Recognition for collaborators with major impact.",
+                    title = stringResource(R.string.about_spotlight_title),
+                    subtitle = stringResource(R.string.about_spotlight_subtitle),
                     modifier = Modifier.padding(top = 24.dp),
                 )
             }
@@ -420,8 +426,8 @@ fun AboutScreen(
 
             item(key = "contributors_title") {
                 AboutSectionHeader(
-                    title = "Open Source Contributors",
-                    subtitle = "Live contributor list from GitHub.",
+                    title = stringResource(R.string.about_contributors_title),
+                    subtitle = stringResource(R.string.about_contributors_subtitle),
                     modifier = Modifier.padding(top = 24.dp),
                 )
             }
@@ -448,7 +454,7 @@ fun AboutScreen(
                         tonalElevation = 1.dp,
                     ) {
                         Text(
-                            text = "No contributors found right now. Please try again later.",
+                            text = stringResource(R.string.about_no_contributors),
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -479,7 +485,7 @@ fun AboutScreen(
         }
 
         CollapsibleCommonTopBar(
-            title = "About",
+            title = stringResource(R.string.about_title),
             collapseFraction = collapseFraction,
             headerHeight = currentTopBarHeightDp,
             onBackClick = onNavigationIconClick,
@@ -545,14 +551,14 @@ private fun AboutHeroCard(
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                     ) {
                         Text(
-                            text = "PixelPlayer",
+                            text = stringResource(R.string.about_hero_app_name),
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
                         Text(
-                            text = "Open source music player built with its community.",
+                            text = stringResource(R.string.about_hero_description),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 2,
@@ -577,7 +583,7 @@ private fun AboutHeroCard(
                         },
                 ) {
                     Text(
-                        text = "Version v$versionName",
+                        text = stringResource(R.string.about_version_format, versionName),
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
@@ -597,9 +603,9 @@ private fun AboutHeroCard(
 @Composable
 private fun CommunitySignalsRow() {
     val labels = listOf(
-        "Open source" to Icons.Rounded.Public,
-        "Community-first" to Icons.Rounded.AutoAwesome,
-        "Material 3 Expressive" to Icons.Rounded.Palette,
+        stringResource(R.string.about_feature_open_source) to Icons.Rounded.Public,
+        stringResource(R.string.about_feature_community) to Icons.Rounded.AutoAwesome,
+        stringResource(R.string.about_feature_material3) to Icons.Rounded.Palette,
     )
 
     FlowRow(
@@ -743,7 +749,7 @@ private fun ContributorCard(
                         ContributorLabel(text = badge)
                     }
                     if (showContributionCount && contributor.contributions != null) {
-                        ContributorLabel(text = "${contributor.contributions} contrib.")
+                        ContributorLabel(text = stringResource(R.string.about_contributions_format, contributor.contributions))
                     }
                 }
             }
@@ -754,12 +760,12 @@ private fun ContributorCard(
             ) {
                 SocialIconButton(
                     painterRes = R.drawable.github,
-                    contentDescription = "Open GitHub profile",
+                    contentDescription = stringResource(R.string.about_open_github_cd),
                     url = contributor.githubUrl,
                 )
                 SocialIconButton(
                     painterRes = R.drawable.telegram,
-                    contentDescription = "Open Telegram",
+                    contentDescription = stringResource(R.string.about_open_telegram_cd),
                     url = contributor.telegramUrl,
                 )
             }
@@ -791,6 +797,7 @@ private fun ContributorAvatar(
     @DrawableRes iconRes: Int?,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     val containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
     val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
     val letterBackground = MaterialTheme.colorScheme.surfaceContainerHighest
@@ -808,7 +815,7 @@ private fun ContributorAvatar(
             cachedBitmap != null -> {
                 Image(
                     bitmap = cachedBitmap!!,
-                    contentDescription = "Avatar of $name",
+                    contentDescription = stringResource(R.string.about_avatar_cd, name),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
                 )
@@ -819,7 +826,7 @@ private fun ContributorAvatar(
                         .data(avatarUrl)
                         .crossfade(true)
                         .build(),
-                    contentDescription = "Avatar of $name",
+                    contentDescription = stringResource(R.string.about_avatar_cd, name),
                     modifier = Modifier.fillMaxSize(),
                     shape = CircleShape,
                     contentScale = ContentScale.Crop,
@@ -846,7 +853,7 @@ private fun ContributorAvatar(
                 ) {
                     Icon(
                         painter = painterResource(iconRes),
-                        contentDescription = "Icon of $name",
+                        contentDescription = stringResource(R.string.about_icon_cd, name),
                         tint = iconTint,
                         modifier = Modifier.size(28.dp),
                     )
