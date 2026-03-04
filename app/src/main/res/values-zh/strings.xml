@@ -1,0 +1,1920 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PixelPlayer</string>
+    <string name="app_name_change_title">应用名称更改</string>
+    <string name="app_name_change_message">由于商标相关问题，我们已将应用名称从 PixelPlay 更改为 PixelPlayer。继续享受！</string>
+    <string name="do_not_show_again">不再显示</string>
+    <string name="dismiss">关闭</string>
+    <string name="lyrics">歌词</string>
+    <string name="close_lyrics_sheet">关闭歌词表单</string>
+    <string name="loading_lyrics">正在加载歌词…</string>
+    <string name="cant_find_lyrics">找不到此歌曲的歌词。</string>
+    <string name="lyrics_provided_by">歌词来自</string>
+    <string name="lrclib_uri">https://lrclib.net/</string>
+    <string name="glance_widget_description">从主屏幕控制您的音乐。</string>
+    <string name="all_files_access_title">需要特殊权限</string>
+    <string name="all_files_access_description">为了编辑您的歌曲元数据 (.mp3 文件)，PixelPlayer 需要获得访问所有文件的特殊权限。这将允许我们直接修改你的曲目标签。请在下一个屏幕上授予此权限以启用元数据编辑。</string>
+    <string name="grant_permission_button">授予权限</string>
+    <string name="all_files_access_setting">所有文件访问</string>
+    <string name="lyrics_not_found">未找到歌词</string>
+    <string name="search_lyrics_online_prompt">你想在线搜索歌词吗？</string>
+    <string name="custom_search_hint">我们找不到歌词。您可以编辑标题或艺术家，然后尝试手动搜索。</string>
+    <string name="failed_to_search_for_lyrics">搜索歌词失败</string>
+    <string name="failed_to_fetch_lyrics_from_remote">从远程获取歌词失败</string>
+    <string name="lyrics_fetch_timeout">连接超时。请检查您的互联网连接。</string>
+    <string name="lyrics_network_error">网络错误。请检查您的互联网连接。</string>
+    <string name="lyrics_server_error">服务器错误 (代码 %d)。请稍后重试。</string>
+    <string name="found_n_matches_format">找到 %d 个匹配项</string>
+    <string name="searched_for_x_format">搜索："%s"</string>
+    <string name="search">搜索</string>
+    <string name="searching_lyrics">正在搜索歌词…</string>
+    <string name="lyrics_embedded_already_available">已找到内嵌歌词。跳过在线获取。</string>
+    <string name="fetch_lyrics_show_options_title">显示歌词选项</string>
+    <string name="fetch_lyrics_show_options_subtitle">始终打开选择器，而不是自动应用第一个匹配项</string>
+    <string name="error">错误</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="import_file">导入</string>
+
+    
+    <string name="sync_scanning">扫描音乐文件…</string>
+    <string name="sync_processing">处理文件…</string>
+    <string name="sync_files_progress">%1$d/%2$d 个文件</string>
+    <string name="sync_in_progress">正在同步库…</string>
+    <string name="sync_complete">同步完成</string>
+    <string name="sync_phase_idle">正在准备同步</string>
+    <string name="sync_phase_fetching_mediastore">正在读取媒体库</string>
+    <string name="sync_phase_processing_files">正在处理曲目</string>
+    <string name="sync_phase_saving_to_database">正在保存到数据库</string>
+    <string name="sync_phase_scanning_lrc">正在扫描歌词文件</string>
+    <string name="sync_phase_completing">正在完成同步</string>
+    <string name="sync_pending">等待中…</string>
+    <string name="syncing_library">正在同步库…</string>
+    <string name="unknown_song_title">未知曲目</string>
+    <string name="unknown_artist">未知艺术家</string>
+    <string name="unknown_album">未知专辑</string>
+    <string name="artist_picker_title">选择艺术家</string>
+    <string name="external_queue_label">快速播放</string>
+    <string name="external_playback_error">无法打开该音频文件。</string>
+    <string name="open_full_player">打开完整播放器</string>
+    <string name="close_external_player">关闭浮动播放器</string>
+    <string name="previous_track">上一曲</string>
+    <string name="next_track">下一曲</string>
+    <string name="pause_playback">暂停播放</string>
+    <string name="play_playback">播放</string>
+    <string name="save_lyrics_as_lrc">将歌词保存为 .lrc</string>
+    <string name="save_lyrics_dialog_title">保存歌词</string>
+    <string name="save_lyrics_dialog_message">选择要保存的版本：</string>
+    <string name="save_synced_lyrics">同步版本（带时间戳）</string>
+    <string name="save_plain_lyrics">纯文本版本</string>
+    <string name="lyrics_saved_successfully">歌词保存成功</string>
+    <string name="lyrics_save_failed">歌词保存失败</string>
+    <string name="no_lyrics_to_save">没有可保存的歌词</string>
+    <string name="reset_imported_lyrics">重置导入的歌词</string>
+    <string name="lyrics_sync_offset">歌词同步偏移</string>
+    <string name="lyrics_sync_offset_format">%+.1fs</string>
+    <string name="lyrics_sync_offset_reset">重置</string>
+    <string name="lyrics_earlier">更早</string>
+    <string name="lyrics_later">更晚</string>
+
+    
+    <string name="ai_error_api_key">请在设置中配置您的 Gemini API 密钥。</string>
+    <string name="ai_error_generic">AI 错误：%s</string>
+    <string name="ai_no_songs_found">AI 找不到符合你的要求的歌曲。</string>
+    <string name="ai_prompt_empty">为你的每日精选写个想法</string>
+    <string name="ai_daily_mix_updated">每日精选已用 AI 更新</string>
+    <string name="ai_no_songs_for_mix">AI 找不到此精选的歌曲</string>
+
+    
+    <string name="shortcut_shuffle_short">随机播放</string>
+    <string name="shortcut_shuffle_long">随机播放所有歌曲</string>
+    <string name="shortcut_playlist_short">播放列表</string>
+    <string name="shortcut_playlist_long">上次播放的播放列表</string>
+
+    
+    <string name="invalid_album_id">无效的专辑 ID</string>
+    <string name="album_id_not_found">未找到专辑 ID</string>
+    <string name="error_loading_album">加载专辑数据出错：%s</string>
+    <string name="album_not_found">未找到专辑</string>
+    <string name="could_not_update">无法更新：%s</string>
+    <string name="invalid_artist_id">无效的艺术家 ID</string>
+    <string name="artist_id_not_found">未找到艺术家 ID</string>
+    <string name="error_loading_artist">加载艺术家数据出错：%s</string>
+    <string name="could_not_find_artist">找不到该艺术家</string>
+    <string name="no_valid_songs">找不到有效的歌曲无法播放</string>
+
+    
+    <string name="setup_welcome_to">欢迎使用</string>
+    <string name="setup_beta_label">测试版</string>
+    <string name="setup_welcome_subtitle">让我们为你完成全部设置。</string>
+    <string name="setup_grant_all_required_permissions">请授予所有必需权限。</string>
+    <string name="setup_directory_excluded_title">排除的文件夹</string>
+    <string name="setup_directory_excluded_desc">默认会扫描所有文件夹。请选择你想在构建媒体库时忽略的位置。</string>
+    <string name="setup_directory_choose_button">选择要忽略的文件夹</string>
+    <string name="setup_grant_storage_permissions_first">请先授予存储权限</string>
+    <string name="setup_skip_for_now">暂时跳过</string>
+    <string name="setup_media_permission_title">媒体权限</string>
+    <string name="setup_media_permission_desc">PixelPlayer 需要访问你的音频文件以构建音乐库。</string>
+    <string name="setup_grant_media_permission">授予媒体权限</string>
+    <string name="setup_notifications_title">通知</string>
+    <string name="setup_notifications_desc">启用通知以在锁屏和通知栏控制音乐。</string>
+    <string name="setup_enable_notifications">启用通知</string>
+    <string name="setup_alarms_title">闹钟与提醒</string>
+    <string name="setup_alarms_desc">为确保睡眠定时器可靠工作并按时暂停音乐，PixelPlayer 需要安排精确闹钟的权限。</string>
+    <string name="setup_grant_permission">授予权限</string>
+    <string name="setup_all_files_access_desc">在某些 Android 版本上，PixelPlayer 需要更广泛的文件访问权限来找到所有音乐。</string>
+    <string name="setup_go_to_settings">前往设置</string>
+    <string name="setup_permission_granted">权限已授予</string>
+    <string name="setup_library_layout_title">媒体库布局</string>
+    <string name="setup_library_layout_desc">选择你偏好的媒体库导航方式。</string>
+    <string name="setup_compact_mode">紧凑模式</string>
+    <string name="setup_compact_mode_desc_compact">使用精简胶囊导航</string>
+    <string name="setup_compact_mode_desc_standard">使用标准标签栏</string>
+    <string name="setup_library_layout_change_later">你可以稍后在 设置 &gt; 外观 &gt; 媒体库导航 中修改。</string>
+    <string name="setup_library_preview_title">媒体库</string>
+    <string name="setup_library_preview_songs">歌曲</string>
+    <string name="setup_library_preview_songs_upper">歌曲</string>
+    <string name="setup_library_preview_albums_upper">专辑</string>
+    <string name="setup_library_preview_artists_upper">艺术家</string>
+    <string name="setup_battery_optimization_title">电池优化</string>
+    <string name="setup_battery_optimization_desc">部分 Android 设备会主动结束后台应用。为避免意外中断播放，请为 PixelPlayer 关闭电池优化。</string>
+    <string name="setup_disable_optimization">关闭优化</string>
+    <string name="setup_battery_settings_error">无法打开电池设置</string>
+    <string name="setup_finish_title">全部完成！</string>
+    <string name="setup_finish_desc">现在可以开始享受音乐了。</string>
+    <string name="setup_step_lets_go">开始吧！</string>
+    <string name="setup_step_of">第 %1$d/%2$d 步</string>
+    <string name="setup_icon_desc_next">下一步</string>
+    <string name="setup_icon_desc_finish">完成</string>
+    <string name="setup_icon_desc_expand_menu">展开菜单</string>
+    <string name="setup_app_navigation_title">应用导航</string>
+    <string name="setup_app_navigation_desc">选择底部导航栏的样式。</string>
+    <string name="setup_default_style">默认样式</string>
+    <string name="setup_default_style_desc_default">悬浮胶囊，圆角</string>
+    <string name="setup_default_style_desc_full">标准全宽栏</string>
+    <string name="setup_customize_corner_radius">自定义圆角半径</string>
+    <string name="setup_navbar_change_later">你可以稍后在 设置 &gt; 外观 &gt; 导航栏样式 中修改。</string>
+
+    
+    <string name="beta_info_title">测试版 0.5.0</string>
+    <string name="beta_info_welcome_title">欢迎使用首个 0.5.0 测试版！</string>
+    <string name="beta_info_welcome_desc">本次大更新带来完整的 UI 重制、10 段均衡器，以及 AI 能力。</string>
+    <string name="beta_info_expect_title">你将获得</string>
+    <string name="beta_info_expect_item_1">设置、播放器与底部弹窗全面升级为 Material 3 Expressive。</string>
+    <string name="beta_info_expect_item_2">全新 10 段均衡器与效果器，并加入 AI 智能歌单。</string>
+    <string name="beta_info_expect_item_3">重构媒体库同步，提升稳定性与进度线性展示。</string>
+    <string name="beta_info_expect_item_4">Casting、队列稳定性与歌词同步的重大修复。</string>
+    <string name="beta_info_report_title">反馈问题</string>
+    <string name="beta_info_report_desc">请提供复现步骤、期望结果、实际结果，以及设备/系统信息。附上截图或录屏会更有帮助。</string>
+    <string name="beta_info_open_github_issues">打开 GitHub issues</string>
+    <string name="beta_info_report_bug">提交问题</string>
+
+    
+    <string name="changelog_title">更新日志</string>
+    <string name="changelog_view_github">在 GitHub 查看</string>
+    <string name="changelog_cd">打开更新日志</string>
+    <string name="changelog_section_highlights">亮点</string>
+    <string name="changelog_section_improvements">改进</string>
+    <string name="changelog_section_fixes">修复</string>
+    <string name="changelog_section_whats_new">新功能</string>
+    <string name="changelog_section_added">新增</string>
+    <string name="changelog_section_changed">变更</string>
+    <string name="changelog_section_fixed">修复</string>
+    <string-array name="changelog_050_highlights">
+        <item>实现了 10 段均衡器和效果器套件 (功能: @theovilardo)</item>
+        <item>添加了 M3U 播放列表导入/导出支持 (功能/修复: @lostf1sh, @theovilardo)</item>
+        <item>集成了 Deezer API 用于艺术家图像 (功能: @lostf1sh)</item>
+        <item>添加了 Gemini AI 模型选择、系统提示词设置和 AI 歌单条目 (功能: @lostf1sh, @theovilardo)</item>
+        <item>添加了歌词同步偏移支持和多策略远程搜索 (功能/修复: @lostf1sh, @theovilardo)</item>
+        <item>添加了基准配置以提高性能 (功能/修复: @theovilardo, @google-labs-julesbot)</item>
+        <item>添加了自定义播放列表封面支持</item>
+    </string-array>
+    <string-array name="changelog_050_improvements">
+        <item>Material 3 Expressive UI：现代化了设置、统计、播放器、底部弹窗和对话框 (重构: @theovilardo, @lostf1sh)</item>
+        <item>库同步：使用分阶段进度报告和线性指示器重建了初始同步流程 (功能: @lostf1sh)</item>
+        <item>设置架构：引入了分类子屏幕和改进的导航处理 (重构/修复: @theovilardo)</item>
+        <item>队列和播放器：解耦了队列更新和滚动动画，添加了动画队列滚动 (功能/修复: @lostf1sh, @theovilardo)</item>
+        <item>改进了小部件预览和不区分大小写的排序逻辑 (功能/修复: @lostf1sh, @google-labs-julesbot)</item>
+    </string-array>
+    <string-array name="changelog_050_fixes">
+        <item>修复了投送稳定性、队列过渡和降低延迟 (修复: @theovilardo)</item>
+        <item>修复了播放器表单中延迟的内容呈现和意外折叠 (修复/重构: @theovilardo)</item>
+        <item>修复了队列中的重排问题</item>
+        <item>通常的崩溃修复和小的 UX 改进 (修复: @lostf1sh, @theovilardo)</item>
+    </string-array>
+    <string-array name="changelog_040_highlights">
+        <item>主导航重新设计</item>
+        <item>用于选择源目录的新文件浏览器</item>
+        <item>横屏模式 (感谢 "leave this blank for now")</item>
+        <item>新的连接和投送功能</item>
+        <item>远程设备之间的无缝连续性</item>
+        <item>歌曲之间的无缝过渡</item>
+        <item>交叉淡化</item>
+        <item>新的自定义过渡 (仅限播放列表)</item>
+        <item>关闭应用后继续播放</item>
+        <item>UI 改进</item>
+        <item>改进的统计</item>
+        <item>具有更多功能的重新设计队列控制</item>
+        <item>改进了不同文件类型的播放和元数据编辑</item>
+        <item>改进的权限控制器</item>
+        <item>小的错误修复</item>
+    </string-array>
+    <string-array name="changelog_030_whats_new">
+        <item>添加了更丰富的听歌统计中心，让您可以深入了解您的听歌数据。</item>
+        <item>推出了浮动快速播放器，可以立即打开和预览本地文件。</item>
+        <item>添加了具有树形导航和播放列表视图的文件夹标签。</item>
+    </string-array>
+    <string-array name="changelog_030_improvements">
+        <item>完善了整体 Material 3 UI，提供了更清洁、更连贯的体验。</item>
+        <item>平滑了整个应用的动画和过渡，实现流畅导航。</item>
+        <item>增强了艺术家屏幕布局，包含更丰富的细节和细化。</item>
+        <item>升级了每日混音和你的混音生成，提供更智能、更多样化的选择。</item>
+        <item>加强了 AI 助手，以提供更相关的播放建议。</item>
+        <item>改进了搜索相关性和展示，加快了发现速度。</item>
+        <item>扩展了对更广泛的音频格式的支持。</item>
+    </string-array>
+    <string-array name="changelog_030_fixes">
+        <item>解决了元数据问题，使歌曲详情在任何地方都保持准确。</item>
+        <item>恢复了通知快捷方式，可以可靠地跳回播放。</item>
+    </string-array>
+    <string-array name="changelog_020_added">
+        <item>Chromecast 支持，可以从您的设备投送音频 (已暂时禁用)。</item>
+        <item>应用内更新日志，让您及时了解新功能。</item>
+        <item>改进的歌词搜索。</item>
+        <item>支持 .LRC 文件，包括内嵌和外部文件。</item>
+        <item>离线歌词支持。</item>
+        <item>同步歌词 (与歌曲时间对齐)。</item>
+        <item>查看完整队列的新屏幕。</item>
+        <item>从队列中重新排列和删除歌曲。</item>
+        <item>迷你播放器手势 (向下滑动关闭)。</item>
+        <item>添加了更多 Material 动画。</item>
+        <item>新的设置以自定义外观和感觉。</item>
+        <item>新的设置以清除缓存。</item>
+    </string-array>
+    <string-array name="changelog_020_changed">
+        <item>完全重新设计的用户界面。</item>
+        <item>完全重新设计的播放器。</item>
+        <item>改进的库性能。</item>
+        <item>更快的应用启动。</item>
+        <item>AI 现在提供了更好的结果。</item>
+    </string-array>
+    <string-array name="changelog_020_fixed">
+        <item>修复了标签编辑器中的各种错误。</item>
+        <item>修复了动态通知未清除。</item>
+        <item>修复了多个崩溃。</item>
+    </string-array>
+    <string name="common_back">返回</string>
+    <string name="common_close">关闭</string>
+    <string name="sync_preparing_library">正在准备媒体库...</string>
+    <string name="sync_scanned_songs">已扫描 %1$d/%2$d 首歌曲</string>
+
+    
+    <string name="nav_home">主页</string>
+    <string name="nav_search">搜索</string>
+    <string name="nav_library">音乐库</string>
+    <string name="nav_settings">设置</string>
+    <string name="cd_back">返回</string>
+
+    
+    <string name="range_today">今天</string>
+    <string name="range_yesterday">昨天</string>
+    <string name="range_this_week">本周</string>
+    <string name="range_this_month">本月</string>
+    <string name="range_this_year">今年</string>
+    <string name="range_all_time">全部时间</string>
+
+    
+    <string name="stats_listening_stats">听歌统计</string>
+    <string name="stats_total_plays">总播放次数</string>
+    <string name="stats_avg_per_day">日均时长</string>
+    <string name="stats_top_track">热门曲目</string>
+    <string name="stats_artist_plays">%1$s · %2$d 次播放</string>
+    <string name="stats_no_recent_plays">%1$s 暂无播放记录</string>
+    <string name="stats_change_range_prompt">切换时间范围或播放更多歌曲以填充此时间线。</string>
+
+    
+    <string name="home_your_mix_title">每日\n精选</string>
+    <string name="home_shuffle_play_cd">随机播放</string>
+    <string name="home_album_art_cd">%1$s 的封面</string>
+
+    
+    <string name="daily_mix_title">每日精选</string>
+    <string name="daily_mix_play_button">播放</string>
+    <string name="daily_mix_shuffle_button">随机</string>
+    <string name="daily_mix_play_cd">播放</string>
+    <string name="daily_mix_shuffle_cd">随机</string>
+    <string name="daily_mix_songs_count">%1$d 首 • %2$s</string>
+    <string name="daily_mix_updating">正在更新…</string>
+    <string name="daily_mix_update_button">更新每日精选</string>
+    <string name="daily_mix_how_it_works_title">每日精选是如何创建的</string>
+    <string name="daily_mix_how_it_works_desc">您的每日精选是根据您的收藏和播放最频繁的歌曲创建的。我们还会添加来自您喜爱的艺术家和流派的歌曲，以便您发现新音乐。</string>
+    <string name="daily_mix_ai_prompt_label">告诉 AI 您今天想听什么</string>
+    <string name="daily_mix_ai_supporting_text">我们使用少量样本以保持较低的成本</string>
+    <string name="daily_mix_menu_cd">打开每日精选菜单</string>
+
+    
+    <string name="ai_playlist_label">AI</string>
+    <string name="ai_playlist_generator">歌单生成器</string>
+    <string name="ai_playlist_description">描述你的氛围、心情或活动，让 AI 从媒体库中生成合适的歌单。</string>
+    <string name="ai_playlist_size_label">歌单数量</string>
+    <string name="ai_playlist_min_songs">最少歌曲</string>
+    <string name="ai_playlist_max_songs">最多歌曲</string>
+    <string name="ai_playlist_prompt_placeholder">例如：夜晚放松、活力健身...</string>
+    <string name="ai_playlist_generating">生成中...</string>
+    <string name="ai_playlist_generate_button">生成歌单</string>
+
+    
+    <string name="ai_metadata_dialog_title">使用 AI 生成媒体信息</string>
+    <string name="ai_metadata_dialog_description">选择您想要生成的字段：</string>
+    <string name="generate">生成</string>
+
+    
+    <string name="cast_get_ready_title">准备连接</string>
+    <string name="cast_permission_description">允许 PixelPlayer 查看您附近的设备和当前的 Wi-Fi，以便我们可以保持您的投送、蓝牙音频和扬声器同步。</string>
+    <string name="cast_nearby_devices_title">附近设备</string>
+    <string name="cast_nearby_devices_desc">用于读取和控制您连接的蓝牙音频设备。</string>
+    <string name="cast_location_wifi_title">Wi-Fi 的位置权限</string>
+    <string name="cast_location_wifi_desc">Android 需要位置权限来共享您所在的 Wi-Fi 网络 (SSID)，以便我们可以找到兼容的投送设备。</string>
+    <string name="cast_allow_access_button">允许访问</string>
+    <string name="cast_permission_privacy_note">我们仅将这些权限用于设备互联 — 投送、控制附近扬声器以及保持音频同步。</string>
+    <string name="cast_connecting">正在连接</string>
+    <string name="cast_connected">已连接</string>
+    <string name="cast_playing">正在播放</string>
+    <string name="cast_paused">已暂停</string>
+    <string name="cast_this_phone">此手机</string>
+    <string name="cast_bluetooth_audio">蓝牙音频</string>
+    <string name="cast_local_playback">本地播放</string>
+    <string name="cast_session_subtitle">投屏</string>
+    <string name="cast_disconnect">断开连接</string>
+    <string name="cast_turn_on_wifi">打开 Wi-Fi</string>
+    <string name="cast_open_bluetooth">打开蓝牙</string>
+    <string name="cast_empty_devices">未发现设备</string>
+    <string name="cast_scanning">正在扫描设备...</string>
+    <string name="cast_connections_off">连接已关闭</string>
+    <string name="cast_connections_off_desc">打开 Wi‑Fi 或蓝牙以发现附近的设备</string>
+    <string name="cast_searching">正在搜索设备...</string>
+    <string name="cast_searching_desc">请确保您的电视或扬声器已开启并处于同一 Wi‑Fi 网络中。</string>
+    <string name="cast_tap_to_connect">点击此以连接</string>
+    <string name="cast_no_devices_yet">尚无设备</string>
+    <string name="cast_refresh_cd">刷新设备</string>
+    <string name="cast_connect_device">连接设备</string>
+    <string name="cast_scanning_nearby">正在扫描附近</string>
+    <string name="cast_available">可用</string>
+    <string name="cast_wifi">Wi-Fi</string>
+    <string name="cast_off">关闭</string>
+    <string name="cast_on">开启</string>
+    <string name="cast_bluetooth">蓝牙</string>
+
+    
+    <string name="crash_report_title">糟糕！出错了</string>
+    <string name="crash_report_desc">应用在您上次使用时崩溃了。请分享崩溃报告以帮助我们修复此问题。</string>
+    <string name="crash_report_date">日期: %s</string>
+    <string name="crash_report_error">错误:</string>
+    <string name="crash_report_stacktrace_preview">堆栈轨迹 (预览):</string>
+    <string name="copy">复制</string>
+    <string name="share">分享</string>
+    <string name="crash_report_copied">崩溃日志已复制到剪贴板</string>
+    <string name="crash_report_share_subject">PixelPlayer 崩溃报告</string>
+    <string name="crash_report_share_chooser_title">分享崩溃报告</string>
+
+    
+    <string name="home_dj_mashup">DJ 串烧</string>
+
+    
+    <string name="selection_songs_count">%1$d 首歌曲</string>
+    <string name="selection_selected_label">已选</string>
+    <string name="selection_play_all">播放全部</string>
+    <string name="selection_play_all_cd">播放全部</string>
+    <string name="selection_like_all_cd">全部喜欢</string>
+    <string name="selection_unlike_all_cd">取消全部喜欢</string>
+    <string name="selection_share_all_cd">打包分享 ZIP</string>
+    <string name="selection_add_to_queue">加入队列</string>
+    <string name="selection_add_to_queue_cd">全部加入队列</string>
+    <string name="selection_play_next_cd">下一首播放</string>
+    <string name="selection_next_label">下一首</string>
+    <string name="selection_add_to_playlist_cd">加入播放列表</string>
+    <string name="selection_playlist_label">播放列表</string>
+    <string name="selection_delete_all_cd">删除全部</string>
+    <string name="selection_delete_all">删除全部</string>
+    <string name="selection_all">全选</string>
+    <string name="selection_deselect">取消选择</string>
+    <string name="selection_select_all">全选</string>
+    <string name="selection_deselect_all">取消全选</string>
+    <string name="selection_more_options_cd">更多选项</string>
+    <string name="selection_options">选项</string>
+    <string name="selection_playlists_count">%1$d 个播放列表</string>
+    <string name="playlist_selection_delete">删除</string>
+    <string name="playlist_selection_delete_all_cd">删除全部</string>
+    <string name="playlist_selection_export">导出</string>
+    <string name="playlist_selection_export_all_cd">导出全部</string>
+    <string name="playlist_selection_merge">合并</string>
+    <string name="playlist_selection_merge_all_cd">合并全部</string>
+    <string name="playlist_selection_share">分享</string>
+    <string name="playlist_selection_share_all_cd">分享全部</string>
+
+    
+    <string name="lyrics_section_title">歌词</string>
+    <string name="lyrics_reset_title">重置歌词？</string>
+    <string name="lyrics_reset_message">确定要重置这首歌的歌词吗？</string>
+    <string name="lyrics_reset_confirm">重置</string>
+    <string name="lyrics_controls_title">控制</string>
+    <string name="lyrics_hide_sync_controls">隐藏同步控制</string>
+    <string name="lyrics_adjust_sync">调整同步</string>
+    <string name="lyrics_disable_immersive_once">临时关闭沉浸模式</string>
+
+    
+    <string name="genre_browse_title">按流派浏览</string>
+    <string name="genre_toggle_view_cd">切换网格/列表视图</string>
+    <string name="genre_illustration_cd">流派插图</string>
+    <string name="unknown_genre">未知流派</string>
+
+    
+    <string name="dismiss_playlist_title">播放列表已隐藏</string>
+    <string name="dismiss_undo">撤销</string>
+
+    
+    <string name="library_import_m3u_cd">导入 M3U</string>
+    <string name="library_locate_current_song_cd">定位当前歌曲</string>
+    <string name="library_sort_options_cd">排序选项</string>
+
+    
+    <string name="settings_category_library_title">音乐管理</string>
+    <string name="settings_category_library_subtitle">管理文件夹、刷新媒体库、解析选项</string>
+    <string name="settings_category_appearance_title">外观</string>
+    <string name="settings_category_appearance_subtitle">主题、布局与视觉风格</string>
+    <string name="settings_category_playback_title">播放</string>
+    <string name="settings_category_playback_subtitle">音频行为、淡入淡出与后台播放</string>
+    <string name="settings_category_behavior_title">行为</string>
+    <string name="settings_category_behavior_subtitle">手势、触感与导航行为</string>
+    <string name="settings_category_ai_title">AI 集成（测试版）</string>
+    <string name="settings_category_ai_subtitle">配置 AI 提供商（Gemini、DeepSeek）</string>
+    <string name="settings_category_backup_title">备份与恢复</string>
+    <string name="settings_category_backup_subtitle">导出并恢复你的个人数据</string>
+    <string name="settings_category_developer_title">开发者选项</string>
+    <string name="settings_category_developer_subtitle">实验性功能与调试</string>
+    <string name="settings_category_equalizer_title">均衡器</string>
+    <string name="settings_category_equalizer_subtitle">调整音频频段与预设</string>
+    <string name="settings_category_about_title">关于</string>
+    <string name="settings_category_about_subtitle">应用信息、版本与致谢</string>
+
+    
+    <string name="library_tab_songs">歌曲</string>
+    <string name="library_tab_albums">专辑</string>
+    <string name="library_tab_artists">艺术家</string>
+    <string name="library_tab_playlists">播放列表</string>
+    <string name="library_tab_folders">文件夹</string>
+    <string name="library_tab_liked">已喜欢</string>
+    <string name="library_tab_edit">编辑</string>
+    <string name="library_tab_reorder_cd">重新排序标签</string>
+    <string name="library_sort_title">按…排序</string>
+    
+    
+    <string name="reorder_tabs_title">重新排序音乐库标签</string>
+    <string name="reorder_tabs_loading">正在重新排序标签…</string>
+    <string name="reorder_tabs_reset_title">重置顺序</string>
+    <string name="reorder_tabs_reset_message">确定要将标签顺序重置为默认吗？</string>
+    <string name="reorder_tabs_reset_button">重置</string>
+    <string name="reorder_tabs_reset_cd">重置</string>
+    <string name="reorder_tabs_cancel">取消</string>
+    <string name="reorder_tabs_done">完成</string>
+    <string name="reorder_tabs_drag_handle">拖动手柄</string>
+    <string name="library_sort_view_label">视图</string>
+    <string name="library_sort_playlist_view_label">播放列表视图</string>
+    <string name="library_sort_source_label">来源</string>
+    
+    
+    <string name="library_view_grid">网格</string>
+    <string name="library_view_list">列表</string>
+    <string name="library_view_toggle_cd">切换视图</string>
+    <string name="storage_internal">内部存储</string>
+    <string name="storage_sd_card">SD 卡</string>
+    <string name="storage_sd_card_unavailable">SD 卡目前不可用。</string>
+    <string name="library_generating_metadata_ai">正在使用 AI 生成元数据…</string>
+    <string name="library_tabs_title">音乐库标签</string>
+    <string name="library_tabs_subtitle">直接进入任何标签或重新排序它们。</string>
+    
+    
+    <string name="library_save_preset_title">保存自定义预设</string>
+    <string name="library_save_preset_desc">为您的自定义均衡器预设输入名称。</string>
+    <string name="library_preset_name_label">预设名称</string>
+    <string name="library_preset_name_empty_error">名称不能为空</string>
+    <string name="library_save_button">保存</string>
+    <string name="library_rename_preset_title">重命名预设</string>
+    <string name="library_rename_preset_button">重命名</string>
+    
+    
+    <string name="genre_sort_and_play">排序并播放</string>
+    <string name="genre_shuffle_action">随机播放</string>
+    <string name="sort_by_artist">艺术家</string>
+    <string name="sort_by_album">专辑</string>
+    <string name="sort_by_title">标题</string>
+
+    
+    <string name="library_empty_no_songs">音乐库中未找到歌曲。</string>
+    <string name="library_empty_no_songs_hint">如果您设备上有音乐，请尝试在设置中重新扫描音乐库。</string>
+    <string name="library_empty_no_albums">未找到专辑。</string>
+    <string name="library_empty_no_artists">未找到艺术家。</string>
+    <string name="library_empty_no_folders">未找到文件夹。</string>
+    <string name="library_empty_no_liked">还没有喜欢的歌曲。</string>
+    <string name="library_empty_no_liked_hint">在播放器中点击爱心图标来添加歌曲。</string>
+
+    
+    <string name="mashup_screen_title">DJ 空间</string>
+    <string name="mashup_loading">加载中...</string>
+    <string name="mashup_deck_label">Deck %1$d</string>
+    <string name="mashup_crossfader_title">交叉推子</string>
+    <string name="mashup_select_song_title">选择歌曲</string>
+    <string name="mashup_nudge_left_label">&lt;&lt;</string>
+    <string name="mashup_nudge_right_label">&gt;&gt;</string>
+    <string name="mashup_song_cover_cd">歌曲封面</string>
+    <string name="mashup_load_song_cd">加载歌曲</string>
+    <string name="mashup_no_song_loaded">未加载歌曲</string>
+    <string name="mashup_artist_placeholder">...</string>
+    <string name="mashup_play_pause_cd">播放/暂停</string>
+    <string name="mashup_volume_label">音量</string>
+    <string name="mashup_speed_label">速度</string>
+
+    
+    <string name="settings_palette_regenerated_for">已为 %1$s 重新生成配色</string>
+    <string name="settings_palette_regenerate_failed_for">无法为 %1$s 重新生成配色</string>
+    <string name="settings_reset_lyrics_title">重置已导入歌词？</string>
+    <string name="settings_reset_lyrics_message">此操作无法撤销。</string>
+    <string name="settings_confirm">确认</string>
+    <string name="settings_rebuild_database_title">重建数据库？</string>
+    <string name="settings_rebuild_database_message">这将从头重建你的音乐库。所有已导入歌词、收藏和自定义元数据都会丢失。此操作无法撤销。</string>
+    <string name="settings_rebuild_database_label">正在重建数据库</string>
+    <string name="settings_rebuild_database_toast">正在重建数据库…</string>
+    <string name="settings_rebuild_database_confirm">重建</string>
+    <string name="settings_regenerate_daily_mix_title">重新生成每日精选？</string>
+    <string name="settings_regenerate_daily_mix_message">将丢弃当前精选，并根据最近的收听习惯生成新的精选。</string>
+    <string name="settings_regenerate_daily_mix_confirm">重新生成</string>
+    <string name="settings_regenerate_daily_mix_started">每日精选已开始重新生成</string>
+    <string name="settings_regenerate_stats_title">重新生成统计？</string>
+    <string name="settings_regenerate_stats_message">将清除统计缓存，并强制从数据库历史重新计算。</string>
+    <string name="settings_regenerate_stats_confirm">重新生成</string>
+    <string name="settings_regenerate_stats_started">统计已开始重新生成</string>
+    <string name="settings_export_backup_title">导出备份</string>
+    <string name="settings_export_backup_message">选择要包含在备份包中的内容。</string>
+    <string name="settings_export_backup_confirm">导出 .pxpl</string>
+
+    
+    <string name="settings_library_structure_title">库结构</string>
+    <string name="settings_excluded_directories_title">排除的目录</string>
+    <string name="settings_excluded_directories_subtitle">扫描库时将跳过这里的文件夹。</string>
+    <string name="settings_artists_title">艺术家</string>
+    <string name="settings_artists_subtitle">多艺术家解析和组织选项。</string>
+    <string name="settings_sync_scanning_title">同步和扫描</string>
+    <string name="settings_auto_scan_lrc_title">自动扫描 .lrc 文件</string>
+    <string name="settings_auto_scan_lrc_subtitle">库同步期间自动扫描并分配同一文件夹中的 .lrc 文件。</string>
+    <string name="settings_lyrics_management_title">歌词管理</string>
+    <string name="settings_full_rescan_running">正在运行完整扫描</string>
+    <string name="settings_full_rescan_started">完整扫描已启动…</string>
+    <string name="settings_library_sync_finished">库同步完成</string>
+    <string name="settings_lyrics_source_priority_label">歌词来源优先级</string>
+    <string name="settings_lyrics_source_priority_desc">选择获取歌词时首先尝试的来源。</string>
+    <string name="settings_lyrics_source_embedded_first">内嵌优先</string>
+    <string name="settings_lyrics_source_api_first">在线优先</string>
+    <string name="settings_lyrics_source_local_first">本地 (.lrc) 优先</string>
+    <string name="settings_reset_imported_lyrics_title">重置导入的歌词</string>
+    <string name="settings_reset_imported_lyrics_subtitle">从数据库中删除所有导入的歌词。</string>
+
+    
+    <string name="settings_global_theme_title">全局主题</string>
+    <string name="settings_app_theme_label">应用主题</string>
+    <string name="settings_app_theme_desc">在浅色、深色或跟随系统外观之间切换。</string>
+    <string name="settings_theme_light">浅色主题</string>
+    <string name="settings_theme_dark">深色主题</string>
+    <string name="settings_theme_follow_system">跟随系统</string>
+    <string name="settings_smooth_corners_title">使用光滑圆角</string>
+    <string name="settings_smooth_corners_subtitle">使用复杂的形状角有效改进美观性，但可能会影响低端设备的性能</string>
+    <string name="settings_now_playing_title">正在播放</string>
+    <string name="settings_player_theme_label">播放器主题</string>
+    <string name="settings_player_theme_desc">为浮动播放器选择外观。</string>
+    <string name="settings_player_theme_album_art">专辑封面</string>
+    <string name="settings_player_theme_dynamic">系统动态</string>
+    <string name="settings_show_player_file_info_title">显示播放器文件信息</string>
+    <string name="settings_show_player_file_info_subtitle">在播放器进度部分显示编解码器、比特率和采样率。</string>
+    <string name="settings_album_palette_style_title">专辑封面调色板样式</string>
+    <string name="settings_album_palette_style_subtitle">当前：%1$s。打开实时预览并选择样式。</string>
+    <string name="settings_carousel_style_label">轮播样式</string>
+    <string name="settings_carousel_style_desc">选择专辑轮播的外观。</string>
+    <string name="settings_carousel_style_no_peek">无预览</string>
+    <string name="settings_carousel_style_one_peek">一个预览</string>
+    <string name="settings_navbar_title">导航栏</string>
+    <string name="settings_navbar_style_label">导航栏样式</string>
+    <string name="settings_navbar_style_desc">选择导航栏的外观。</string>
+    <string name="settings_navbar_style_default">默认</string>
+    <string name="settings_navbar_style_full_width">全宽</string>
+    <string name="settings_navbar_corner_radius_title">导航栏圆角半径</string>
+    <string name="settings_navbar_corner_radius_subtitle">调整导航栏的圆角半径。</string>
+    <string name="nav_bar_corner_radius_done">完成</string>
+    <string name="nav_bar_corner_radius_adjust_title">调整圆角半径</string>
+    <string name="nav_bar_corner_radius_description">使导航栏形状的圆角与您设备的物理圆角匹配，以获得无缝外观。</string>
+    <string name="nav_bar_corner_radius_label">圆角半径</string>
+    <string name="nav_bar_corner_radius_reset">重置</string>
+    <string name="nav_bar_corner_radius_value_format">%d dp</string>
+    <string name="settings_lyrics_screen_title">歌词屏幕</string>
+    <string name="settings_immersive_lyrics_title">沉浸式歌词</string>
+    <string name="settings_immersive_lyrics_subtitle">自动隐藏控制并放大文本。</string>
+    <string name="settings_auto_hide_delay_label">自动隐藏延迟</string>
+    <string name="settings_auto_hide_delay_desc">控制隐藏前的时间。</string>
+    <string name="settings_auto_hide_delay_3s">3 秒</string>
+    <string name="settings_auto_hide_delay_4s">4 秒</string>
+    <string name="settings_auto_hide_delay_5s">5 秒</string>
+    <string name="settings_auto_hide_delay_6s">6 秒</string>
+    <string name="settings_app_navigation_title_section">应用导航</string>
+    <string name="settings_default_tab_label">默认标签</string>
+    <string name="settings_default_tab_desc">选择默认启动标签。</string>
+    <string name="settings_default_tab_home">主页</string>
+    <string name="settings_default_tab_search">搜索</string>
+    <string name="settings_default_tab_library">库</string>
+    <string name="settings_library_nav_label">库导航</string>
+    <string name="settings_library_nav_desc">选择如何在库标签之间移动。</string>
+    <string name="settings_library_nav_tab_row">标签行（默认）</string>
+    <string name="settings_library_nav_compact_pill">紧凑胶囊和网格</string>
+
+    
+    <string name="settings_background_playback_title">后台播放</string>
+    <string name="settings_keep_playing_label">关闭后继续播放</string>
+    <string name="settings_keep_playing_desc">如果关闭，从最近移除应用将停止播放。</string>
+    <string name="settings_keep_playing_on">开启</string>
+    <string name="settings_keep_playing_off">关闭</string>
+    <string name="settings_battery_optimization_title">电池优化</string>
+    <string name="settings_battery_optimization_subtitle">禁用电池优化以防止播放中断。</string>
+    <string name="settings_battery_optimization_already_disabled">电池优化已禁用</string>
+    <string name="settings_cast_title">投屏</string>
+    <string name="settings_cast_autoplay_label">连接/断开投屏时自动播放</string>
+    <string name="settings_cast_autoplay_desc">切换投屏连接后立即开始播放。</string>
+    <string name="settings_cast_autoplay_enabled">已启用</string>
+    <string name="settings_cast_autoplay_disabled">已禁用</string>
+    <string name="settings_queue_transitions_title">队列和过渡</string>
+    <string name="settings_crossfade_label">交叉淡化</string>
+    <string name="settings_crossfade_desc">启用歌曲之间的平滑过渡。</string>
+    <string name="settings_crossfade_enabled">已启用</string>
+    <string name="settings_crossfade_disabled">已禁用</string>
+    <string name="settings_crossfade_duration_label">交叉淡化时长</string>
+    <string name="settings_crossfade_duration_format">%d 秒</string>
+    <string name="settings_persistent_shuffle_title">持久随机播放</string>
+    <string name="settings_persistent_shuffle_subtitle">即使关闭应用后仍记住随机播放设置。</string>
+    <string name="settings_show_queue_history_title">显示队列历史</string>
+    <string name="settings_show_queue_history_subtitle">在队列中显示之前播放的歌曲。</string>
+    <string name="settings_filtering_title">筛选</string>
+    <string name="settings_minimum_song_duration_label">最小歌曲时长</string>
+    <string name="settings_volume_normalization_title">音量规范化 (ReplayGain)</string>
+    <string name="settings_enable_replay_gain_title">启用 ReplayGain</string>
+    <string name="settings_enable_replay_gain_subtitle">使用音频文件中的 ReplayGain 元数据规范化音量级别。</string>
+    <string name="settings_gain_mode_label">增益模式</string>
+    <string name="settings_gain_mode_description">曲目：规范化每首歌曲。专辑：按专辑规范化。</string>
+    <string name="settings_gain_mode_track">曲目</string>
+    <string name="settings_gain_mode_album">专辑</string>
+
+    
+    <string name="settings_folders_title">文件夹</string>
+    <string name="settings_folder_back_gesture_title">返回手势控制文件夹</string>
+    <string name="settings_folder_back_gesture_subtitle">在"文件夹"标签中，系统返回在离开库之前导航文件夹堆栈。</string>
+    <string name="settings_player_gestures_title">播放器手势</string>
+    <string name="settings_tap_background_closes_title">点击背景关闭播放器</string>
+    <string name="settings_tap_background_closes_subtitle">点击模糊背景关闭播放器表单。</string>
+    <string name="settings_haptics_title">触觉反馈</string>
+    <string name="settings_haptics_subtitle">在整个应用中启用振动反馈。</string>
+
+    
+    <string name="settings_backup_info_title">备份如何工作</string>
+    <string name="settings_backup_info_desc">选择部分、导出 .pxpl 文件，稍后导入。恢复仅替换您选择的部分。</string>
+    <string name="settings_create_backup_title">创建备份</string>
+    <string name="settings_export_backup_subtitle">%1$s 创建 .pxpl 备份文件。</string>
+    <string name="settings_select_export">选择并导出</string>
+    <string name="settings_restore_backup_title">恢复备份</string>
+    <string name="settings_import_backup_subtitle">浏览或从最近的备份中选择。所选数据将替换当前数据。</string>
+    <string name="settings_select_restore">选择并恢复</string>
+    <string name="settings_import_backup_title">导入备份</string>
+    <string name="settings_import_backup_selecting_desc">选择 .pxpl 备份文件进行检查。您将在下一步选择要恢复的部分。</string>
+    <string name="settings_browse_file">浏览文件</string>
+    <string name="settings_inspecting">正在检查…</string>
+    <string name="settings_recent_backups_title">最近的备份</string>
+    <string name="settings_no_recent_backups">没有最近的备份</string>
+    <string name="settings_no_recent_backups_desc">之前导入的备份将显示在此处。</string>
+    <string name="settings_backup_all_sections">已选择所有部分。</string>
+    <string name="settings_backup_no_sections">未选择部分。</string>
+    <string name="settings_selected_count_format">已选择 %1$d 个 %2$d 个部分</string>
+    <string name="settings_transfer_in_progress">传输进行中…</string>
+    <string name="settings_creating_backup">创建备份</string>
+    <string name="settings_restoring_backup">恢复备份</string>
+    <string name="settings_backup_step_format">第 %1$d/%2$d 步</string>
+    <string name="settings_backup_will_replace">将替换当前数据</string>
+    <string name="backup_export_success">数据导出成功</string>
+    <string name="backup_export_failed">导出失败：%s</string>
+    <string name="backup_invalid">备份无效：%s</string>
+    <string name="backup_restore_success">数据恢复成功</string>
+    <string name="backup_restore_partial">部分恢复结果。失败：%s</string>
+    <string name="backup_restore_failed">恢复失败：%s</string>
+
+    
+    <string name="settings_experiments_title">实验</string>
+    <string name="settings_experimental_title">实验</string>
+    <string name="settings_experimental_subtitle">播放器 UI 加载实验和切换。</string>
+    <string name="settings_test_setup_title">测试设置流程</string>
+    <string name="settings_test_setup_subtitle">启动入职设置屏幕进行测试。</string>
+    <string name="settings_maintenance_title">维护</string>
+    <string name="settings_force_daily_mix_title">强制每日精选重新生成</string>
+    <string name="settings_force_daily_mix_subtitle">立即重新创建每日精选播放列表。</string>
+    <string name="settings_regenerate_daily_mix">重新生成每日精选</string>
+    <string name="settings_force_stats_title">强制统计重新生成</string>
+    <string name="settings_force_stats_subtitle">清除缓存并重新计算播放统计。</string>
+    <string name="settings_regenerate_stats">重新生成统计</string>
+    <string name="settings_force_palette_regen_title">强制专辑调色板重新生成</string>
+    <string name="settings_force_palette_regen_subtitle_empty">未发现有专辑封面的歌曲。</string>
+    <string name="settings_force_palette_regen_subtitle">选择一首歌以从头开始重建所有专辑颜色变体。</string>
+    <string name="settings_choose_song">选择歌曲</string>
+    <string name="settings_palette_regen_title">选择歌曲</string>
+    <string name="settings_diagnostics_title">诊断</string>
+    <string name="settings_trigger_crash_title">触发测试崩溃</string>
+    <string name="settings_trigger_crash_subtitle">模拟崩溃以测试崩溃报告系统。</string>
+
+    
+    <string name="backup_how_it_works">备份如何工作</string>
+    <string name="backup_info_notice">选择部分、导出 .pxpl 文件并稍后导入。恢复仅替换您选择的部分。</string>
+    <string name="backup_all_sections_selected">选择了所有部分。</string>
+    <string name="backup_no_sections_selected">没有选择部分。</string>
+    <string name="backup_selected_format">已选择 %1$d 个（共 %2$d 个）部分</string>
+    <string name="backup_select_all">全选</string>
+    <string name="backup_clear_selection">清除选择</string>
+    <string name="backup_exporting">导出中</string>
+    <string name="backup_importing">导入中</string>
+    <string name="backup_export_backup">导出备份</string>
+    <string name="backup_import_backup">导入备份</string>
+    <string name="backup_creating">创建备份</string>
+    <string name="backup_restoring">恢复备份</string>
+    <string name="backup_step_format">第 %1$d/%2$d 步</string>
+    <string name="backup_transfer_in_progress">传输进行中…</string>
+    <string name="backup_will_replace_data">将替换当前数据</string>
+
+    
+    <string name="settings_dialog_select_and_export">选择并导出</string>
+    <string name="settings_dialog_select_and_restore">选择并恢复</string>
+    <string name="settings_dialog_close_notice">关闭通知</string>
+
+    
+    <string name="backup_section_playlists_label">播放列表</string>
+    <string name="backup_section_playlists_desc">您的自定义播放列表和排序偏好。</string>
+    <string name="backup_section_global_settings_label">全局设置</string>
+    <string name="backup_section_global_settings_desc">主题、行为、播放和应用偏好。</string>
+    <string name="backup_section_favorites_label">收藏</string>
+    <string name="backup_section_favorites_desc">标记为收藏的歌曲。</string>
+    <string name="backup_section_lyrics_label">已保存歌词</string>
+    <string name="backup_section_lyrics_desc">您保存或导入的歌词。</string>
+    <string name="backup_section_search_history_label">搜索历史</string>
+    <string name="backup_section_search_history_desc">应用中的最近搜索词。</string>
+    <string name="backup_section_transitions_label">过渡规则</string>
+    <string name="backup_section_transitions_desc">歌曲之间的自定义过渡设置。</string>
+    <string name="backup_section_engagement_stats_label">使用统计</string>
+    <string name="backup_section_engagement_stats_desc">每首歌曲的播放次数和收听时长。</string>
+    <string name="backup_section_playback_history_label">播放历史</string>
+    <string name="backup_section_playback_history_desc">用于统计的基于时间线的听歌历史。</string>
+    <string name="backup_section_quick_fill_label">快速填充流派</string>
+    <string name="backup_section_quick_fill_desc">自定义流派及其图标。</string>
+    <string name="backup_section_artist_images_label">艺术家图像</string>
+    <string name="backup_section_artist_images_desc">来自 Deezer 的缓存艺术家图像 URL。</string>
+    <string name="backup_section_equalizer_label">均衡器预设</string>
+    <string name="backup_section_equalizer_desc">自定义均衡器预设和固定顺序。</string>
+    <string name="backup_entry_count_format">%1$d 条目 · 将替换当前数据</string>
+
+    
+    <string name="edit_song_info_icon_cd">信息图标</string>
+    <string name="edit_song_info_title">歌曲信息</string>
+    <string name="edit_song_info_message">编辑此歌曲的元数据。</string>
+    <string name="edit_song_info_confirm">确认</string>
+    <string name="edit_song_title">标题</string>
+    <string name="edit_song_use_gemini_cd">使用 Gemini 填充</string>
+    <string name="edit_song_info_dialog_cd">歌曲信息对话框</string>
+    <string name="edit_song_field_title">标题</string>
+    <string name="edit_song_field_title_icon_cd">标题图标</string>
+    <string name="edit_song_field_track_number">曲目号</string>
+    <string name="edit_song_field_track_number_icon_cd">曲目号图标</string>
+    <string name="edit_song_field_artist">艺术家</string>
+    <string name="edit_song_field_artist_icon_cd">艺术家图标</string>
+    <string name="edit_song_field_album">专辑</string>
+    <string name="edit_song_field_album_icon_cd">专辑图标</string>
+    <string name="edit_song_field_genre">流派</string>
+    <string name="edit_song_field_genre_icon_cd">流派图标</string>
+    <string name="edit_song_field_lyrics">歌词</string>
+    <string name="edit_song_field_lyrics_icon_cd">歌词图标</string>
+
+    
+    <string name="queue_no_songs_match">没有歌曲与筛选器匹配</string>
+    <string name="queue_added_to_queue">已添加到队列</string>
+    <string name="queue_playing_next">下一首播放</string>
+    <string name="queue_empty">队列为空。</string>
+    <string name="queue_clear_title">清空队列</string>
+    <string name="queue_clear_message">您确定要清空队列中除了当前歌曲以外的所有歌曲吗？</string>
+    <string name="queue_clear_confirm">清空</string>
+    <string name="playlist_not_found">找不到播放列表。</string>
+    <string name="playlist_created_successfully">播放列表创建成功</string>
+    <string name="playlist_merge_title">合并播放列表</string>
+    <string name="playlist_merge_prompt">请输入合并后播放列表的名称：</string>
+    <string name="playlist_merge_placeholder">合并的播放列表</string>
+    <string name="playlist_merge_summary">这将把 %1$d 个选中的播放列表合并为一个。</string>
+    <string name="playlist_merge_action">合并</string>
+    <string name="playlist_search_songs_placeholder">搜索要包含的歌曲...</string>
+
+    
+    <string name="player_overlay_connect">连接</string>
+    <string name="player_overlay_disconnect">断开连接</string>
+
+    
+    <string name="cast_keep_app_open">保持应用打开</string>
+    <string name="cast_transfering_desc">正在传输播放…</string>
+    <string name="album_art_cd">专辑封面</string>
+    <string name="mini_player_connecting">正在连接…</string>
+    <string name="mini_player_preparing">正在准备…</string>
+    <string name="mini_player_loading_audio">加载音频</string>
+    <string name="mini_player_previous_cd">上一首</string>
+    <string name="mini_player_pause_cd">暂停</string>
+    <string name="mini_player_play_cd">播放</string>
+    <string name="mini_player_next_cd">下一首</string>
+
+    
+    <string name="mashup_stem_unavailable">此歌曲的人声提取不可用</string>
+
+    
+    <string name="search_placeholder">搜索...</string>
+    <string name="search_results">搜索结果</string>
+    <string name="search_no_genres_available">没有可用的流派。</string>
+    <string name="search_album_art_cd">专辑封面</string>
+    <string name="search_play_album_cd">播放专辑</string>
+    <string name="search_artist_cd">艺术家</string>
+
+    <string name="settings_could_not_open_battery_settings">无法打开电池设置</string>
+
+    
+    <string name="equalizer_title">均衡器</string>
+    <string name="equalizer_back_cd">返回</string>
+    <string name="equalizer_view_mode_cd">更改视图模式</string>
+    <string name="equalizer_enable_cd">启用均衡器</string>
+    <string name="equalizer_disable_cd">禁用均衡器</string>
+    <string name="equalizer_custom_preset_cd">自定义</string>
+    <string name="equalizer_edit_presets_cd">编辑预设</string>
+    <string name="equalizer_saved_presets">保存的预设</string>
+    <string name="equalizer_no_presets">尚未保存自定义预设。</string>
+    <string name="action_pin">固定</string>
+    <string name="action_unpin">取消固定</string>
+    <string name="action_rename">重命名</string>
+    <string name="equalizer_presets_cd">预设</string>
+    <string name="equalizer_save">保存</string>
+    <string name="equalizer_update">更新</string>
+
+    
+    <string name="settings_refresh_library_title">刷新媒体库</string>
+    <string name="settings_refresh_library_subtitle">扫描整个库以查找新文件和修改过的文件。</string>
+    <string name="settings_full_rescan">完整重新扫描</string>
+    <string name="settings_rebuild_database">重建数据库</string>
+    <string name="settings_refresh_lyrics_title">刷新歌词</string>
+    <string name="settings_refresh_lyrics_subtitle">使用 lrclib 自动获取所有歌曲的歌词。</string>
+    <string name="settings_enter_api_key_placeholder">输入 API 密钥</string>
+    <string name="settings_save">保存</string>
+    <string name="settings_saved">已保存！</string>
+    <string name="settings_enter_system_prompt_placeholder">输入系统提示词...</string>
+    <string name="settings_reset">重置</string>
+
+    
+    <string name="edit_song_generating_metadata">正在生成元数据</string>
+    <string name="edit_song_cancel">取消</string>
+    <string name="edit_song_save">保存</string>
+    <string name="edit_song_cover_art_title">专辑封面</string>
+    <string name="edit_song_cover_art_preview_cd">新专辑封面预览</string>
+    <string name="edit_song_cover_art_current_cd">当前歌曲专辑封面</string>
+    <string name="edit_song_cover_art_description">选择一张正方形图片并进行微调，让您的专辑封面在应用中更美观。</string>
+    <string name="edit_song_change_cover_art">更改专辑封面</string>
+    <string name="edit_song_reset">重置</string>
+    <string name="edit_song_unable_to_load_image">无法加载所选图片</string>
+    <string name="edit_song_adjust_cover_art">调整专辑封面</string>
+    <string name="edit_song_search_lyrics_cd">在 lrclib.net 上搜索歌词</string>
+
+    
+    <string name="timer_title">睡眠定时器</string>
+    <string name="timer_minutes_label">分钟</string>
+    <string name="timer_custom_time">自定义时间</string>
+    <string name="timer_cancel_timer">取消定时器</string>
+    <string name="timer_set_custom_duration">设置自定义时长</string>
+    <string name="timer_title_short">定时器</string>
+    <string name="timer_play_count_label">播放次数：</string>
+    <string name="timer_times_label">次</string>
+    <string name="timer_time_label">次</string>
+    <string name="timer_end_of_track">当前曲目结束</string>
+
+    
+    <string name="fetch_lyrics_title_placeholder">标题</string>
+    <string name="fetch_lyrics_artist_placeholder">艺术家（可选）</string>
+    <string name="lyrics_refresh_progress_format">正在处理第 %1$d 首，共 %2$d 首歌曲</string>
+    <string name="lyrics_synced_tag">有时间轴</string>
+
+    
+    <string name="playlist_empty_title">尚未创建播放列表。</string>
+    <string name="playlist_empty_subtitle">点击“新播放列表”按钮开始创建。</string>
+    <string name="playlist_ai_generated_cd">AI 生成</string>
+    <string name="playlist_songs_count">%d 首歌曲</string>
+    <string name="playlist_new_title">新播放列表</string>
+    <string name="playlist_name_label">播放列表名称</string>
+    <string name="playlist_name_placeholder">我的播放列表</string>
+    <string name="playlist_generate_ai">通过 AI 生成</string>
+    <string name="create">创建</string>
+    <string name="playlist_add_songs_to_format">添加 %d 首歌曲到...</string>
+    <string name="playlist_select_playlists">选择播放列表</string>
+    <string name="playlist_search_placeholder">搜索播放列表...</string>
+    <string name="playlist_created_and_added">播放列表已创建并添加歌曲</string>
+    <string name="playlist_songs_added">歌曲已添加到播放列表</string>
+    <string name="playlist_detail_shuffle_label">随机播放</string>
+    <string name="playlist_detail_shuffle_cd">随机播放此播放列表</string>
+    <string name="playlist_detail_play_label">播放</string>
+    <string name="playlist_detail_play_cd">播放此播放列表</string>
+    <string name="playlist_detail_add_label">添加</string>
+    <string name="playlist_detail_add_songs_cd">添加歌曲</string>
+    <string name="playlist_detail_remove_label">移除</string>
+    <string name="playlist_detail_remove_songs_cd">移除歌曲</string>
+    <string name="playlist_detail_reorder_label">重新排序</string>
+    <string name="playlist_detail_reorder_songs_cd">重新排序歌曲</string>
+    <string name="playlist_detail_reorder_song_cd">重新排序歌曲</string>
+    <string name="playlist_detail_empty_title">此播放列表为空。</string>
+    <string name="playlist_detail_empty_folder">此文件夹没有歌曲。</string>
+    <string name="playlist_detail_empty_add_prompt">点击“添加歌曲”开始。</string>
+    <string name="playlist_detail_options_title">播放列表选项</string>
+    <string name="playlist_detail_edit">编辑播放列表</string>
+    <string name="playlist_detail_delete">删除播放列表</string>
+    <string name="playlist_detail_set_default_transition">设置默认转场</string>
+    <string name="playlist_detail_export_m3u">导出 M3U</string>
+    <string name="playlist_detail_delete_title">删除播放列表？</string>
+    <string name="playlist_detail_delete_message">确定要删除此播放列表吗？</string>
+    <string name="playlist_detail_delete_confirm">删除</string>
+    <string name="playlist_detail_delete_cancel">取消</string>
+    <string name="playlist_detail_toast_added_to_queue">已添加到队列</string>
+    <string name="playlist_detail_toast_play_next">将在下一首播放</string>
+
+    
+    <string name="playlist_create_flow_choose">选择创建流程。</string>
+    <string name="playlist_mode_manual_title">手动</string>
+    <string name="playlist_mode_manual_subtitle">设计封面、图标、形状并亲自挑选歌曲。</string>
+    <string name="playlist_mode_ai_title">使用 AI</string>
+    <string name="playlist_mode_ai_subtitle">使用高级控制生成策划好的播放列表。</string>
+    <string name="playlist_mode_ai_no_key">需要在设置中配置 Gemini API 密钥。</string>
+    <string name="playlist_setup_api_key">设置 API 密钥</string>
+    <string name="playlist_ai_lab_title">AI 播放列表实验室</string>
+    <string name="playlist_reset">重置</string>
+    <string name="playlist_generating_indicator">正在生成...</string>
+    <string name="playlist_ai_section_intent">意图</string>
+    <string name="playlist_name_optional">播放列表名称 (可选)</string>
+    <string name="playlist_prompt_feel_label">这个播放列表应该是什么感觉？</string>
+    <string name="playlist_prompt_placeholder_example">例如：带着温暖合成器的日落驾驶</string>
+    <string name="playlist_ai_section_direction">方向</string>
+    <string name="playlist_mood_label">心情</string>
+    <string name="playlist_activity_label">活动</string>
+    <string name="playlist_era_label">时代</string>
+    <string name="playlist_era_any">任何时代</string>
+    <string name="playlist_ai_section_curation">策划引擎</string>
+    <string name="playlist_energy_label">能量</string>
+    <string name="playlist_discovery_label">发现</string>
+    <string name="playlist_ai_section_filters">过滤器</string>
+    <string name="playlist_prioritize_genres_label">优先流派 (可选)</string>
+    <string name="playlist_prioritize_genres_placeholder">例如：合成器波、独立流行</string>
+    <string name="playlist_avoid_genres_label">避开流派 (可选)</string>
+    <string name="playlist_avoid_genres_placeholder">例如：金属、硬陷阱</string>
+    <string name="playlist_preferred_language_label">首选语言 (可选)</string>
+    <string name="playlist_preferred_language_placeholder">例如：英语、中文、纯音乐</string>
+    <string name="playlist_prioritize_favorites">优先收藏</string>
+    <string name="playlist_avoid_explicit">避开露骨歌词</string>
+    <string name="playlist_error_add_instruction">为 AI 添加至少一条说明。</string>
+    <string name="playlist_error_invalid_range">设置有效的歌曲范围。</string>
+    <string name="playlist_ai_section_prompt_preview">提示预览</string>
+    <string name="playlist_create_title">创建播放列表</string>
+    <string name="playlist_min_songs">最少歌曲</string>
+    <string name="playlist_max_songs">最多歌曲</string>
+    <string name="playlist_mood_chill">放松</string>
+    <string name="playlist_mood_energetic">活力</string>
+    <string name="playlist_mood_happy">快乐</string>
+    <string name="playlist_mood_dark">阴沉</string>
+    <string name="playlist_mood_romantic">浪漫</string>
+    <string name="playlist_mood_melancholic">忧郁</string>
+    <string name="playlist_activity_workout">健身</string>
+    <string name="playlist_activity_focus">专注</string>
+    <string name="playlist_activity_road_trip">公路旅行</string>
+    <string name="playlist_activity_party">派对</string>
+    <string name="playlist_activity_study">学习</string>
+    <string name="playlist_activity_late_night">深夜</string>
+    <string name="playlist_era_70s">70年代</string>
+    <string name="playlist_era_80s">80年代</string>
+    <string name="playlist_era_90s">90年代</string>
+    <string name="playlist_era_2000s">2000年代</string>
+    <string name="playlist_era_2010s">2010年代</string>
+    <string name="playlist_era_2020s">2020年代</string>
+    <string name="playlist_prompt_preview_empty">一旦您添加了偏好，您的最终提示词将出现在这里。</string>
+    <string name="playlist_hero_title">精准策划</string>
+    <string name="playlist_hero_subtitle">定义心情、活动、约束和深度。</string>
+    <string name="playlist_hero_note">AI 仅会使用您本地媒体库中的歌曲。</string>
+    <string name="library_shuffle_on">随机播放：开启</string>
+    <string name="library_shuffle">随机播放</string>
+    <string name="play_latest">播放最新</string>
+    <string name="library_internal_storage">内部存储</string>
+    <string name="library_create_new_playlist_cd">创建新播放列表</string>
+    <string name="library_shuffle_play_cd">随机播放</string>
+    <string name="common_save">保存</string>
+    <string name="common_saved">已保存</string>
+    <string name="common_add">添加</string>
+    <string name="common_dismiss">关闭</string>
+    <string name="playlist_api_key_required">请先设置您的 Gemini API 密钥</string>
+    <string name="common_play">播放</string>
+    <string name="common_delete">删除</string>
+    <string name="common_next">下一首</string>
+    <string name="common_options">选项</string>
+    <string name="common_info">信息</string>
+    <string name="song_info_album_art_cd">专辑封面</string>
+    <string name="song_info_edit_cd">编辑歌曲元数据</string>
+    <string name="song_info_play_cd">播放歌曲</string>
+    <string name="song_info_favorite_remove_cd">从收藏中移除</string>
+    <string name="song_info_favorite_add_cd">添加到收藏</string>
+    <string name="song_info_share_chooser_title">通过以下方式分享歌曲文件</string>
+    <string name="song_info_share_failed">无法分享歌曲：%s</string>
+    <string name="song_info_share_file_cd">分享歌曲文件</string>
+    <string name="song_info_add_to_queue_cd">添加到队列</string>
+    <string name="song_info_play_next_cd">下一首播放</string>
+    <string name="song_info_add_to_playlist_cd">添加到播放列表</string>
+    <string name="edit_song_field_duration">时长</string>
+    <string name="edit_song_field_path">路径</string>
+
+    
+    <string name="home_today_mix">今日推荐</string>
+    <string name="home_your_mix_queue">每日精选</string>
+    <string name="home_recently_played">最近播放</string>
+
+    
+    <string name="settings_subsection_library_structure">库结构</string>
+    <string name="settings_subsection_sync_scanning">同步与扫描</string>
+    <string name="settings_subsection_lyrics_management">歌词管理</string>
+    <string name="settings_subsection_global_theme">全局主题</string>
+    <string name="settings_subsection_now_playing">正在播放</string>
+    <string name="settings_subsection_navigation_bar">导航栏</string>
+    <string name="settings_subsection_lyrics_screen">歌词界面</string>
+    <string name="settings_subsection_app_navigation">应用导航</string>
+    <string name="settings_subsection_background_playback">后台播放</string>
+    <string name="settings_subsection_cast">投射</string>
+    <string name="settings_subsection_queue_transitions">队列与过渡</string>
+    <string name="settings_subsection_folders">文件夹</string>
+    <string name="settings_subsection_player_gestures">播放器手势</string>
+    <string name="settings_subsection_haptics">触感反馈</string>
+    <string name="settings_subsection_credentials">凭据</string>
+    <string name="settings_subsection_model_selection">模型选择</string>
+    <string name="settings_subsection_prompt_behavior">提示词行为</string>
+
+    
+    <string name="settings_lyrics_source_priority_title">歌词来源优先级</string>
+    <string name="settings_lyrics_source_priority_subtitle">选择获取歌词时优先尝试的来源。</string>
+    <string name="settings_lyrics_source_embedded">内嵌优先</string>
+    <string name="settings_lyrics_source_api">在线优先</string>
+    <string name="settings_lyrics_source_local">本地 (.lrc) 优先</string>
+    <string name="settings_reset_lyrics_subtitle">从数据库中删除所有导入的歌词。</string>
+
+    
+    <string name="settings_app_theme_title">应用主题</string>
+    <string name="settings_app_theme_subtitle">在浅色、深色或遵循系统外观之间切换。</string>
+    <string name="settings_app_theme_light">浅色主题</string>
+    <string name="settings_app_theme_dark">深色主题</string>
+    <string name="settings_app_theme_system">跟随系统</string>
+    <string name="settings_player_theme_title">播放器主题</string>
+    <string name="settings_player_theme_subtitle">选择悬浮播放器的外观。</string>
+    <string name="settings_player_theme_album">专辑封面</string>
+    <string name="settings_show_file_info_title">显示播放器文件信息</string>
+    <string name="settings_show_file_info_subtitle">在播放器进度栏部分显示编解码器、比特率和采样率。</string>
+    <string name="settings_palette_style_title">专辑封面调色板样式</string>
+    <string name="settings_palette_style_subtitle_format">当前：%s。打开实时预览并选择样式。</string>
+    <string name="settings_carousel_style_title">轮播表样式</string>
+    <string name="settings_carousel_style_subtitle">选择专辑轮播的外观。</string>
+    <string name="settings_navbar_style_title">导航栏样式</string>
+    <string name="settings_navbar_style_subtitle">选择导航栏的外观。</string>
+    <string name="settings_navbar_style_full">全宽</string>
+    <string name="settings_navbar_radius_title">导航栏圆角半径</string>
+    <string name="settings_navbar_radius_subtitle">调整导航栏的圆角半径。</string>
+    <string name="settings_autohide_delay_title">自动隐藏延迟</string>
+    <string name="settings_autohide_delay_subtitle">控件隐藏前的时长。</string>
+    <string name="settings_default_tab_title">默认标签页</string>
+    <string name="settings_default_tab_subtitle">选择默认启动时的标签页。</string>
+    <string name="settings_library_nav_title">媒体库导航</string>
+    <string name="settings_library_nav_subtitle">选择如何在媒体库标签页之间移动。</string>
+    <string name="settings_library_nav_compact">紧凑型药丸和网格</string>
+
+    
+    <string name="settings_keep_playing_title">关闭后继续播放</string>
+    <string name="settings_keep_playing_subtitle">如果关闭，从最近任务中移除应用将停止播放。</string>
+    <string name="settings_cast_autoplay_title">投射连接/断开时自动播放</string>
+    <string name="settings_cast_autoplay_subtitle">切换投射连接后立即开始播放。</string>
+    <string name="settings_crossfade_title">淡入淡出</string>
+    <string name="settings_crossfade_subtitle">实现歌曲之间的平滑过渡。</string>
+    <string name="settings_crossfade_duration_title">淡入淡出时长</string>
+
+    
+    <string name="settings_folder_back_nav_title">返回手势控制文件夹</string>
+    <string name="settings_folder_back_nav_subtitle">在文件夹标签页中，系统返回将在离开媒体库前导航文件夹堆栈。</string>
+    <string name="settings_tap_close_player_title">点击背景关闭播放器</string>
+    <string name="settings_tap_close_player_subtitle">点击模糊背景以关闭播放器页面。</string>
+
+    
+    <string name="settings_gemini_api_key_title">Gemini API 密钥</string>
+    <string name="settings_gemini_api_key_subtitle">AI 功能所需。</string>
+    <string name="settings_ai_model_title">AI 模型</string>
+    <string name="settings_ai_model_subtitle">选择要使用的 Gemini 模型。</string>
+    <string name="settings_ai_loading_models">正在加载可用模型…</string>
+    <string name="settings_ai_models_error">加载模型出错</string>
+    <string name="settings_system_prompt_title">系统提示词</string>
+    <string name="settings_system_prompt_subtitle">自定义 AI 的行为方式。</string>
+
+    <string name="settings_ai_provider_title">AI 提供商</string>
+    <string name="settings_ai_provider_subtitle">选择要使用的 AI 服务提供商。</string>
+    <string name="settings_deepseek_api_key_title">DeepSeek API 密钥</string>
+    <string name="settings_deepseek_api_key_subtitle">从 DeepSeek 平台获取 (api.deepseek.com)</string>
+    <string name="settings_deepseek_model_subtitle">选择要使用的 DeepSeek 模型。</string>
+    <string name="artist_settings_multi_parsing_title">多艺术家解析</string>
+    <string name="artist_settings_delimiters_title">配置分隔符</string>
+    <string name="artist_settings_delimiters_subtitle_format">当前：%s</string>
+    <string name="artist_settings_org_title">媒体库组织</string>
+    <string name="artist_settings_group_album_artist_title">按专辑艺术家分组</string>
+    <string name="artist_settings_group_album_artist_subtitle">在主艺术家下显示合作专辑</string>
+    <string name="artist_settings_rescan_required_title">需要重新扫描</string>
+    <string name="artist_settings_rescan_required_subtitle">艺术家设置已更改。请重新扫描您的库以应用。</string>
+    <string name="artist_settings_rescan_button">重新扫描</string>
+    <string name="artist_settings_scanning_button">正在扫描…</string>
+    <string name="artist_settings_about_title">关于多艺术家解析</string>
+    <string name="artist_settings_about_content">PixelPlayer 会自动拆分包含多个艺术家的艺术家标签。这对于使用 yt-dlp 或其他使用“/”等分隔符分隔艺术家的工具下载的歌曲非常有用。\n\n反斜杠 (\\) 可用于转义分隔符。</string>
+    <string name="artist_settings_examples_title">示例</string>
+    <string name="artist_settings_examples_escaped">(已转义)</string>
+    <string name="artist_settings_configure_cd">配置</string>
+
+    
+    <string name="toast_library_sync_finished">媒体库同步完成</string>
+
+    
+    <string name="daily_mix_based_on_history">基于播放历史</string>
+    <string name="daily_mix_check_all">查看所有每日精选</string>
+
+    
+    <string name="about_title">关于</string>
+    <string name="about_thanks">感谢您使用 PixelPlayer！</string>
+    <string name="about_built_with_passion">这款应用倾注了我们对音乐的热爱。希望您喜欢它。</string>
+    <string name="about_author">作者</string>
+    <string name="about_contributors">贡献者</string>
+    <string name="about_app_icon_cd">应用图标</string>
+    <string name="about_open_github_cd">打开 GitHub 主页</string>
+    <string name="about_open_telegram_cd">打开 Telegram</string>
+    
+    
+    <string name="about_hero_app_name">PixelPlayer</string>
+    <string name="about_hero_description">与社区共建的开源音乐播放器。</string>
+    <string name="about_version_format">版本 v%1$s</string>
+    
+    
+    <string name="about_feature_open_source">开源</string>
+    <string name="about_feature_community">社区优先</string>
+    <string name="about_feature_material3">Material 3 Expressive</string>
+    
+    
+    <string name="about_maintainer_title">维护者</string>
+    <string name="about_maintainer_subtitle">PixelPlayer 背后的开发者。</string>
+    <string name="about_spotlight_title">社区焦点</string>
+    <string name="about_spotlight_subtitle">表彰具有重大影响的协作者。</string>
+    <string name="about_contributors_title">开源贡献者</string>
+    <string name="about_contributors_subtitle">来自 GitHub 的实时贡献者列表。</string>
+    
+    
+    <string name="about_contributor_role_maintainer">创建者和维护者</string>
+    <string name="about_contributor_detail_maintainer">根据社区的直接反馈构建 PixelPlayer。</string>
+    <string name="about_contributor_role_top">最活跃的贡献者</string>
+    <string name="about_contributor_detail_top">在核心功能、架构和可靠性方面做出了巨大贡献。</string>
+    <string name="about_contributor_badge_top">顶级影响</string>
+    <string name="about_contributor_role_rhythm">Rhythm 开发者</string>
+    <string name="about_contributor_detail_rhythm">Rhythm（另一款音乐应用）的开发者和重要的社区支持者。</string>
+    <string name="about_contributor_badge_ally">社区盟友</string>
+    <string name="about_contributor_role_early">早期贡献者</string>
+    <string name="about_contributor_detail_early">在应用的早期阶段帮助塑造 PixelPlayer。</string>
+    <string name="about_contributor_badge_early">早期支持</string>
+    <string name="about_contributor_role_community">社区贡献者</string>
+    
+    
+    <string name="about_contributions_format">%1$d 次贡献</string>
+    <string name="about_no_contributors">目前未找到贡献者。请稍后重试。</string>
+    <string name="about_avatar_cd">%1$s 的头像</string>
+    <string name="about_icon_cd">%1$s 的图标</string>
+
+    
+    <string name="settings_backup_how_works_title">备份的工作原理</string>
+    <string name="settings_backup_how_works_desc">选择部分，导出 .pxpl 文件，以后再导入。恢复只会替换您选择的部分。</string>
+    <string name="settings_backup_selection_summary_none">未选择任何部分。</string>
+    <string name="settings_backup_selection_summary_all">已选择所有部分。</string>
+    <string name="settings_backup_selection_summary_format">已选择 %2$d 个部分中的 %1$d 个。</string>
+    <string name="settings_exporting">正在导出</string>
+    <string name="settings_importing">正在导入</string>
+    <string name="settings_select_all">全选</string>
+    <string name="settings_clear_selection">清除选择</string>
+
+    
+    <string name="settings_on">开启</string>
+    <string name="settings_off">关闭</string>
+    <string name="settings_enabled">已开启</string>
+    <string name="settings_disabled">已关闭</string>
+    <string name="settings_3s">3秒</string>
+    <string name="settings_4s">4秒</string>
+    <string name="settings_5s">5秒</string>
+    <string name="settings_6s">6秒</string>
+
+    
+    <string name="settings_subsection_create_backup">创建备份</string>
+    <string name="settings_subsection_restore_backup">恢复备份</string>
+    <string name="settings_backup_file_suffix_desc">这将创建一个 .pxpl 备份文件。</string>
+    <string name="settings_subsection_experiments">实验性功能</string>
+    <string name="settings_test_setup_flow_title">测试设置流程</string>
+    <string name="settings_test_setup_flow_subtitle">启动初始设置界面进行测试。</string>
+    <string name="settings_subsection_maintenance">维护</string>
+    <string name="settings_regenerate_daily_mix_subtitle">立即重新创建每日混合播放列表。</string>
+    <string name="settings_regenerate_stats_subtitle">清除缓存并重新计算播放统计信息。</string>
+    <string name="settings_regenerate_palette_title">强制专辑调色盘重新生成</string>
+    <string name="settings_regenerate_palette_no_songs">未找到带专辑封面的歌曲。</string>
+    <string name="settings_regenerate_palette_subtitle">选择一首歌曲以从头开始重建所有专辑颜色变体。</string>
+    <string name="settings_subsection_diagnostics">诊断</string>
+    <string name="settings_subsection_application">应用程序</string>
+    <string name="settings_about_pixelplayer_title">关于 PixelPlayer</string>
+    <string name="settings_about_pixelplayer_subtitle">应用版本、鸣谢等。</string>
+    <string name="settings_step_format">第 %1$d 步，共 %2$d 步</string>
+    <string name="settings_import_backup_message_v2">选择一个 .pxpl 备份文件。您将在下一步中选择要恢复的内容。</string>
+    <string name="settings_recent_backups">最近备份</string>
+    <string name="settings_remove_from_history">从历史记录中移除</string>
+    <string name="settings_backup_at">于</string>
+    <string name="settings_backup_modules_count_format">%1$d 个模块</string>
+    <string name="settings_backup_schema_version_format">架构 v%1$d</string>
+    <string name="settings_backup_history_at">于</string>
+    <string name="settings_backup_modules_count_format_v2">%1$d 个模块</string>
+    <string name="settings_backup_modules_schema_format_v2">%1$d 个模块 · v%2$s · 架构 v%3$d</string>
+    <string name="settings_backup_modules_selected_count_format">已选择 %1$d/%2$d 个模块</string>
+    <string name="settings_dialog_clear_search">清除搜索</string>
+    <string name="settings_palette_no_match">未找到匹配项</string>
+    <string name="settings_backup_import_confirm">导入并确认</string>
+    <string name="settings_modules_schema_format">%1$d 个模块 · v%2$s · 架构 v%3$d</string>
+    <string name="settings_restore_modules_title">恢复模块</string>
+    <string name="settings_restore_selected">恢复所选项目</string>
+    <string name="settings_restoring">正在恢复</string>
+    <string name="settings_backup_details">备份详细信息</string>
+    <string name="settings_backup_created">创建时间</string>
+    <string name="settings_backup_app_version">应用版本</string>
+    <string name="settings_backup_schema">架构版本</string>
+    <string name="settings_backup_device">设备信息</string>
+    <string name="settings_modules_selected_format">已选择 %1$d/%2$d 个模块</string>
+    <string name="settings_unknown">未知</string>
+    <string name="settings_regenerate_palette_desc">选择一首歌以清除缓存的模版数据，并从专辑封面重新生成所有调色板样式。</string>
+    <string name="settings_search_songs_placeholder">按标题、艺术家或专辑搜索</string>
+    <string name="settings_regenerating_palette">正在重新生成调色板...</string>
+    <string name="settings_no_songs_found">没有找到匹配的歌曲。</string>
+    <string name="settings_backup_schema_format">v%1$d</string>
+    <string name="settings_backup_device_format">%1$s %2$s</string>
+    <string name="settings_back">返回</string>
+    <string name="settings_open">打开</string>
+    <string name="settings_import_backup_desc">从之前的备份文件恢复数据。</string>
+    <string name="settings_version_format">版本 %s</string>
+
+    
+    <string name="stats_listening">听歌时长</string>
+    <string name="stats_plays">播放次数</string>
+    <string name="stats_listening_habits">听歌习惯</string>
+    <string name="stats_no_habits_yet">暂无习惯数据</string>
+    <string name="stats_no_habits_subtitle">当我们更了解您之后，会在这里显示您的听歌习惯。</string>
+    <string name="stats_total_sessions">总播放次数</string>
+    <string name="stats_avg_session">平均时长</string>
+    <string name="stats_longest_session">最长时长</string>
+    <string name="stats_sessions_per_day">每日播放次数</string>
+    <string name="stats_most_active_day">最活跃日期</string>
+    <string name="stats_no_playback_yet">暂无播放记录</string>
+    <string name="stats_peak_timeline_slot">高峰时段</string>
+    <string name="stats_listening_timeline">听歌时间线</string>
+    <string name="stats_top_categories">热门分类</string>
+    <string name="stats_categories_description">对比您在流派、艺术家、专辑和歌曲之间的听歌分布。</string>
+    <string name="stats_top_artists">热门艺术家</string>
+    <string name="stats_no_top_artists">暂无热门艺术家</string>
+    <string name="stats_no_top_artists_subtitle">继续聆听，您最喜欢的艺术家会出现在这里。</string>
+    <string name="stats_top_albums">热门专辑</string>
+    <string name="stats_no_top_albums">暂无热门专辑</string>
+    <string name="stats_no_top_albums_subtitle">您经常重听的专辑会出现在这里。</string>
+    <string name="stats_tracks_in_range">此时段的曲目</string>
+    <string name="stats_tracks_in_range_subtitle">所选时间范围内播放最多的曲目。</string>
+    <string name="stats_no_top_tracks">暂无热门曲目</string>
+    <string name="stats_no_top_tracks_subtitle">聆听您的最爱曲目，它们会在这里高亮显示。</string>
+    <string name="stats_collapse_tracks">收起曲目</string>
+    <string name="stats_show_all_tracks">显示全部曲目</string>
+    <string name="stats_track_concentration">曲目集中度</string>
+    <string name="stats_track_concentration_subtitle">您的听歌时间如何分布在热门曲目中。</string>
+    <string name="stats_no_concentration_data">暂无集中度数据</string>
+    <string name="stats_no_concentration_data_subtitle">播放更多曲目以查看您的听歌专注程度。</string>
+    <string name="stats_plays_format">%d</string>
+    <string name="stats_unique_songs">%d 首曲目</string>
+    <string name="stats_unique_artists">%d 位艺术家</string>
+    <string name="stats_plays_and_tracks">%1$d 次播放 • %2$d 首曲目</string>
+    <string name="stats_plays_and_artists">%1$d 次播放 • %2$d 位艺术家</string>
+    <string name="stats_top_1">第 1 名</string>
+    <string name="stats_top_2_3">第 2-3 名</string>
+    <string name="stats_others">其他</string>
+    <string name="stats_listening_concentration">听歌集中度</string>
+    <string name="stats_top_3_share_format">前 3 首曲目占您听歌时间的 %d%%。</string>
+    <string name="stats_avg_plays_per_track">平均播放/曲目</string>
+    <string name="stats_unique_tracks">独立曲目数</string>
+    <string name="stats_top_3_share">前 3 占比</string>
+    <string name="stats_peak_segment">高峰时段</string>
+    <string name="stats_no_listening_data">暂无听歌数据</string>
+    <string name="stats_no_listening_data_subtitle">按下播放开始构建您的听歌时间线</string>
+    <string name="stats_no_category_data">暂无分类数据</string>
+    <string name="stats_no_category_data_subtitle">按下播放以展示您的听歌亮点</string>
+
+    
+    <string name="experimental_player_ui_tweaks">播放器UI加载优化</string>
+    <string name="experimental_use_player_sheet_v2">使用播放器表单V2</string>
+    <string name="experimental_use_player_sheet_v2_desc">通过新的重写主机路由播放器UI。如果注意到回归，请保持禁用。</string>
+    <string name="experimental_delay_everything">全部延迟</string>
+    <string name="experimental_delay_everything_desc">保持完整播放器内容直到面板背景完全展开。</string>
+    <string name="experimental_album_carousel">专辑轮播</string>
+    <string name="experimental_album_carousel_desc">延迟专辑封面和轮播直到面板展开。</string>
+    <string name="experimental_song_metadata">歌曲元数据</string>
+    <string name="experimental_song_metadata_desc">延迟标题、艺术家和歌词/队列操作。</string>
+    <string name="experimental_progress_bar">进度条</string>
+    <string name="experimental_progress_bar_desc">延迟时间线和时间标签直到展开完成。</string>
+    <string name="experimental_playback_controls">播放控制</string>
+    <string name="experimental_playback_controls_desc">延迟播放/暂停、搜索和收藏控制。</string>
+    <string name="experimental_expand_threshold">展开阈值</string>
+    <string name="experimental_expand_threshold_desc">选择面板展开的程度使延迟的组件显示。</string>
+    <string name="experimental_expand_threshold_result">内容在展开 %d%% 时显示</string>
+    <string name="experimental_close_threshold">关闭阈值</string>
+    <string name="experimental_close_threshold_desc">选择面板在关闭时需要折叠多少使占位符接管。</string>
+    <string name="experimental_close_threshold_result">占位符在折叠 %d%% 后显示</string>
+    <string name="experimental_use_placeholders">为延迟的项目使用占位符</string>
+    <string name="experimental_use_placeholders_desc">通过渲染轻量级占位符来保持布局稳定，同时组件等待展开。</string>
+    <string name="experimental_apply_on_close">在播放器关闭时也应用</string>
+    <string name="experimental_apply_on_close_desc">当播放器开始折叠时立即显示延迟的占位符。</string>
+    <string name="experimental_transparent_placeholders">使占位符透明</string>
+    <string name="experimental_transparent_placeholders_desc">占位符保持其布局空间但变为不可见。</string>
+    <string name="experimental_visual_quality">视觉质量</string>
+    <string name="experimental_album_art_resolution">专辑封面分辨率</string>
+    <string name="experimental_album_art_quality">专辑封面质量</string>
+    <string name="experimental_step_1_all_delayed">第 1 步：当前所有元素都延迟显示，直到播放器面板达到您的阈值。</string>
+    <string name="experimental_step_2_placeholders">第 2 步：使用占位符进行平滑过渡</string>
+    <string name="experimental_step_3_trigger">第 3 步：选择您的触发方式</string>
+    <string name="experimental_trigger_modes_desc">决定元素是根据展开百分比显示，还是仅在您松开面板后显示。</string>
+    <string name="experimental_animated_lyrics_title">动态歌词 (高性能设备)</string>
+    <string name="experimental_animated_lyrics_desc">为歌词使用弹簧动画和视觉效果。在低端设备上可能会导致掉帧。</string>
+    <string name="experimental_lyric_blur_effect">歌词模糊效果</string>
+    <string name="experimental_lyric_blur_effect_desc">为非活动歌词应用景深模糊。</string>
+    <string name="experimental_blur_strength">模糊强度</string>
+    <string name="experimental_blur_strength_desc">调整模糊效果的强度。</string>
+    <string name="experimental_step_1_choose_delay">第 1 步 · 选择要延迟的内容</string>
+    <string name="experimental_trigger_unlock_msg">在上方至少启用一个延迟选项以解锁触发设置。</string>
+    <string name="experimental_threshold_mode">阈值模式</string>
+    <string name="experimental_threshold_uses_expansion">使用展开百分比</string>
+    <string name="experimental_drag_release_mode">拖拽释放模式</string>
+    <string name="experimental_drag_release_waits">等待松手</string>
+    <string name="experimental_drag_release_info">触发模式已设置为拖拽释放。内容仅在您松开拖拽手势后显示。</string>
+    
+    
+    <string name="stats_metric_listening_time">听歌时长</string>
+    <string name="stats_metric_listening_time_desc">所选范围内的总听歌时长。</string>
+    <string name="stats_metric_play_count">播放次数</string>
+    <string name="stats_metric_play_count_desc">您在每个时段的播放次数。</string>
+    <string name="stats_metric_avg_session">平均时长</string>
+    <string name="stats_metric_avg_session_desc">每个时段的平均时长。</string>
+    
+    
+    <string name="stats_daily_rhythm">每日节奏</string>
+    <string name="stats_weekly_rhythm">每周节奏</string>
+    <string name="stats_monthly_rhythm">每月节奏</string>
+    <string name="stats_year_glance">全年概览</string>
+    <string name="stats_all_time_progression">全部时间进程</string>
+    <string name="stats_grouped_4hour">按 4 小时时段分组</string>
+    <string name="stats_grouped_day_of_week">按星期几分组</string>
+    <string name="stats_grouped_week_of_month">按月内周数分组</string>
+    <string name="stats_grouped_by_month">按月份分组</string>
+    <string name="stats_grouped_by_year">按年份分组</string>
+    
+    
+    <string name="stats_dimension_genre">流派</string>
+    <string name="stats_dimension_artist">艺术家</string>
+    <string name="stats_dimension_album">专辑</string>
+    <string name="stats_dimension_song">歌曲</string>
+    <string name="stats_listening_by_genre">按流派播放</string>
+    <string name="stats_listening_by_artist">按艺术家播放</string>
+    <string name="stats_listening_by_album">按专辑播放</string>
+    <string name="stats_listening_by_song">按歌曲播放</string>
+    <string name="stats_top_genre">热门流派</string>
+    <string name="stats_top_artist">热门艺术家</string>
+    <string name="stats_top_album">热门专辑</string>
+    <string name="stats_top_song">热门歌曲</string>
+    
+    
+    <string name="stats_timeline_day_copy">拆分为 4 小时窗口以展示您的每日节奏。</string>
+    <string name="stats_timeline_week_copy">每日柱状图让每周习惯一目了然。</string>
+    <string name="stats_timeline_month_copy">每周柱状图显示本月趋势。</string>
+    <string name="stats_timeline_year_copy">每月柱状图显示全年季节性变化。</string>
+    <string name="stats_timeline_all_copy">每年柱状图总结您的完整历史。</string>
+
+    
+    <string name="widget_bar_4x1_desc">紧凑播放器栏</string>
+    <string name="widget_control_4x2_desc">带有随机播放和重复播放的完整控制</string>
+    <string name="widget_grid_2x2_desc">极简方形播放器</string>
+
+    
+    <string name="tile_shuffle_all">随机播放全部</string>
+    <string name="tile_last_playlist">最后播放列表</string>
+
+    
+    <string name="sort_option_album_artist">艺人</string>
+    <string name="sort_option_album_release_year">发布年份</string><string name="sort_option_album_size_asc">歌曲最少</string>
+    <string name="sort_option_album_size_desc">歌曲最多</string><string name="sort_option_album_title_az">标题 (A-Z)</string>
+    <string name="sort_option_album_title_za">标题 (Z-A)</string><string name="sort_option_artist_name_az">名字 (A-Z)</string>
+    <string name="sort_option_artist_name_za">名字 (Z-A)</string><string name="sort_option_folder_name_az">名字 (A-Z)</string>
+    <string name="sort_option_folder_name_za">名字 (Z-A)</string><string name="sort_option_folder_song_count_asc">歌曲最少</string>
+    <string name="sort_option_folder_song_count_desc">歌曲最多</string><string name="sort_option_folder_subdir_count_asc">子文件夹最少</string>
+    <string name="sort_option_folder_subdir_count_desc">子文件夹最多</string><string name="sort_option_liked_album">专辑</string>
+    <string name="sort_option_liked_artist">艺人</string><string name="sort_option_liked_date_liked">喜欢日期</string>
+    <string name="sort_option_liked_title_az">标题 (A-Z)</string><string name="sort_option_liked_title_za">标题 (Z-A)</string>
+    <string name="sort_option_playlist_date_created">创建日期</string><string name="sort_option_playlist_name_az">名字 (A-Z)</string>
+    <string name="sort_option_playlist_name_za">名字 (Z-A)</string><string name="sort_option_song_album">专辑</string>
+    <string name="sort_option_song_artist">艺人</string><string name="sort_option_song_date_added">添加日期</string>
+    <string name="sort_option_song_default_order">默认顺序</string><string name="sort_option_song_duration">时长</string>
+    <string name="sort_option_song_title_az">标题 (A-Z)</string><string name="sort_option_song_title_za">标题 (Z-A)</string>
+
+    
+    <string name="nav_telegram">Telegram</string>
+
+    <string name="cloud_streaming_title">云端串流</string>
+    <string name="cloud_streaming_subtitle">从您的云端账户播放音乐</string>
+    <string name="cloud_streaming_provider_telegram_title">Telegram</string>
+    <string name="cloud_streaming_provider_telegram_subtitle">从频道和聊天中播放</string>
+    <string name="cloud_streaming_provider_gdrive_title">Google Drive</string>
+    <string name="cloud_streaming_provider_gdrive_subtitle_coming_soon">即将推出</string>
+    <string name="cloud_streaming_provider_netease_title">网易云音乐</string>
+    <string name="cloud_streaming_provider_netease_subtitle_connected">已连接 - 打开仪表板</string>
+    <string name="cloud_streaming_provider_netease_subtitle_sign_in">网易云音乐 - 登录以串流</string>
+
+    
+    <string name="accounts_title">账户</string>
+    <string name="accounts_active_title">活跃</string>
+    <string name="accounts_available_title">可用</string>
+    
+    
+    <string name="accounts_linked_services">已关联服务</string>
+    <string name="accounts_connected_accounts">已连接账户</string>
+    <string name="accounts_subtitle">管理已关联的提供商，让每个集成都在您的掌控之中。</string>
+    <string name="accounts_status_connected">已连接</string>
+    <string name="accounts_status_soon">即将推出</string>
+    <string name="accounts_coming_soon">即将推出</string>
+    <string name="accounts_open_service">打开服务</string>
+    <string name="accounts_log_out">退出登录</string>
+    <string name="accounts_logging_out">退出登录中...</string>
+    <string name="accounts_no_linked_yet">暂无已关联账户</string>
+    <string name="accounts_connect_provider_prompt">连接一个提供商，即可在此页面进行管理。</string>
+    <string name="accounts_connect_format">连接 %1$s</string>
+    <string name="accounts_coming_soon_format">%1$s（即将推出）</string>
+    <string name="accounts_gdrive_coming_soon_toast">Google Drive 即将推出。</string>
+    <string name="accounts_unable_to_open_toast">当前无法打开此页面。</string>
+    <string name="accounts_service_telegram">Telegram</string>
+    <string name="accounts_service_google_drive">Google Drive</string>
+    <string name="accounts_service_netease">网易云音乐</string>
+    <string name="accounts_telegram_session_active">Telegram 会话已激活</string>
+    <string name="accounts_google_account_connected">Google 账户已连接</string>
+    <string name="accounts_netease_account_connected">网易账户已连接</string>
+    <string name="accounts_synced_channel">个已同步频道</string>
+    <string name="accounts_synced_channels">个已同步频道</string>
+    <string name="accounts_synced_folder">个已同步文件夹</string>
+    <string name="accounts_synced_folders">个已同步文件夹</string>
+    <string name="accounts_synced_playlist">个已同步歌单</string>
+    <string name="accounts_synced_playlists">个已同步歌单</string>
+
+    
+    <string name="settings_category_artist_title">艺术家</string>
+    <string name="delimiter_config_title">分隔符</string>
+    <string name="delimiter_config_current_title">当前分隔符</string>
+    <string name="delimiter_config_current_description">点击一个分隔符将其移除。至少需要一个分隔符。</string>
+    <string name="delimiter_config_at_least_one_required">至少需要一个分隔符</string>
+    <string name="delimiter_config_add_title">添加新分隔符</string>
+    <string name="delimiter_config_add_placeholder">例如：/ 或 ;</string>
+    <string name="delimiter_config_added">已添加分隔符</string>
+    <string name="delimiter_config_invalid_or_exists">分隔符已存在或无效</string>
+    <string name="delimiter_config_add_cd">添加分隔符</string>
+    <string name="delimiter_config_remove_cd">移除</string>
+    <string name="delimiter_config_default_title">默认分隔符</string>
+    <string name="delimiter_config_reset_button">重置</string>
+    <string name="delimiter_config_reset_toast">分隔符已重置为默认值</string>
+    <string name="delimiter_config_space">空格</string>
+    <string name="device_capabilities_title">设备能力</string>
+    <string name="device_capabilities_subtitle">音频规格、编解码器和解码器信息</string>
+    <string name="device_capabilities_audio_output">音频输出</string>
+    <string name="device_capabilities_exoplayer">ExoPlayer 引擎</string>
+    <string name="device_capabilities_supported_codecs">支持的音频编解码器</string>
+    <string name="device_info_title">设备信息</string>
+    <string name="device_info_manufacturer">制造商</string>
+    <string name="device_info_model">型号</string>
+    <string name="device_info_brand">品牌</string>
+    <string name="device_info_device">设备</string>
+    <string name="device_info_android_version">Android 版本</string>
+    <string name="device_info_sdk_version">SDK 版本</string>
+    <string name="device_info_hardware">硬件</string>
+    <string name="device_capabilities_sample_rate">采样率</string>
+    <string name="device_capabilities_frames_per_buffer">每缓冲区帧数</string>
+    <string name="device_capabilities_low_latency">低延迟支持</string>
+    <string name="device_capabilities_pro_audio">专业音频支持</string>
+    <string name="device_capabilities_exo_version">版本</string>
+    <string name="device_capabilities_exo_renderers">活动渲染器</string>
+    <string name="device_capabilities_active_renderers_format">%1$d 个活动渲染器</string>
+    <string name="device_capabilities_exo_decoders">解码器计数器</string>
+    <string name="device_capabilities_exo_decoders_na">N/A (需要调试监听器)</string>
+    <string name="device_capabilities_yes">是</string>
+    <string name="device_capabilities_no">否</string>
+    <string name="device_capabilities_hw_accel_cd">硬件加速</string>
+
+    
+    <string name="about_special_thanks">特别鸣谢</string>
+
+    
+    <string name="edit_transition_fade_out">淡出</string>
+    <string name="edit_transition_fade_in">淡入</string>
+    <string name="transition_snackbar_using_global_defaults">已使用全局默认设置</string>
+    <string name="transition_snackbar_changes_saved">更改已保存</string>
+    <string name="transition_title_playlist_rules">播放列表规则</string>
+    <string name="transition_title_global_transitions">全局过渡</string>
+    <string name="transition_description_playlist">为此播放列表配置默认行为。</string>
+    <string name="transition_description_global">此配置适用于所有播放来源，除非被覆盖。</string>
+    <string name="transition_status_title">当前状态</string>
+    <string name="transition_status_global_default">全局默认</string>
+    <string name="transition_status_following_global">跟随全局</string>
+    <string name="transition_status_custom_override">自定义覆盖</string>
+    <string name="transition_status_playlist_default">播放列表默认</string>
+    <string name="transition_custom_override_title">自定义覆盖</string>
+    <string name="transition_custom_override_desc">启用后可为此播放列表设置专属规则。</string>
+    <string name="transition_style_title">过渡样式</string>
+    <string name="transition_style_subtitle">歌曲如何衔接</string>
+    <string name="transition_option_crossfade">交叉淡化</string>
+    <string name="transition_option_none">无</string>
+    <string name="transition_duration_title">过渡时长</string>
+    <string name="transition_duration_total_overlap_format">总重叠 %1$d 秒</string>
+    <string name="transition_current_song_label">当前歌曲</string>
+    <string name="transition_next_song_label">下一首歌曲</string>
+    <string name="transition_overlap_format">歌曲将重叠 %1$d 秒</string>
+    <string name="transition_curves_title">音量曲线</string>
+    <string name="transition_curves_subtitle">微调音量变化曲线</string>
+
+    
+    <string name="equalizer_edit_title">编辑</string>
+    <string name="manage_presets_title">管理预设</string>
+    <string name="manage_presets_reset_title">重置预设</string>
+    <string name="manage_presets_reset_message">这将恢复默认预设顺序和可见性。继续吗?</string>
+    <string name="manage_presets_reset_button">重置</string>
+    <string name="manage_presets_cancel_button">取消</string>
+    <string name="manage_presets_done_button">完成</string>
+    <string name="manage_presets_close_button">关闭</string>
+    <string name="manage_presets_help_text">拖动以重新排序 • 点击眼睛图标以显示/隐藏</string>
+    <string name="manage_presets_reset_to_default">重置为默认值</string>
+    <string name="queue_next_up">下一首</string>
+
+    
+    <string name="file_explorer_excluded_folders">排除的文件夹</string>
+    <string name="file_explorer_close_button">关闭</string>
+    <string name="file_explorer_refresh_button">刷新</string>
+    <string name="file_explorer_done_button">完成</string>
+    <string name="file_explorer_help_text">默认情况下允许所有内容。点击一个文件夹以将其标记为扫描中排除。</string>
+    <string name="file_explorer_no_subfolders">这里没有子文件夹</string>
+
+    
+    <string name="experimental_title">实验性功能</string>
+
+    
+    <string name="library_empty_no_songs_yet">还没有歌曲</string>
+    <string name="library_empty_add_music_subtitle">将音乐添加到您的设备或同步云源以开始收听</string>
+    <string name="library_empty_no_local_songs">未找到本地歌曲</string>
+    <string name="library_empty_try_filter_or_rescan">尝试另一个源过滤器或重新扫描您的设备库</string>
+    <string name="library_empty_no_cloud_songs">未找到云歌曲</string>
+    <string name="library_empty_sync_cloud_sources">同步 Telegram 或网易音乐，或切换到本地源</string>
+    <string name="library_empty_albums_appear_when_grouped">一旦您的库对曲目进行分组，专辑就会显示在这里</string>
+    <string name="library_empty_no_local_albums">未找到本地专辑</string>
+    <string name="library_empty_local_songs_required">构建本地专辑组需要本地歌曲</string>
+    <string name="library_empty_no_cloud_albums">未找到云专辑</string>
+    <string name="library_empty_cloud_albums_appear_after_sync">具有专辑数据的云歌曲将在同步后显示在这里</string>
+    <string name="library_empty_artists_after_indexing">从任何源索引歌曲后会显示艺术家</string>
+    <string name="library_empty_no_local_artists">未找到本地艺术家</string>
+    <string name="library_empty_no_artist_metadata">本地歌曲目前没有可用的艺术家元数据</string>
+    <string name="library_empty_no_cloud_artists">未找到云艺术家</string>
+    <string name="library_empty_cloud_artist_after_sync">当远程歌曲同步时，云艺术家条目会显示</string>
+    <string name="library_empty_no_liked_songs">还没有喜欢的歌曲</string>
+    <string name="library_empty_tap_heart_to_like">在播放歌曲时点击心形图标以将其保存在这里</string>
+    <string name="library_empty_no_liked_local_songs">没有喜欢的本地歌曲</string>
+    <string name="library_empty_switch_source_or_like">切换源过滤器或从您的设备中按赞歌曲</string>
+    <string name="library_empty_no_liked_cloud_songs">没有喜欢的云歌曲</string>
+    <string name="library_empty_like_cloud_tracks">喜欢 Telegram 或网易音乐的曲目以在此视图中查看它们</string>
+    <string name="library_empty_internal_storage_folders">包含音乐的内部存储文件夹将显示在这里</string>
+    <string name="library_empty_no_playlists">还没有播放列表</string>
+    <string name="library_empty_create_first_playlist">创建您的第一个播放列表来组织您的库</string>
+
+    
+    <string name="sort_songs_title">排序歌曲</string>
+
+    <string name="telegram_dashboard_title">Telegram 同步</string>
+    <string name="telegram_add_channel">添加频道</string>
+    <string name="common_songs_count">%d 首歌曲</string>
+    <string name="artist_change_photo">更换照片</string>
+    <string name="quick_fill_select_songs">选择歌曲</string>
+    <string name="quick_fill_select_a_genre">选择流派</string>
+    <string name="quick_fill_selected_genre">流派: %1$s</string>
+    <string name="quick_fill_next">下一步</string>
+    <string name="quick_fill_button">快速填充</string>
+    <string name="quick_fill_select_all">全选</string>
+    <string name="quick_fill_clear">清除</string>
+    <string name="quick_fill_add_custom">添加自定义</string>
+    <string name="quick_fill_new_genre">新建流派</string>
+    <string name="quick_fill_add_custom_genre">添加自定义流派</string>
+    <string name="quick_fill_genre_name">流派名称</string>
+    <string name="quick_fill_select_icon">选择图标</string>
+    <string name="quick_fill_add">添加</string>
+    <string name="quick_fill_cancel">取消</string>
+    <string name="artist_expand">展开 %s</string>
+    <string name="artist_collapse">收起 %s</string>
+    <string name="artist_play">播放 %s</string>
+    <string name="artist_shuffle">随机播放专辑</string>
+    <string name="artist_edit_image_cd">修改艺术家图片</string>
+    <string name="telegram_channel_options_cd">频道选项</string>
+    <string name="artist_reset_image">重置为默认照片</string>
+    <string name="quick_fill_choose_genre">选择流派</string>
+    <string name="quick_fill_search_songs">搜索歌曲</string>
+    <string name="telegram_action_remove">移除频道</string>
+    <string name="telegram_action_remove_desc">从您的库中移除此频道。</string>
+    <string name="telegram_action_sync_channel">正在同步频道</string>
+    <string name="telegram_action_sync_desc">正在获取最新文件。请稍候...</string>
+    <string name="telegram_action_sync_now_desc">拉取新文件并将此频道添加到您的同步列表。</string>
+    <string name="telegram_empty_desc">您同步的 Telegram 频道将显示在这里。</string>
+    <string name="telegram_empty_title">未同步任何频道</string>
+    <string name="telegram_last_synced_never">从未同步</string>
+    <string name="telegram_last_synced_relative">同步于 %1$s</string>
+    <string name="telegram_public_channel">公共频道</string>
+    <string name="telegram_status_syncing">正在同步...</string>
+    <string name="telegram_status_sync_now">立即同步</string>
+    <string name="netease_cloud_music">网易云音乐</string>
+    <string name="save_as_playlist">保存为播放列表</string>
+    <string name="phone_volume">手机音量</string>
+    <string name="device_volume">设备音量</string>
+    <string name="synced_playlists_count_format">已同步 %1$d 个播放列表</string>
+    <string name="playlists_synced_count_format">%1$d 个播放列表已同步</string>
+    <string name="songs_synced_count_format">%1$d 首歌曲已同步</string>
+    <string name="no_playlists_synced_yet">尚未同步播放列表</string>
+    <string name="synced_playlists_and_songs_format">已同步 %1$d 个播放列表，%2$d 首歌曲</string>
+    <string name="synced_playlists_and_songs_failed_format">已同步 %1$d 个播放列表，%2$d 首歌曲（%3$d 个失败）</string>
+    <string name="sync_status_playlists">同步播放列表</string>
+    <string name="sync_label">同步</string>
+    <string name="tap_sync_to_fetch_your_playlists">点击同步以获取您的播放列表</string>
+    <string name="queue_item_removed">已移除</string>
+    <string name="undo">撤销</string>
+    <string name="current_queue">当前队列</string>
+    <string name="queue_suffix">%1$s 队列</string>
+    <string name="sync_notification_playlists">正在同步您的播放列表…</string>
+    <string name="sync_notification_songs">正在同步歌曲…</string>
+    <string name="sync_failed">同步失败: %1$s</string>
+    <string name="selected_songs_format">已选择 %1$d 首歌曲</string>
+    <string name="save_as_format">保存为: %1$s</string>
+    <string name="enter_playlist_name">请输入播放列表名称</string>
+    <string name="cast_connecting_subtitle">连接中…</string>
+    <string name="setup_grant_all_required_msg">请授予所有必要权限以继续</string>
+
+    
+    <string name="common_error_loading">加载失败</string>
+    <string name="common_retry">重试</string>
+    <string name="common_unknown_error">未知错误</string>
+    <string name="library_error_loading_songs">加载歌曲失败</string>
+    <string name="search_no_recent">暂无最近搜索</string>
+    <string name="search_filter_all">全部</string>
+    <string name="search_filter_songs">歌曲</string>
+    <string name="search_filter_albums">专辑</string>
+    <string name="search_filter_artists">艺术家</string>
+    <string name="search_filter_playlists">播放列表</string>
+    <string name="common_empty_playlist">播放列表为空</string>
+    <string name="common_selected">已选中</string>
+    <string name="search_recent_title">最近搜索</string>
+    <string name="search_clear_all">全部清空</string>
+    <string name="search_history_icon_cd">搜索历史图标</string>
+    <string name="search_delete_history_cd">删除搜索历史</string>
+    <string name="search_no_results_cd">无搜索结果</string>
+    <string name="search_no_results_for_format">未找到关于“%s”的搜索结果</string>
+    <string name="search_nothing_found">未找到内容</string>
+    <string name="search_try_different">尝试不同的搜索词或检查你的过滤器。</string>
+    <string name="search_no_results_found">未找到搜索结果。</string>
+    <string name="search_clear_cd">清除</string>
+    <string name="search_play_artist_cd">播放艺术家</string>
+    <string name="search_playlist_cd">播放列表</string>
+    <string name="search_play_playlist_cd">播放此列表</string>
+    
+    
+    <string name="settings_subsection_home_collage">主页拼贴画</string>
+    <string name="settings_collage_pattern_title">拼贴画样式</string>
+    <string name="settings_collage_pattern_subtitle">为您的混合拼贴画选择形状排列。</string>
+    <string name="settings_collage_auto_rotate_title">自动轮换样式</string>
+    <string name="settings_collage_auto_rotate_subtitle">每次访问主页时循环更换拼贴画样式。</string>
+
+    <string name="palette_style_tonal_spot">色调斑点 (Tonal Spot)</string>
+    <string name="palette_style_vibrant">鲜艳 (Vibrant)</string>
+    <string name="palette_style_expressive">表现力 (Expressive)</string>
+    <string name="palette_style_fruit_salad">水果沙拉 (Fruit Salad)</string>
+    <string name="palette_style_monochrome">单色 (Monochrome)</string>
+
+    <string name="collage_pattern_cosmic_swirl">宇宙漩涡 (Cosmic Swirl)</string>
+    <string name="collage_pattern_honeycomb_groove">蜂巢律动 (Honeycomb Groove)</string>
+    <string name="collage_pattern_vinyl_stack">黑胶堆栈 (Vinyl Stack)</string>
+    <string name="collage_pattern_pixel_mosaic">像素马赛克 (Pixel Mosaic)</string>
+    <string name="collage_pattern_stardust_scatter">星尘散射 (Stardust Scatter)</string>
+    
+    <string name="settings_date_pattern">yyyy年M月d日</string>
+    <string name="settings_time_pattern">HH:mm</string>
+    <string name="settings_dot_separator"> · </string>
+    <string name="settings_backup_filename_prefix">PixelPlayer_备份_</string>
+    <string name="settings_backup_module_detail_format">%1$d 个条目</string>
+
+    <string name="palette_settings_title">调色板样式</string>
+    <string name="palette_settings_description">选择播放器界面的相册颜色风格。</string>
+    <string name="palette_settings_header">颜色</string>
+    <string name="palette_settings_apply">应用</string>
+    <string name="palette_description_tonal_spot">均衡且冷静。</string>
+    <string name="palette_description_vibrant">高饱和度的点缀。</string>
+    <string name="palette_description_expressive">大胆的色调变化和对比。</string>
+    <string name="palette_description_fruit_salad">活泼的旋转色调点缀。</string>
+    <string name="palette_description_monochrome">近乎中性的呈现。</string>
+
+    
+    <string name="settings_selected_cd">已选中</string>
+    <string name="settings_refresh_lyrics_cd">刷新歌词</string>
+
+    <string name="delete">删除</string>
+    <string name="delete_songs_title">删除 %1$d 首歌曲？</string>
+    <string name="delete_song_title">删除歌曲？</string>
+    <string name="delete_song_message">这些歌曲将从您的设备中永久删除，无法恢复。</string>
+    <string name="delete_song_single_message">\"%1$s\" (%2$s)\n\n此歌曲将从您的设备中永久删除，无法恢复。</string>
+    <string name="toast_cannot_delete_playing_song">无法删除正在播放的歌曲</string>
+    <string name="toast_file_deleted">文件已删除</string>
+    <string name="toast_file_delete_failed">无法删除文件或文件不存在</string>
+
+    
+    <string name="equalizer_preset_flat">平衡</string>
+    <string name="equalizer_preset_rock">摇滚</string>
+    <string name="equalizer_preset_pop">流行</string>
+    <string name="equalizer_preset_hip_hop">嘻哈</string>
+    <string name="equalizer_preset_jazz">爵士</string>
+    <string name="equalizer_preset_classical">古典</string>
+    <string name="equalizer_preset_electronic">电子</string>
+    <string name="equalizer_preset_bass_boost">低音增强</string>
+    <string name="equalizer_preset_treble_boost">高音增强</string>
+    <string name="equalizer_preset_vocal">人声</string>
+    <string name="equalizer_preset_custom">自定义</string>
+
+    
+    <string name="quick_fill_input_placeholder">按歌曲或艺术家搜索</string>
+    <string name="storage_filter_all">显示所有音乐</string>
+    <string name="storage_filter_offline">仅显示离线音乐</string>
+    <string name="storage_filter_online">仅显示在线音乐</string>
+    <string name="folder_source_internal">内部存储</string>
+    <string name="folder_source_sd_card">SD 卡</string>
+    <string name="browse_folders_permission_required">浏览文件夹需要所有文件访问权限。</string>
+    <string name="gemini_api_key_required">请先设置您的 Gemini API 密钥</string>
+    <string name="album_detail_cover_cd">%1$s 的封面</string>
+    <string name="album_detail_subtitle">%1$s • %2$d 首歌曲</string>
+    <string name="album_sort_songs">排序歌曲</string>
+    <string name="album_detail_shuffle_cd">随机播放专辑</string>
+    <string name="library_reorder_tabs">重新排序标签</string>
+    <string name="merge_playlists_title">合并播放列表</string>
+    <string name="merge_playlists_enter_name">输入合并后的播放列表名称：</string>
+    <string name="merge_playlists_placeholder">合并的播放列表</string>
+    <string name="merge_playlists_description">这将把 %d 个选中的播放列表合并为一个。</string>
+    <string name="common_merge">合并</string>
+    <string name="common_cancel">取消</string>
+    <string name="playlist_rename_title">重命名播放列表</string>
+    <string name="playlist_rename_new_name">新名称</string>
+    <string name="playlist_rename_confirm">重命名</string>
+
+    
+    <string name="playlist_no_playlists_to_share">没有要分享的播放列表</string>
+    <string name="playlist_share_playlists_chooser">分享播放列表</string>
+    <string name="playlist_sharing_count">正在分享 %d 个播放列表</string>
+    <string name="playlist_share_failed">分享失败：%s</string>
+    <string name="playlist_no_playlists_to_export">没有要导出的播放列表</string>
+    <string name="playlist_exported_success">已导出 %1$d 个播放列表到 Music/PixelPlayer Exports </string>
+    <string name="playlist_export_failed">导出失败：%s</string>
+
+    
+    <string name="settings_backup_browse_file">浏览文件</string>
+    <string name="settings_backup_unknown">未知</string>
+    <string name="settings_backup_selected_count_format">已选择 %1$d/%2$d 个部分</string>
+    <string name="backup_section_playlists_description">您的自定义播放列表和排序偏好。</string>
+    <string name="backup_section_global_settings_description">主题、行为、播放和应用偏好。</string>
+    <string name="backup_section_favorites_description">标记为收藏的歌曲。</string>
+    <string name="backup_section_lyrics_description">您保存或导入的歌词。</string>
+    <string name="backup_section_search_history_description">应用中的最近搜索词。</string>
+    <string name="backup_section_transitions_description">歌曲之间的自定义过渡设置。</string>
+    <string name="backup_section_engagement_stats_description">每首歌曲的播放次数和聆听时长。</string>
+    <string name="backup_section_playback_history_description">用于统计的基于时间线的聆听历史。</string>
+    <string name="backup_section_quick_fill_description">自定义流派及其图标。</string>
+    <string name="backup_section_artist_images_description">来自 Deezer 的缓存艺术家图像 URL。</string>
+    <string name="backup_section_equalizer_description">自定义均衡器预设和固定顺序。</string>
+
+    <!-- Telegram Login -->
+    <string name="telegram_login_title">Telegram 登录</string>
+    <string name="telegram_login_connect">连接 Telegram</string>
+    <string name="telegram_login_subtitle">使用强大的错误处理、超时控制和可编辑的步骤登录。</string>
+    <string name="telegram_login_phone_number">电话号码</string>
+    <string name="telegram_login_send_code">发送验证码</string>
+    <string name="telegram_login_verify_code">验证验证码</string>
+    <string name="telegram_login_verify_password">验证密码</string>
+    <string name="telegram_login_edit_phone">编辑电话</string>
+    <string name="telegram_login_resend_code">重新发送验证码</string>
+    <string name="telegram_login_editing_notice">您正在编辑您的号码。再次发送验证码将替换之前的验证码。</string>
+    <string name="telegram_login_back">返回</string>
+
+    <!-- Telegram Login Messages -->
+    <string name="telegram_msg_edit_phone_prompt">编辑您的电话号码并重新发送验证码。</string>
+    <string name="telegram_msg_wait_request">请等待当前请求完成。</string>
+    <string name="telegram_msg_invalid_phone">使用国际电话号码（例如：+14155550123）。</string>
+    <string name="telegram_msg_sending_code">正在发送验证码...</string>
+    <string name="telegram_msg_enter_code">输入 Telegram 发送的验证码。</string>
+    <string name="telegram_msg_verifying_code">正在验证验证码...</string>
+    <string name="telegram_msg_enter_password">输入您的 Telegram 两步验证密码。</string>
+    <string name="telegram_msg_verifying_password">正在验证密码...</string>
+    <string name="telegram_msg_working">正在处理...</string>
+
+    <!-- Telegram Login Errors -->
+    <string name="telegram_error_timeout">Telegram 请求超时。检查您的连接并重试。</string>
+    <string name="telegram_error_login_failed">Telegram 登录失败。</string>
+    <string name="telegram_error_login_failed_msg">Telegram 登录失败：%s</string>
+    <string name="telegram_error_phone_invalid">无效的电话号码。确认国家代码和号码。</string>
+    <string name="telegram_error_phone_flood">尝试次数过多。等待几分钟后重试。</string>
+    <string name="telegram_error_code_invalid">无效的验证码。检查后重试。</string>
+    <string name="telegram_error_code_expired">验证码已过期。请求新的验证码。</string>
+    <string name="telegram_error_password_invalid">不正确的两步验证密码。</string>
+    <string name="telegram_error_network">网络错误或超时。</string>
+
+    <!-- Telegram Authorization States -->
+    <string name="telegram_state_initializing">正在初始化 Telegram...</string>
+    <string name="telegram_state_logging_out">正在登出...</string>
+    <string name="telegram_state_closing">正在关闭会话...</string>
+    <string name="telegram_state_closed">会话已关闭。重新打开登录以继续。</string>
+    <string name="telegram_state_preparing">正在准备安全的 Telegram 会话...</string>
+    <string name="telegram_state_waiting">等待 Telegram 响应...</string>
+
+    <!-- Equalizer Frequency Bands -->
+    <string name="equalizer_freq_31hz">31Hz</string>
+    <string name="equalizer_freq_62hz">62Hz</string>
+    <string name="equalizer_freq_125hz">125Hz</string>
+    <string name="equalizer_freq_250hz">250Hz</string>
+    <string name="equalizer_freq_500hz">500Hz</string>
+    <string name="equalizer_freq_1khz">1kHz</string>
+    <string name="equalizer_freq_2khz">2kHz</string>
+    <string name="equalizer_freq_4khz">4kHz</string>
+    <string name="equalizer_freq_8khz">8kHz</string>
+    <string name="equalizer_freq_16khz">16kHz</string>
+
+    <!-- Equalizer Effects -->
+    <string name="equalizer_bass_boost">低音增强</string>
+    <string name="equalizer_virtualizer">虚拟器</string>
+    <string name="equalizer_loudness">响度</string>
+
+    <!-- Equalizer Effects Controls -->
+    <string name="equalizer_bass_boost_label">低音增强</string>
+    <string name="equalizer_bass_boost_strength">强度</string>
+    <string name="equalizer_virtualizer_label">虚拟器</string>
+    <string name="equalizer_virtualizer_strength">强度</string>
+    <string name="equalizer_loudness_label">响度增强</string>
+    <string name="equalizer_loudness_strength">强度</string>
+
+    <!-- Equalizer UI Labels -->
+    <string name="equalizer_title_cn">均衡器</string>
+    <string name="equalizer_back">返回</string>
+    <string name="equalizer_view_mode">更改视图模式</string>
+    <string name="equalizer_enable">启用均衡器</string>
+    <string name="equalizer_disable">禁用均衡器</string>
+    <string name="equalizer_volume">音量</string>
+    <string name="equalizer_custom_preset">自定义</string>
+    <string name="equalizer_edit_presets">编辑预设</string>
+    <string name="equalizer_save_preset">保存预设</string>
+    <string name="equalizer_save_preset_desc">输入自定义均衡器预设的名称。</string>
+    <string name="equalizer_presets_title">预设</string>
+    <string name="equalizer_effects_title">效果</string>
+    <string name="equalizer_not_supported">您的设备不支持此效果</string>
+
+    <!-- Additional Equalizer Terms -->
+    <string name="equalizer_treble">高音</string>
+    <string name="equalizer_frequency_response">频率响应</string>
+    <string name="equalizer_bass">低音</string>
+    <string name="equalizer_low_mids">低中</string>
+    <string name="equalizer_high_mids">高中</string>
+    <string name="equalizer_bass_low">低音 / 低</string>
+    <string name="equalizer_mid_high">中 / 高</string>
+
+    <!-- Telegram Login UI Strings -->
+    <string name="telegram_login_phone_number_input">电话号码</string>
+    <string name="telegram_login_enter_phone_subtitle">输入您的 Telegram 号码。您可以稍后返回并编辑它。</string>
+    <string name="telegram_login_code_input_label">验证码</string>
+    <string name="telegram_login_code_placeholder">12345</string>
+    <string name="telegram_login_verification_code_title">验证码</string>
+    <string name="telegram_login_enter_code_subtitle">输入来自 Telegram 的验证码。如果号码错误，请返回并编辑它。</string>
+    <string name="telegram_login_two_step_password_title">两步验证密码</string>
+    <string name="telegram_login_enter_password_subtitle">输入您的 Telegram 密码。您仍然可以返回并修正您的号码。</string>
+    <string name="telegram_login_password_input_label">密码</string>
+</resources>
