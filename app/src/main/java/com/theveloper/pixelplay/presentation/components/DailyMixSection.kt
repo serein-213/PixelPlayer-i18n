@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -255,13 +256,13 @@ fun DailyMixHeader(thumbnails: ImmutableList<Song>) {
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "DAILY MIX",
+                    text = stringResource(R.string.daily_mix_title),
                     style = titleStyle,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
                     modifier = Modifier.padding(start = 1.dp),
-                    text = "Based on History",
+                    text = stringResource(R.string.daily_mix_based_on_history),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
@@ -387,7 +388,7 @@ private fun ViewAllDailyMixButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Check all of Daily Mix",
+                text = stringResource(R.string.daily_mix_check_all),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium
             )
