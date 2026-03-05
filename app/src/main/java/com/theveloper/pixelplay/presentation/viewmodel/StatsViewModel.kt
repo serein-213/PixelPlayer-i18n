@@ -30,6 +30,7 @@ class StatsViewModel @Inject constructor(
     data class StatsUiState(
         val selectedRange: StatsTimeRange = StatsTimeRange.WEEK,
         val isLoading: Boolean = true,
+        val isRefreshing: Boolean = false,
         val summary: PlaybackStatsSummary? = null,
         val availableRanges: List<StatsTimeRange> = StatsTimeRange.entries
     )
@@ -86,7 +87,9 @@ class StatsViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             if (showLoading) {
-                _uiState.update { it.copy(isLoading = true, selectedRange = range) }
+                _uiState.update { it.copy(isLoading = true, isRefreshing = false, selectedRange = range) }
+            } else {
+                _uiState.update { it.copy(isRefreshing = true, selectedRange = range) }
             }
             val summary = runCatching {
                 withContext(Dispatchers.IO) {
@@ -102,6 +105,7 @@ class StatsViewModel @Inject constructor(
             _uiState.update { current ->
                 current.copy(
                     isLoading = false,
+                    isRefreshing = false,
                     summary = summary.getOrNull(),
                     selectedRange = range
                 )
