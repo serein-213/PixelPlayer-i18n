@@ -397,19 +397,11 @@ class ConnectivityStateHolder @Inject constructor(
         if (normalizedName.isEmpty()) return true
 
         val localDeviceNames = buildSet {
-            getLocalBluetoothAdapterName()?.let(::add)
+            bluetoothAdapter?.name?.trim()?.takeIf { it.isNotEmpty() }?.let(::add)
             Build.MODEL.trim().takeIf { it.isNotEmpty() }?.let(::add)
         }
 
         return localDeviceNames.any { it.equals(normalizedName, ignoreCase = true) }
-    }
-
-    private fun getLocalBluetoothAdapterName(): String? {
-        if (!hasBluetoothConnectPermission()) return null
-
-        return runCatching {
-            bluetoothAdapter?.name?.trim()?.takeIf { it.isNotEmpty() }
-        }.getOrNull()
     }
 
     private fun hasBluetoothConnectPermission(): Boolean {
@@ -451,14 +443,12 @@ class ConnectivityStateHolder @Inject constructor(
     }
 
     private fun BluetoothDevice.toBluetoothAudioDeviceState(isConnected: Boolean): BluetoothAudioDeviceState? {
-        if (!hasBluetoothConnectPermission()) return null
-
-        val deviceName = runCatching { name?.trim().orEmpty() }.getOrDefault("")
+        val deviceName = name?.trim().orEmpty()
         if (deviceName.isEmpty() || isOwnBluetoothDeviceName(deviceName)) return null
 
         return BluetoothAudioDeviceState(
             name = deviceName,
-            address = runCatching { address?.trim()?.takeIf { it.isNotEmpty() } }.getOrNull(),
+            address = address?.trim()?.takeIf { it.isNotEmpty() },
             isConnected = isConnected,
             batteryPercent = resolveBatteryPercent(this)
         )
