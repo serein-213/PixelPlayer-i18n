@@ -1096,6 +1096,9 @@
     <string name="cloud_streaming_provider_netease_title">網易雲音樂</string>
     <string name="cloud_streaming_provider_netease_subtitle_connected">已連線 - 開啟儀表板</string>
     <string name="cloud_streaming_provider_netease_subtitle_sign_in">網易雲音樂 - 登入以串流</string>
+    <string name="cloud_streaming_provider_qqmusic_title">QQ 音樂</string>
+    <string name="cloud_streaming_provider_qqmusic_subtitle_connected">已連線 - 開啟儀表板</string>
+    <string name="cloud_streaming_provider_qqmusic_subtitle_sign_in">QQ 音樂 - 登入以串流</string>
     <string name="edit_transition_fade_out">淡出</string>
     <string name="edit_transition_fade_in">淡入</string>
     <string name="transition_snackbar_using_global_defaults">已使用全域預設</string>

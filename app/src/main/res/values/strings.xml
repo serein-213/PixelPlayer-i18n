@@ -1513,6 +1513,23 @@
     <string name="cloud_streaming_provider_netease_title">Netease Cloud Music</string>
     <string name="cloud_streaming_provider_netease_subtitle_connected">Connected - Open dashboard</string>
     <string name="cloud_streaming_provider_netease_subtitle_sign_in">Netease Cloud Music - Sign in to stream</string>
+    <string name="cloud_streaming_provider_qqmusic_title">QQ Music</string>
+    <string name="cloud_streaming_provider_qqmusic_subtitle_connected">Connected - Open dashboard</string>
+    <string name="cloud_streaming_provider_qqmusic_subtitle_sign_in">QQ Music - Sign in to stream</string>
+    <string name="cloud_streaming_netease_security_note">Security note: your password is entered only in NetEase web pages. PixelPlay stores session cookies (MUSIC_U) to sync your library.</string>
+    <string name="cloud_streaming_qqmusic_security_note">Security note: your password is entered only in QQ Music web pages. PixelPlay stores session cookies to sync your library.</string>
+    <string name="cloud_streaming_netease_login_exit_title">Exit NetEase login?</string>
+    <string name="cloud_streaming_qqmusic_login_exit_title">Exit QQ Music login?</string>
+    <string name="cloud_streaming_login_exit_text">You can come back later. Current page state will be discarded when closing.</string>
+    <string name="cloud_streaming_login_exit_confirm">Exit</string>
+    <string name="cloud_streaming_login_exit_dismiss">Stay</string>
+    <string name="cloud_streaming_netease_login_title">Login to NetEase</string>
+    <string name="cloud_streaming_qqmusic_login_title">Login to QQ Music</string>
+    <string name="cloud_streaming_login_saving">Saving...</string>
+    <string name="cloud_streaming_login_done">Done</string>
+    <string name="cloud_streaming_login_retry">Retry</string>
+    <string name="cloud_streaming_login_error_timeout">Page is taking too long to load. Use refresh or try another network.</string>
+    <string name="cloud_streaming_login_welcome">Welcome, %s!</string>
 
     
     <string name="accounts_title">Accounts</string>

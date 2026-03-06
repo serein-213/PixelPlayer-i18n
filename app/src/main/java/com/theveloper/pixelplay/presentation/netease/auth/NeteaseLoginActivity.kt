@@ -64,6 +64,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -140,7 +141,7 @@ fun NeteaseWebLoginScreen(
     LaunchedEffect(loginState) {
         when (val state = loginState) {
             is NeteaseLoginState.Success -> {
-                Toast.makeText(context, "Welcome, ${state.nickname}!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.cloud_streaming_login_welcome, state.nickname), Toast.LENGTH_SHORT).show()
                 onClose()
             }
 
@@ -200,11 +201,11 @@ fun NeteaseWebLoginScreen(
         AlertDialog(
             onDismissRequest = { showExitDialog = false },
             title = {
-                Text(text = "Exit NetEase login?", fontFamily = GoogleSansRounded)
+                Text(text = stringResource(R.string.cloud_streaming_netease_login_exit_title), fontFamily = GoogleSansRounded)
             },
             text = {
                 Text(
-                    text = "You can come back later. Current page state will be discarded when closing.",
+                    text = stringResource(R.string.cloud_streaming_login_exit_text),
                     fontFamily = GoogleSansRounded
                 )
             },
@@ -215,18 +216,18 @@ fun NeteaseWebLoginScreen(
                         onClose()
                     }
                 ) {
-                    Text(text = "Exit", fontFamily = GoogleSansRounded)
+                    Text(text = stringResource(R.string.cloud_streaming_login_exit_confirm), fontFamily = GoogleSansRounded)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showExitDialog = false }) {
-                    Text(text = "Stay", fontFamily = GoogleSansRounded)
+                    Text(text = stringResource(R.string.cloud_streaming_login_exit_dismiss), fontFamily = GoogleSansRounded)
                 }
             }
         )
     }
 
-    val appBarTitle = "Login to NetEase" //webUiState.title.ifBlank { "Login to NetEase" } add after translations
+    val appBarTitle = stringResource(R.string.cloud_streaming_netease_login_title)
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -356,7 +357,7 @@ fun NeteaseWebLoginScreen(
                         }
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = if (loginState is NeteaseLoginState.Loading) "Saving..." else "Done",
+                            text = if (loginState is NeteaseLoginState.Loading) stringResource(R.string.cloud_streaming_login_saving) else stringResource(R.string.cloud_streaming_login_done),
                             fontFamily = GoogleSansRounded,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -386,7 +387,7 @@ fun NeteaseWebLoginScreen(
                 )
             ) {
                 Text(
-                    text = "Security note: your password is entered only in NetEase web pages. PixelPlay stores session cookies (MUSIC_U) to sync your library.",
+                    text = stringResource(R.string.cloud_streaming_netease_security_note),
                     modifier = Modifier.padding(12.dp),
                     style = MaterialTheme.typography.bodySmall,
                     fontFamily = GoogleSansRounded,
@@ -395,7 +396,7 @@ fun NeteaseWebLoginScreen(
             }
 
             val effectiveError = when {
-                pageLoadTimeout -> "Page is taking too long to load. Use refresh or try another network."
+                pageLoadTimeout -> stringResource(R.string.cloud_streaming_login_error_timeout)
                 webUiState.lastError != null -> webUiState.lastError
                 else -> null
             }
@@ -430,7 +431,7 @@ fun NeteaseWebLoginScreen(
                                 webView?.reload()
                             }
                         ) {
-                            Text(text = "Retry", fontFamily = GoogleSansRounded)
+                            Text(text = stringResource(R.string.cloud_streaming_login_retry), fontFamily = GoogleSansRounded)
                         }
                     }
                 }

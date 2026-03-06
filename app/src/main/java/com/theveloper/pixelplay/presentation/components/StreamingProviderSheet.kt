@@ -205,14 +205,15 @@ fun StreamingProviderSheet(
                  ProviderCard(
                     modifier = Modifier.weight(1f),
                     iconPainter = painterResource(R.drawable.qq_music),
-                    title = "QQ",
-                    subtitle = if (isQqMusicLoggedIn)
-                        "✓ Connected"
-                    else
-                        "Sign in",
-                    containerColor = providerContainerColor,
-                    contentColor = providerContentColor,
-                    iconColor = providerContentColor,
+                    title = stringResource(R.string.cloud_streaming_provider_qqmusic_title),
+                    subtitle = if (isQqMusicLoggedIn) {
+                        stringResource(R.string.cloud_streaming_provider_qqmusic_subtitle_connected)
+                    } else {
+                        stringResource(R.string.cloud_streaming_provider_qqmusic_subtitle_sign_in)
+                    },
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    iconColor = MaterialTheme.colorScheme.onTertiaryContainer,
                     shape = qqCardShape,
                     onClick = {
                         if (isQqMusicLoggedIn) {

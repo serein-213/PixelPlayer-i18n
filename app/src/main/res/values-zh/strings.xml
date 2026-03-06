@@ -1448,9 +1448,26 @@
     <string name="cloud_streaming_provider_telegram_subtitle">从频道和聊天中播放</string>
     <string name="cloud_streaming_provider_gdrive_title">Google Drive</string>
     <string name="cloud_streaming_provider_gdrive_subtitle_coming_soon">即将推出</string>
-    <string name="cloud_streaming_provider_netease_title">网易云音乐</string>
-    <string name="cloud_streaming_provider_netease_subtitle_connected">已连接 - 打开仪表板</string>
-    <string name="cloud_streaming_provider_netease_subtitle_sign_in">网易云音乐 - 登录以串流</string>
+    <string name="cloud_streaming_provider_netease_title">网易云</string>
+    <string name="cloud_streaming_provider_netease_subtitle_connected">已连接</string>
+    <string name="cloud_streaming_provider_netease_subtitle_sign_in">点击登录</string>
+    <string name="cloud_streaming_provider_qqmusic_title">QQ音乐</string>
+    <string name="cloud_streaming_provider_qqmusic_subtitle_connected">已连接</string>
+    <string name="cloud_streaming_provider_qqmusic_subtitle_sign_in">点击登录</string>
+    <string name="cloud_streaming_netease_security_note">安全提示：您的密码仅在网易云音乐网页内输入。PixelPlay 仅存储会话 Cookie (MUSIC_U) 以同步您的音乐库。</string>
+    <string name="cloud_streaming_qqmusic_security_note">安全提示：您的密码仅在 QQ 音乐网页内输入。PixelPlay 仅存储会话 Cookie 以同步您的音乐库。</string>
+    <string name="cloud_streaming_netease_login_exit_title">退出网易云登录？</string>
+    <string name="cloud_streaming_qqmusic_login_exit_title">退出 QQ 音乐登录？</string>
+    <string name="cloud_streaming_login_exit_text">您可以稍后再回来。关闭后当前的页面状态将被丢弃。</string>
+    <string name="cloud_streaming_login_exit_confirm">退出</string>
+    <string name="cloud_streaming_login_exit_dismiss">留下</string>
+    <string name="cloud_streaming_netease_login_title">登录网易云</string>
+    <string name="cloud_streaming_qqmusic_login_title">登录 QQ 音乐</string>
+    <string name="cloud_streaming_login_saving">存储中...</string>
+    <string name="cloud_streaming_login_done">完成</string>
+    <string name="cloud_streaming_login_retry">重试</string>
+    <string name="cloud_streaming_login_error_timeout">页面加载时间过长。请刷新或尝试其他网络。</string>
+    <string name="cloud_streaming_login_welcome">欢迎回来，%s！</string>
 
     
     <string name="accounts_title">账户</string>
