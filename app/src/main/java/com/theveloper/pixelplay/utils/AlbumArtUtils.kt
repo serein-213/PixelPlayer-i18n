@@ -5,13 +5,19 @@ import android.content.Context
 import android.net.Uri
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileInputStream
 
 object AlbumArtUtils {
+
+    // P2-1: Dedicated app-level scope to replace GlobalScope.
+    // SupervisorJob ensures child failures don't cancel sibling coroutines.
+    // Appropriate for fire-and-forget tasks like cache cleanup that outlive any single component.
+    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     /**
      * Main function to get album art - tries multiple methods
@@ -182,8 +188,8 @@ object AlbumArtUtils {
         }
         noArtMarkerFile(appContext, songId).delete()
         
-        // Trigger async cache cleanup if needed (GlobalScope: intentional fire-and-forget app-level task)
-        GlobalScope.launch(Dispatchers.IO) {
+        // Trigger async cache cleanup if needed
+        appScope.launch {
             AlbumArtCacheManager.cleanCacheIfNeeded(appContext)
         }
 

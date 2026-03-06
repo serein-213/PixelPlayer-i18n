@@ -1390,6 +1390,9 @@ class MediaFileHttpServerService : Service() {
             startInProgress = false
         }
 
+        // P0-1: Cancel serviceScope to avoid coroutine leaks after service is destroyed.
+        serviceJob.cancel()
+
         val serverInstance = server
         server = null
 

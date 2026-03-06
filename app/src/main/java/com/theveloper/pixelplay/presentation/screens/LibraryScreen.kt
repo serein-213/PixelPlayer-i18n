@@ -432,7 +432,8 @@ fun LibraryScreen(
     val syncManager = playerViewModel.syncManager
     var isRefreshing by remember { mutableStateOf(false) }
     val isSyncing by syncManager.isSyncing.collectAsStateWithLifecycle(initialValue = false)
-    val syncProgress by syncManager.syncProgress.collectAsStateWithLifecycle(initialValue = SyncProgress())
+    // NOTE: syncProgress is NOT collected here. It is collected inside LibrarySyncOverlay
+    // to avoid triggering recomposition of the entire LibraryScreen on every progress tick.
 
     var showSongInfoBottomSheet by remember { mutableStateOf(false) }
     var showPlaylistBottomSheet by remember { mutableStateOf(false) }
@@ -500,7 +501,7 @@ fun LibraryScreen(
     val selectedSongIds by multiSelectionState.selectedSongIds.collectAsStateWithLifecycle()
     var showMultiSelectionSheet by remember { mutableStateOf(false) }
     var selectedAlbums by remember { mutableStateOf<List<Album>>(emptyList()) }
-    val selectedAlbumIds = selectedAlbums.map { it.id }.toSet()
+    val selectedAlbumIds = remember(selectedAlbums) { selectedAlbums.map { it.id }.toSet() }
     val isAlbumSelectionMode = selectedAlbums.isNotEmpty()
     var showAlbumMultiSelectionSheet by remember { mutableStateOf(false) }
 
@@ -608,18 +609,27 @@ fun LibraryScreen(
         }
     }
 
-    val hasSelectionInCurrentTab = when (currentTabId) {
-        LibraryTabId.PLAYLISTS -> isPlaylistSelectionMode
-        LibraryTabId.ALBUMS -> isAlbumSelectionMode
-        LibraryTabId.SONGS,
-        LibraryTabId.LIKED,
-        LibraryTabId.FOLDERS -> isSelectionMode
-        LibraryTabId.ARTISTS -> false
+    // P1-1: derivedStateOf ensures BackHandler only recomposes when the boolean RESULT changes,
+    // not every time any individual selection state emits.
+    val hasSelectionInCurrentTab by remember {
+        derivedStateOf {
+            when (currentTabId) {
+                LibraryTabId.PLAYLISTS -> isPlaylistSelectionMode
+                LibraryTabId.ALBUMS -> isAlbumSelectionMode
+                LibraryTabId.SONGS,
+                LibraryTabId.LIKED,
+                LibraryTabId.FOLDERS -> isSelectionMode
+                LibraryTabId.ARTISTS -> false
+            }
+        }
     }
-    val canHandleFolderBack =
-        currentTabId == LibraryTabId.FOLDERS &&
-            canNavigateBackInFolders &&
-            !isSortSheetVisible
+    val canHandleFolderBack by remember {
+        derivedStateOf {
+            currentTabId == LibraryTabId.FOLDERS &&
+                canNavigateBackInFolders &&
+                !isSortSheetVisible
+        }
+    }
 
     BackHandler(enabled = hasSelectionInCurrentTab || canHandleFolderBack) {
         when {
@@ -1537,34 +1547,9 @@ fun LibraryScreen(
                             isLibraryContentEmpty
                         )
                 ) {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(32.dp)
-                            ) {
-                                if (syncProgress.hasProgress && syncProgress.isRunning) {
-                                    // Show progress bar with file count when we have progress info
-                                    SyncProgressBar(
-                                        syncProgress = syncProgress,
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
-                                } else {
-                                    // Show indeterminate loading indicator when scanning starts
-                                    LoadingIndicator(modifier = Modifier.size(64.dp))
-                                    Spacer(modifier = Modifier.height(16.dp))
-                                    Text(
-                                        text = stringResource(R.string.syncing_library),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                }
-                            }
-                        }
-                    }
+                    // P1-1: LibrarySyncOverlay reads syncProgress internally so that sync progress
+                    // ticks don't trigger recomposition of the entire LibraryScreen.
+                    LibrarySyncOverlay(syncManager = syncManager)
                 }
             }
             //Grad box
@@ -1977,6 +1962,49 @@ private fun CompactLibraryPagerIndicator(
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary.copy(alpha = alpha))
             )
+        }
+    }
+}
+
+/**
+ * P1-1: Isolated sync/loading overlay composable.
+ *
+ * By collecting [SyncManager.syncProgress] HERE instead of in the parent [LibraryScreen],
+ * only this small subtree recomposes on every progress tick (e.g., file count updates
+ * during a library scan). The rest of [LibraryScreen] — including the Scaffold, pager,
+ * and all tab content — remains unaffected during sync.
+ */
+@Composable
+private fun LibrarySyncOverlay(syncManager: com.theveloper.pixelplay.data.worker.SyncManager) {
+    val syncProgress by syncManager.syncProgress
+        .collectAsStateWithLifecycle(initialValue = SyncProgress())
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(32.dp)
+            ) {
+                if (syncProgress.hasProgress && syncProgress.isRunning) {
+                    // Show progress bar with file count when we have progress info
+                    SyncProgressBar(
+                        syncProgress = syncProgress,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    // Show indeterminate loading indicator when scanning starts
+                    LoadingIndicator(modifier = Modifier.size(64.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = stringResource(R.string.syncing_library),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
         }
     }
 }

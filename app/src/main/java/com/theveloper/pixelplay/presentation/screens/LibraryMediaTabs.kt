@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 
 package com.theveloper.pixelplay.presentation.screens
 
@@ -55,6 +55,7 @@ import com.theveloper.pixelplay.presentation.viewmodel.PlaylistUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @androidx.annotation.OptIn(UnstableApi::class)
@@ -109,9 +110,12 @@ fun LibraryAlbumsTab(
         pendingAlbumSortScrollReset = false
     }
 
+    // P2-3: Debounce 150ms to avoid firing on every scroll frame.
+    // Reduced prefetchCount from 10 to 4 to lower memory/IO pressure.
     LaunchedEffect(albums, gridState, listState, isListView) {
         if (isListView) {
             snapshotFlow { listState.layoutInfo }
+                .debounce(150)
                 .distinctUntilChanged()
                 .collect { layoutInfo ->
                     val visibleItemsInfo = layoutInfo.visibleItemsInfo
@@ -119,7 +123,7 @@ fun LibraryAlbumsTab(
                         val lastVisibleItemIndex = visibleItemsInfo.last().index
                         val totalItemsCount = albums.size
                         val prefetchThreshold = 5
-                        val prefetchCount = 10
+                        val prefetchCount = 4 // Reduced from 10 to lower memory pressure
 
                         if (totalItemsCount > lastVisibleItemIndex + 1 && lastVisibleItemIndex + prefetchThreshold >= totalItemsCount - prefetchCount) {
                             val startIndexToPrefetch = lastVisibleItemIndex + 1
@@ -140,6 +144,7 @@ fun LibraryAlbumsTab(
                 }
         } else {
             snapshotFlow { gridState.layoutInfo }
+                .debounce(150)
                 .distinctUntilChanged()
                 .collect { layoutInfo ->
                     val visibleItemsInfo = layoutInfo.visibleItemsInfo
@@ -147,7 +152,7 @@ fun LibraryAlbumsTab(
                         val lastVisibleItemIndex = visibleItemsInfo.last().index
                         val totalItemsCount = albums.size
                         val prefetchThreshold = 5
-                        val prefetchCount = 10
+                        val prefetchCount = 4 // Reduced from 10 to lower memory pressure
 
                         if (totalItemsCount > lastVisibleItemIndex + 1 && lastVisibleItemIndex + prefetchThreshold >= totalItemsCount - prefetchCount) {
                             val startIndexToPrefetch = lastVisibleItemIndex + 1

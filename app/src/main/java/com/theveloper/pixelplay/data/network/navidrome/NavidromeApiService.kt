@@ -23,7 +23,12 @@ import javax.inject.Singleton
  * API Reference: http://www.subsonic.org/pages/api.jsp
  */
 @Singleton
-class NavidromeApiService @Inject constructor() {
+class NavidromeApiService @Inject constructor(
+    // P1-3: Inject singleton OkHttpClient instead of creating a new one.
+    // Use newBuilder() to apply Navidrome-specific timeouts while sharing the base
+    // connection pool and dispatcher, saving ~2-4MB RAM.
+    baseOkHttpClient: OkHttpClient
+) {
 
     companion object {
         private const val TAG = "NavidromeApi"
@@ -36,7 +41,7 @@ class NavidromeApiService @Inject constructor() {
     @Volatile
     private var credentials: NavidromeCredentials? = null
 
-    private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+    private val okHttpClient: OkHttpClient = baseOkHttpClient.newBuilder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS) // Longer timeout for streaming
         .writeTimeout(15, TimeUnit.SECONDS)

@@ -21,7 +21,10 @@ import javax.inject.Singleton
 
 @Singleton
 class QqMusicApiService @Inject constructor(
-    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
+    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
+    // P1-3: Inject singleton OkHttpClient instead of creating a new one.
+    // Use newBuilder() to share the base connection pool and dispatcher.
+    baseOkHttpClient: OkHttpClient
 ) {
 
     private val cookieStore: MutableMap<String, MutableList<Cookie>> = mutableMapOf()
@@ -29,7 +32,7 @@ class QqMusicApiService @Inject constructor(
     @Volatile
     private var persistedCookies: Map<String, String> = emptyMap()
 
-    private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+    private val okHttpClient: OkHttpClient = baseOkHttpClient.newBuilder()
         .cookieJar(object : CookieJar {
             override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
                 val host = url.host

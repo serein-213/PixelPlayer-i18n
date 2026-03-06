@@ -103,7 +103,7 @@ object AppModule {
     @Singleton
     @Provides
     fun providePixelPlayDatabase(@ApplicationContext context: Context): PixelPlayDatabase {
-        return Room.databaseBuilder(
+        val builder = Room.databaseBuilder(
             context.applicationContext,
             PixelPlayDatabase::class.java,
             "pixelplay_database"
@@ -143,8 +143,15 @@ object AppModule {
                     }
                 }
             )
-            .fallbackToDestructiveMigration(dropAllTables = true)
-            .build()
+
+        // P2-4: Only allow destructive migration in debug builds.
+        // In release, a migration bug will crash the app (revealing the problem)
+        // rather than silently wiping user data (playlists, favorites, statistics).
+        if (BuildConfig.DEBUG) {
+            builder.fallbackToDestructiveMigration(dropAllTables = true)
+        }
+
+        return builder.build()
     }
 
     @Singleton

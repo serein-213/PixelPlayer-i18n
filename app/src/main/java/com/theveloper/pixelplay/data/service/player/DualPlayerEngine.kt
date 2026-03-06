@@ -342,10 +342,13 @@ class DualPlayerEngine @Inject constructor(
                     // Cache miss — URI was not pre-resolved.
                     // Instead of just logging a warning, we perform a synchronous resolution inside runBlocking.
                     // This ensures the data source gets a valid URI, which fixes the "loop of death" or loading hang.
+                    // P1-2: Timeout of 3s to prevent indefinitely blocking the ExoPlayer playback thread.
                     Timber.tag("DualPlayerEngine").w("resolveDataSpec: cache MISS for $originalUri — performing synchronous resolution")
                     try {
                         val resolvedUri = runBlocking(Dispatchers.IO) {
-                            resolveCloudUri(uri)
+                            kotlinx.coroutines.withTimeout(3000L) {
+                                resolveCloudUri(uri)
+                            }
                         }
                         if (resolvedUri != uri) {
                             Timber.tag("DualPlayerEngine").i("resolveDataSpec: Synchronous resolution successful for $originalUri")
