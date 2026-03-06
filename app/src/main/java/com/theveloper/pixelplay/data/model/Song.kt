@@ -41,6 +41,7 @@ data class Song(
     val neteaseId: Long? = null, // Netease Cloud Music song ID
     val gdriveFileId: String? = null, // Google Drive file ID
     val qqMusicMid: String? = null, // QQ Music song MID
+    val navidromeId: String? = null, // Navidrome song ID
 ) : Parcelable {
     @IgnoredOnParcel
     private val defaultArtistDelimiters = listOf("/", ";", ",", "+", "&")
@@ -98,7 +99,8 @@ data class Song(
                 telegramChatId = null,
                 neteaseId = null,
                 gdriveFileId = null,
-                qqMusicMid = null
+                qqMusicMid = null,
+                navidromeId = null
             )
         }
     }

@@ -102,6 +102,9 @@ private fun SongEntity.toSongInternal(artists: List<ArtistRef>): Song {
         qqMusicMid = if (this.contentUriString.startsWith("qqmusic://")) {
             this.contentUriString.removePrefix("qqmusic://")
         } else null,
+        navidromeId = if (this.contentUriString.startsWith("navidrome://")) {
+            this.contentUriString.removePrefix("navidrome://")
+        } else null,
         mimeType = this.mimeType,
         bitrate = this.bitrate,
         sampleRate = this.sampleRate
