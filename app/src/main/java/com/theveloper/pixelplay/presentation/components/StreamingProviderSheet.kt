@@ -145,17 +145,37 @@ fun StreamingProviderSheet(
 
             Spacer(Modifier.height(12.dp))
 
-            // Navidrome Provider
+            // Subsonic Provider
             ProviderCard(
-                iconPainter = painterResource(R.drawable.ic_navidrome),
-                title = "Navidrome",
+                icon = null,
+                iconPainter = null,
+                title = "Subsonic",
+                customIconContent = {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_navidrome),
+                            contentDescription = "Navidrome",
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Icon(
+                            painter = painterResource(R.drawable.ic_subsonic),
+                            contentDescription = "Subsonic",
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                },
                 subtitle = if (isNavidromeLoggedIn)
-                    "✓ Connected"
+                    "✓ Connected (Navidrome/Airsonic)"
                 else
-                    "Sign in",
-                containerColor = Color(0xFFE3F2FD), // 改为淡蓝色 (Material Blue 50)
-                contentColor = Color(0xFF1565C0), // 使用 Navidrome 官方深蓝色
-                iconColor = Color.Unspecified, // 保持原始色彩
+                    "Connect Navidrome & others",
+                containerColor = Color(0xFFE3F2FD),
+                contentColor = Color(0xFF1565C0),
+                iconColor = Color.Unspecified,
                 shape = cardShape,
                 onClick = {
                     if (isNavidromeLoggedIn) {
@@ -230,6 +250,7 @@ private fun ProviderCard(
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
     iconPainter: Painter? = null,
+    customIconContent: @Composable (() -> Unit)? = null,
     title: String,
     subtitle: String,
     containerColor: Color,
@@ -256,7 +277,9 @@ private fun ProviderCard(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (iconPainter != null) {
+            if (customIconContent != null) {
+                customIconContent()
+            } else if (iconPainter != null) {
                 Icon(
                     painter = iconPainter,
                     contentDescription = null,
@@ -272,7 +295,7 @@ private fun ProviderCard(
                 )
             }
 
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(16.dp))
 
             Column {
                 Text(

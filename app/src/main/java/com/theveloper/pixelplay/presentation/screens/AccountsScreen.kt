@@ -21,9 +21,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.ui.draw.alpha
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -347,15 +350,23 @@ private fun ConnectedAccountCard(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Surface(
-                    shape = AbsoluteSmoothCornerShape(16.dp, 60),
-                    color = palette.iconContainer
-                ) {
+                if (account.service == ExternalServiceAccount.NAVIDROME) {
                     ServiceIcon(
                         service = account.service,
                         tint = palette.iconTint,
-                        modifier = Modifier.padding(10.dp).size(20.dp)
+                        modifier = Modifier.width(48.dp).height(40.dp) // Narrower width for closer stack
                     )
+                } else {
+                    Surface(
+                        shape = AbsoluteSmoothCornerShape(16.dp, 60),
+                        color = palette.iconContainer
+                    ) {
+                        ServiceIcon(
+                            service = account.service,
+                            tint = palette.iconTint,
+                            modifier = Modifier.padding(10.dp).size(20.dp)
+                        )
+                    }
                 }
                 Spacer(Modifier.size(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
@@ -612,12 +623,29 @@ private fun accountIcon(service: ExternalServiceAccount): ImageVector {
 @Composable
 private fun ServiceIcon(service: ExternalServiceAccount, tint: Color, modifier: Modifier = Modifier) {
     if (service == ExternalServiceAccount.NAVIDROME) {
-        Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.ic_navidrome),
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = modifier
-        )
+        Box(
+            modifier = modifier,
+            contentAlignment = Alignment.CenterStart
+        ) {
+            // Subsonic icon (Bottom) - No outer container
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_subsonic),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .size(32.dp)
+            )
+            
+            // Navidrome icon (Top) - Closer horizontal offset, no outer container
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_navidrome),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .size(32.dp)
+                    .offset(x = 16.dp) // Closer overlap offset (was 24dp)
+            )
+        }
     } else {
         Icon(
             imageVector = accountIcon(service),
@@ -634,7 +662,7 @@ private fun serviceTitle(context: Context, service: ExternalServiceAccount): Str
         ExternalServiceAccount.GOOGLE_DRIVE -> "Google Drive"
         ExternalServiceAccount.NETEASE -> "Netease"
         ExternalServiceAccount.QQ_MUSIC -> "QQ Music"
-        ExternalServiceAccount.NAVIDROME -> "Navidrome"
+        ExternalServiceAccount.NAVIDROME -> "Subsonic"
     }
 }
 

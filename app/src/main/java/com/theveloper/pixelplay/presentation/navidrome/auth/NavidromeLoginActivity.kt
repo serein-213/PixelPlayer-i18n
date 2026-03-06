@@ -124,7 +124,7 @@ fun NavidromeLoginScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Connect Navidrome",
+                        text = "Subsonic / Navidrome",
                         fontFamily = GoogleSansRounded,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -162,26 +162,55 @@ fun NavidromeLoginScreen(
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Icon
-            androidx.compose.material3.Surface(
-                shape = CircleShape,
-                color = androidx.compose.ui.graphics.Color.White,
-                modifier = Modifier.size(72.dp)
+            // Protocol Icons (Tiled/Horizontal)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        imageVector = androidx.compose.ui.graphics.vector.ImageVector.vectorResource(id = R.drawable.ic_navidrome),
-                        contentDescription = null,
-                        tint = androidx.compose.ui.graphics.Color.Unspecified,
-                        modifier = Modifier.size(48.dp)
-                    )
+                // Navidrome Icon
+                androidx.compose.material3.Surface(
+                    shape = CircleShape,
+                    color = androidx.compose.ui.graphics.Color.White,
+                    modifier = Modifier.size(64.dp),
+                    tonalElevation = 2.dp,
+                    shadowElevation = 2.dp
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = androidx.compose.ui.graphics.vector.ImageVector.vectorResource(id = R.drawable.ic_navidrome),
+                            contentDescription = "Navidrome",
+                            tint = androidx.compose.ui.graphics.Color.Unspecified,
+                            modifier = Modifier.size(42.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(24.dp))
+
+                // Subsonic Icon
+                androidx.compose.material3.Surface(
+                    shape = CircleShape,
+                    color = androidx.compose.ui.graphics.Color.White,
+                    modifier = Modifier.size(64.dp),
+                    tonalElevation = 2.dp,
+                    shadowElevation = 2.dp
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = androidx.compose.ui.graphics.vector.ImageVector.vectorResource(id = R.drawable.ic_subsonic),
+                            contentDescription = "Subsonic",
+                            tint = androidx.compose.ui.graphics.Color.Unspecified,
+                            modifier = Modifier.size(42.dp)
+                        )
+                    }
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Navidrome / Subsonic",
+                text = "Subsonic / Navidrome",
                 style = MaterialTheme.typography.headlineSmall,
                 fontFamily = GoogleSansRounded,
                 fontWeight = FontWeight.Bold,
@@ -205,8 +234,7 @@ fun NavidromeLoginScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Navidrome is a self-hosted music server compatible with Subsonic API. " +
-                        "Enter your server URL, username and password to connect.",
+                    text = "Supports Navidrome, Airsonic, Gonic, Ampache and other servers compatible with the Subsonic API.",
                     modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
