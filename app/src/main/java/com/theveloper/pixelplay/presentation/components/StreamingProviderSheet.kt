@@ -54,6 +54,8 @@ fun StreamingProviderSheet(
     )
 ) {
     val context = LocalContext.current
+    val providerContainerColor = MaterialTheme.colorScheme.secondaryContainer
+    val providerContentColor = MaterialTheme.colorScheme.onSecondaryContainer
 
     val cardShape = AbsoluteSmoothCornerShape(
         cornerRadiusTR = 20.dp, cornerRadiusTL = 20.dp,
@@ -116,9 +118,9 @@ fun StreamingProviderSheet(
                 icon = Icons.Rounded.Cloud,
                 title = "Telegram",
                 subtitle = "Stream from channels & chats",
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                iconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                containerColor = providerContainerColor,
+                contentColor = providerContentColor,
+                iconColor = providerContentColor,
                 shape = cardShape,
                 onClick = {
                     context.startActivity(Intent(context, TelegramLoginActivity::class.java))
@@ -134,9 +136,9 @@ fun StreamingProviderSheet(
                 iconPainter = painterResource(R.drawable.rounded_drive_export_24),
                 title = "Google Drive",
                 subtitle = "Coming soon",
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-                contentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                iconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                containerColor = providerContainerColor,
+                contentColor = providerContentColor,
+                iconColor = providerContentColor,
                 shape = cardShape,
                 enabled = false,
                 onClick = { }
@@ -147,34 +149,15 @@ fun StreamingProviderSheet(
             // Subsonic Provider
             ProviderCard(
                 icon = null,
-                iconPainter = null,
+                iconPainter = painterResource(R.drawable.ic_navidrome_md3),
                 title = "Subsonic",
-                customIconContent = {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_navidrome),
-                            contentDescription = "Navidrome",
-                            tint = Color.Unspecified,
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Icon(
-                            painter = painterResource(R.drawable.ic_subsonic),
-                            contentDescription = "Subsonic",
-                            tint = Color.Unspecified,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                },
                 subtitle = if (isNavidromeLoggedIn)
                     "✓ Connected (Navidrome/Airsonic)"
                 else
                     "Connect Navidrome & others",
-                containerColor = Color(0xFFE3F2FD),
-                contentColor = Color(0xFF1565C0),
-                iconColor = Color.Unspecified,
+                containerColor = providerContainerColor,
+                contentColor = providerContentColor,
+                iconColor = providerContentColor,
                 shape = cardShape,
                 onClick = {
                     if (isNavidromeLoggedIn) {
@@ -202,9 +185,9 @@ fun StreamingProviderSheet(
                         "✓ Connected"
                     else
                         "Sign in",
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                    iconColor = MaterialTheme.colorScheme.onErrorContainer,
+                    containerColor = providerContainerColor,
+                    contentColor = providerContentColor,
+                    iconColor = providerContentColor,
                     shape = neteaseCardShape,
                     onClick = {
                         if (isNeteaseLoggedIn) {
@@ -225,9 +208,9 @@ fun StreamingProviderSheet(
                         "✓ Connected"
                     else
                         "Sign in",
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                    iconColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    containerColor = providerContainerColor,
+                    contentColor = providerContentColor,
+                    iconColor = providerContentColor,
                     shape = qqCardShape,
                     onClick = {
                         if (isQqMusicLoggedIn) {

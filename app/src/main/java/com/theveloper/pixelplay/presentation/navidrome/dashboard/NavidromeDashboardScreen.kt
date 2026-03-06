@@ -16,12 +16,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.Logout
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.CloudQueue
 import androidx.compose.material.icons.rounded.CloudSync
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.MusicNote
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -65,39 +63,29 @@ fun NavidromeDashboardScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Navidrome",
+                        "Subsonic",
                         fontFamily = GoogleSansRounded,
                         fontWeight = FontWeight.Bold
                     )
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                ),
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    // Sync button
-                    IconButton(
-                        onClick = { viewModel.syncAllPlaylistsAndSongs() },
-                        enabled = !isSyncing
+                    FilledTonalIconButton(
+                        onClick = onBack,
+                        colors = IconButtonDefaults.filledTonalIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        )
                     ) {
                         Icon(
-                            Icons.Rounded.CloudSync,
-                            contentDescription = "Sync All Playlists",
-                            tint = MaterialTheme.colorScheme.primary
+                            Icons.AutoMirrored.Rounded.ArrowBack,
+                            contentDescription = "Back"
                         )
                     }
-                    // Logout button
-                    IconButton(onClick = {
-                        viewModel.logout()
-                        onBack()
-                    }) {
-                        Icon(
-                            Icons.AutoMirrored.Rounded.Logout,
-                            contentDescription = "Logout"
-                        )
-                    }
-                }
+                },
+                actions = {}
             )
         }
     ) { paddingValues ->
@@ -110,6 +98,10 @@ fun NavidromeDashboardScreen(
             onSyncPlaylist = { viewModel.syncPlaylistSongs(it) },
             onDeletePlaylist = { viewModel.deletePlaylist(it) },
             onLoadPlaylistSongs = { viewModel.loadPlaylistSongs(it) },
+            onLogout = {
+                viewModel.logout()
+                onBack()
+            },
             cardShape = cardShape,
             paddingValues = paddingValues
         )
@@ -126,6 +118,7 @@ private fun DashboardContent(
     onSyncPlaylist: (String) -> Unit,
     onDeletePlaylist: (String) -> Unit,
     onLoadPlaylistSongs: (String) -> Unit,
+    onLogout: () -> Unit,
     cardShape: AbsoluteSmoothCornerShape,
     paddingValues: PaddingValues
 ) {
@@ -207,7 +200,9 @@ private fun DashboardContent(
                         )
                     }
                     Spacer(Modifier.width(16.dp))
-                    Column {
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
                         Text(
                             text = name,
                             style = MaterialTheme.typography.titleMedium,
@@ -224,6 +219,13 @@ private fun DashboardContent(
                 }
             }
         }
+
+        SubsonicMenuCard(
+            isSyncing = isSyncing,
+            onSyncAll = onSyncAll,
+            onLogout = onLogout,
+            cardShape = cardShape
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -304,6 +306,92 @@ private fun DashboardContent(
                         cardShape = cardShape,
                         isSyncing = isSyncing
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SubsonicMenuCard(
+    isSyncing: Boolean,
+    onSyncAll: () -> Unit,
+    onLogout: () -> Unit,
+    cardShape: AbsoluteSmoothCornerShape
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = cardShape,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Quick actions",
+                style = MaterialTheme.typography.titleMedium,
+                fontFamily = GoogleSansRounded,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Manage Navidrome, Airsonic and other Subsonic-compatible servers.",
+                style = MaterialTheme.typography.bodySmall,
+                fontFamily = GoogleSansRounded,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                FilledTonalButton(
+                    onClick = onSyncAll,
+                    enabled = !isSyncing,
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                ) {
+                    if (isSyncing) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(18.dp),
+                            strokeWidth = 2.dp,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Syncing", fontFamily = GoogleSansRounded)
+                    } else {
+                        Icon(
+                            Icons.Rounded.CloudSync,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Sync library", fontFamily = GoogleSansRounded)
+                    }
+                }
+
+                FilledTonalButton(
+                    onClick = onLogout,
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Rounded.Logout,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Disconnect", fontFamily = GoogleSansRounded)
                 }
             }
         }
@@ -447,25 +535,33 @@ private fun PlaylistCard(
                 )
             }
 
-            // Sync button
-            IconButton(
+            FilledTonalIconButton(
                 onClick = onSyncClick,
-                enabled = !isSyncing
+                enabled = !isSyncing,
+                colors = IconButtonDefaults.filledTonalIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             ) {
                 Icon(
                     Icons.Rounded.Sync,
                     contentDescription = "Sync",
-                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(20.dp)
                 )
             }
 
-            // Delete button
-            IconButton(onClick = onDeleteClick) {
+            Spacer(Modifier.width(8.dp))
+
+            FilledTonalIconButton(
+                onClick = onDeleteClick,
+                colors = IconButtonDefaults.filledTonalIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                )
+            ) {
                 Icon(
                     Icons.Rounded.Delete,
                     contentDescription = "Remove",
-                    tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
                     modifier = Modifier.size(20.dp)
                 )
             }

@@ -25,6 +25,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.CloudQueue
+import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.Button
@@ -32,12 +34,15 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -86,7 +91,7 @@ class NavidromeLoginActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun NavidromeLoginScreen(
     viewModel: NavidromeLoginViewModel = hiltViewModel(),
@@ -117,6 +122,7 @@ fun NavidromeLoginScreen(
     }
 
     val isLoading = loginState is NavidromeLoginState.Loading
+    val inputShape = AbsoluteSmoothCornerShape(18.dp, 60)
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -244,75 +250,133 @@ fun NavidromeLoginScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Server URL Input
-            OutlinedTextField(
-                value = serverUrl,
-                onValueChange = { serverUrl = it },
-                label = { Text("Server URL", fontFamily = GoogleSansRounded) },
-                placeholder = { Text("https://music.example.com", fontFamily = GoogleSansRounded) },
-                singleLine = true,
-                enabled = !isLoading,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Uri,
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = AbsoluteSmoothCornerShape(28.dp, 60),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(18.dp)
+                ) {
+                    Text(
+                        text = "Connection details",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontFamily = GoogleSansRounded,
+                        fontWeight = FontWeight.Bold
+                    )
 
-            Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
-            // Username Input
-            OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
-                label = { Text("Username", fontFamily = GoogleSansRounded) },
-                singleLine = true,
-                enabled = !isLoading,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
+                    Text(
+                        text = "Enter your server URL and account credentials.",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontFamily = GoogleSansRounded,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
 
-            Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(18.dp))
 
-            // Password Input
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Password", fontFamily = GoogleSansRounded) },
-                singleLine = true,
-                enabled = !isLoading,
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
-                        if (serverUrl.isNotBlank() && username.isNotBlank() && password.isNotBlank()) {
-                            viewModel.login(serverUrl, username, password)
-                        }
-                    }
-                ),
-                trailingIcon = {
-                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                        Icon(
-                            imageVector = if (passwordVisible) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
-                            contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                    ExpressiveLoginField(
+                        value = serverUrl,
+                        onValueChange = { serverUrl = it },
+                        label = "Server URL",
+                        placeholder = "https://music.example.com",
+                        supportingText = "Use the full base address of your server.",
+                        leadingIcon = Icons.Rounded.CloudQueue,
+                        enabled = !isLoading,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Uri,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        ),
+                        shape = inputShape
+                    )
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    ExpressiveLoginField(
+                        value = username,
+                        onValueChange = { username = it },
+                        label = "Username",
+                        placeholder = "admin",
+                        supportingText = "This is your Subsonic or Navidrome account name.",
+                        leadingIcon = Icons.Rounded.Person,
+                        enabled = !isLoading,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        ),
+                        shape = inputShape
+                    )
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    ExpressiveLoginField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = "Password",
+                        placeholder = "Enter password",
+                        supportingText = "App password also works if your server supports it.",
+                        leadingIcon = Icons.Rounded.Lock,
+                        enabled = !isLoading,
+                        visualTransformation = if (passwordVisible) {
+                            VisualTransformation.None
+                        } else {
+                            PasswordVisualTransformation()
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.clearFocus()
+                                if (serverUrl.isNotBlank() && username.isNotBlank() && password.isNotBlank()) {
+                                    viewModel.login(serverUrl, username, password)
+                                }
+                            }
+                        ),
+                        trailingContent = {
+                            IconButton(
+                                onClick = { passwordVisible = !passwordVisible },
+                                enabled = !isLoading
+                            ) {
+                                Icon(
+                                    imageVector = if (passwordVisible) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
+                                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                                )
+                            }
+                        },
+                        shape = inputShape
+                    )
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    FilledTonalButton(
+                        onClick = {
+                            if (serverUrl.isBlank()) {
+                                serverUrl = "https://"
+                            }
+                        },
+                        enabled = !isLoading && serverUrl.isBlank(),
+                        shape = inputShape,
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
+                    ) {
+                        Text(
+                            text = "Prefill https://",
+                            fontFamily = GoogleSansRounded,
+                            fontWeight = FontWeight.Medium
                         )
                     }
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+                }
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -354,6 +418,72 @@ fun NavidromeLoginScreen(
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
+}
+
+@Composable
+private fun ExpressiveLoginField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    placeholder: String,
+    supportingText: String,
+    leadingIcon: ImageVector,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    trailingContent: @Composable (() -> Unit)? = null,
+    shape: AbsoluteSmoothCornerShape
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier.fillMaxWidth(),
+        enabled = enabled,
+        singleLine = true,
+        shape = shape,
+        textStyle = MaterialTheme.typography.bodyLarge.copy(
+            fontFamily = GoogleSansRounded
+        ),
+        label = {
+            Text(
+                text = label,
+                fontFamily = GoogleSansRounded
+            )
+        },
+        placeholder = {
+            Text(
+                text = placeholder,
+                fontFamily = GoogleSansRounded
+            )
+        },
+        supportingText = {
+            Text(
+                text = supportingText,
+                fontFamily = GoogleSansRounded
+            )
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = leadingIcon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        },
+        trailingIcon = trailingContent,
+        visualTransformation = visualTransformation,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = Color.Transparent,
+            disabledBorderColor = Color.Transparent
+        )
+    )
 }
 
 @Composable
