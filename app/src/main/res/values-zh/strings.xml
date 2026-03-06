@@ -1451,6 +1451,15 @@
     <string name="cloud_streaming_provider_netease_title">网易云音乐</string>
     <string name="cloud_streaming_provider_netease_subtitle_connected">已连接 - 打开仪表板</string>
     <string name="cloud_streaming_provider_netease_subtitle_sign_in">网易云音乐 - 登录以串流</string>
+    <string name="cloud_streaming_provider_qq_title">QQ 音乐</string>
+    <string name="cloud_streaming_provider_qq_subtitle_connected">已连接 - 打开仪表板</string>
+    <string name="cloud_streaming_provider_qq_subtitle_sign_in">QQ 音乐 - 登录以串流</string>
+    <string name="cloud_streaming_provider_navidrome_title">Subsonic / Navidrome</string>
+    <string name="cloud_streaming_provider_navidrome_subtitle_connected">已连接 - 打开仪表板</string>
+    <string name="cloud_streaming_provider_navidrome_subtitle_sign_in">Subsonic - 云端串流</string>
+
+    <string name="qq_music">QQ 音乐</string>
+    <string name="navidrome">Navidrome</string>
 
     
     <string name="accounts_title">账户</string>

@@ -36,6 +36,9 @@ import com.theveloper.pixelplay.presentation.components.SmartImage
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
 
+import androidx.compose.ui.res.stringResource
+import com.theveloper.pixelplay.R
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QqMusicDashboardScreen(
@@ -61,7 +64,7 @@ fun QqMusicDashboardScreen(
     val syncMessage = when (val s = syncState) {
         is SyncState.Success -> s.message
         is SyncState.Error -> "Error: ${s.message}"
-        is SyncState.Syncing -> "Syncing…"
+        is SyncState.Syncing -> stringResource(R.string.sync_in_progress)
         else -> null
     }
 
@@ -77,14 +80,14 @@ fun QqMusicDashboardScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "QQ Music",
+                        stringResource(R.string.qq_music),
                         fontFamily = GoogleSansRounded,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
@@ -94,7 +97,7 @@ fun QqMusicDashboardScreen(
                     ) {
                         Icon(
                             Icons.Rounded.CloudSync,
-                            contentDescription = "Sync All Playlists",
+                            contentDescription = stringResource(R.string.sync_status_playlists),
                             tint = MaterialTheme.colorScheme.tertiary
                         )
                     }

@@ -41,6 +41,7 @@ import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.presentation.components.SmartImage
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -65,14 +66,14 @@ fun NavidromeDashboardScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Navidrome",
+                        stringResource(R.string.navidrome),
                         fontFamily = GoogleSansRounded,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
@@ -83,7 +84,7 @@ fun NavidromeDashboardScreen(
                     ) {
                         Icon(
                             Icons.Rounded.CloudSync,
-                            contentDescription = "Sync All Playlists",
+                            contentDescription = stringResource(R.string.sync_status_playlists),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -94,7 +95,7 @@ fun NavidromeDashboardScreen(
                     }) {
                         Icon(
                             Icons.AutoMirrored.Rounded.Logout,
-                            contentDescription = "Logout"
+                            contentDescription = stringResource(R.string.accounts_log_out)
                         )
                     }
                 }

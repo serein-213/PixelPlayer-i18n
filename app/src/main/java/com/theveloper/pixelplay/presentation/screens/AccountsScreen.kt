@@ -48,6 +48,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -216,6 +219,8 @@ fun AccountsScreen(
                             painterResource(R.drawable.qq_music)
                         } else if (account.service == ExternalServiceAccount.TELEGRAM) {
                             painterResource(R.drawable.telegram)
+                        } else if (account.service == ExternalServiceAccount.NAVIDROME) {
+                            painterResource(R.drawable.ic_navidrome)
                         } else null
                     )
                 }
@@ -361,11 +366,20 @@ private fun ConnectedAccountCard(
                         shape = AbsoluteSmoothCornerShape(16.dp, 60),
                         color = palette.iconContainer
                     ) {
-                        ServiceIcon(
-                            service = account.service,
-                            tint = palette.iconTint,
-                            modifier = Modifier.padding(10.dp).size(20.dp)
-                        )
+                        if (painter != null) {
+                            Icon(
+                                painter = painter,
+                                contentDescription = null,
+                                tint = palette.iconTint,
+                                modifier = Modifier.padding(10.dp).size(20.dp)
+                            )
+                        } else {
+                            ServiceIcon(
+                                service = account.service,
+                                tint = palette.iconTint,
+                                modifier = Modifier.padding(10.dp).size(20.dp)
+                            )
+                        }
                     }
                 }
                 Spacer(Modifier.size(12.dp))
@@ -517,6 +531,7 @@ private fun EmptyAccountsCard(
                     ExternalServiceAccount.NETEASE -> painterResource(R.drawable.netease_cloud_music_logo_icon_206716__1_)
                     ExternalServiceAccount.QQ_MUSIC -> painterResource(R.drawable.qq_music)
                     ExternalServiceAccount.TELEGRAM -> painterResource(R.drawable.telegram)
+                    ExternalServiceAccount.NAVIDROME -> painterResource(R.drawable.ic_navidrome)
                     else -> null
                 }
                 FilledTonalButton(
@@ -533,7 +548,8 @@ private fun EmptyAccountsCard(
                         Icon(
                             painter = painter,
                             contentDescription = null,
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(18.dp),
+                            tint = Color.Unspecified
                         )
                     } else {
                         Icon(

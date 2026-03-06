@@ -149,7 +149,7 @@ fun StreamingProviderSheet(
             ProviderCard(
                 icon = null,
                 iconPainter = null,
-                title = "Subsonic",
+                title = stringResource(R.string.cloud_streaming_provider_navidrome_title),
                 customIconContent = {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -170,9 +170,9 @@ fun StreamingProviderSheet(
                     }
                 },
                 subtitle = if (isNavidromeLoggedIn)
-                    "✓ Connected (Navidrome/Airsonic)"
+                    stringResource(R.string.cloud_streaming_provider_navidrome_subtitle_connected)
                 else
-                    "Connect Navidrome & others",
+                    stringResource(R.string.cloud_streaming_provider_navidrome_subtitle_sign_in),
                 containerColor = Color(0xFFE3F2FD),
                 contentColor = Color(0xFF1565C0),
                 iconColor = Color.Unspecified,
@@ -222,11 +222,11 @@ fun StreamingProviderSheet(
                  ProviderCard(
                     modifier = Modifier.weight(1f),
                     iconPainter = painterResource(R.drawable.qq_music),
-                    title = "QQ",
+                    title = stringResource(R.string.cloud_streaming_provider_qq_title),
                     subtitle = if (isQqMusicLoggedIn)
-                        "✓ Connected"
+                        stringResource(R.string.cloud_streaming_provider_qq_subtitle_connected)
                     else
-                        "Sign in",
+                        stringResource(R.string.cloud_streaming_provider_qq_subtitle_sign_in),
                     containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                     contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
                     iconColor = MaterialTheme.colorScheme.onTertiaryContainer,

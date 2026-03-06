@@ -191,8 +191,8 @@ class AccountsViewModel @Inject constructor(
                             ?: "Subsonic account connected",
                         syncedContentLabel = formatCount(
                             count = navidromePlaylistCount,
-                            singular = "synced playlist",
-                            plural = "synced playlists"
+                            singularResId = R.string.accounts_synced_playlist,
+                            pluralResId = R.string.accounts_synced_playlists
                         ),
                         isLoggingOut = ExternalServiceAccount.NAVIDROME in activeLogouts
                     )
