@@ -26,9 +26,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         PlaylistEntity::class,
         PlaylistSongEntity::class,
         QqMusicSongEntity::class,
-        QqMusicPlaylistEntity::class
+        QqMusicPlaylistEntity::class,
+        NavidromeSongEntity::class,
+        NavidromePlaylistEntity::class
     ],
-    version = 28, // Incremented for QQ Music support
+    version = 29, // Incremented for Navidrome support
 
     exportSchema = true
 )
@@ -45,6 +47,7 @@ abstract class PixelPlayDatabase : RoomDatabase() {
     abstract fun gdriveDao(): GDriveDao
     abstract fun localPlaylistDao(): LocalPlaylistDao
     abstract fun qqmusicDao(): QqMusicDao
+    abstract fun navidromeDao(): NavidromeDao
 
     companion object {
         // Gap-bridging no-op migrations for missing version ranges.
@@ -748,6 +751,55 @@ abstract class PixelPlayDatabase : RoomDatabase() {
                         date_added INTEGER NOT NULL
                     )
                 """.trimIndent())
+            }
+        }
+
+        /**
+         * Add Navidrome/Subsonic support tables.
+         */
+        val MIGRATION_28_29 = object : Migration(28, 29) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS navidrome_playlists (
+                        id TEXT NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        comment TEXT,
+                        owner TEXT,
+                        cover_art_id TEXT,
+                        song_count INTEGER NOT NULL,
+                        duration INTEGER NOT NULL,
+                        public INTEGER NOT NULL,
+                        last_sync_time INTEGER NOT NULL
+                    )
+                """.trimIndent())
+
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS navidrome_songs (
+                        id TEXT NOT NULL PRIMARY KEY,
+                        navidrome_id TEXT NOT NULL,
+                        playlist_id INTEGER NOT NULL,
+                        title TEXT NOT NULL,
+                        artist TEXT NOT NULL,
+                        artist_id TEXT,
+                        album TEXT NOT NULL,
+                        album_id TEXT,
+                        cover_art_id TEXT,
+                        duration INTEGER NOT NULL,
+                        track_number INTEGER NOT NULL,
+                        disc_number INTEGER NOT NULL,
+                        year INTEGER NOT NULL,
+                        genre TEXT,
+                        bitRate INTEGER,
+                        mime_type TEXT,
+                        suffix TEXT,
+                        path TEXT NOT NULL,
+                        date_added INTEGER NOT NULL
+                    )
+                """.trimIndent())
+
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_navidrome_songs_navidrome_id ON navidrome_songs(navidrome_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_navidrome_songs_playlist_id ON navidrome_songs(playlist_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_navidrome_songs_playlist_id_date_added ON navidrome_songs(playlist_id, date_added)")
             }
         }
     }

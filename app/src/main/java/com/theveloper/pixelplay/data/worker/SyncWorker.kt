@@ -21,6 +21,7 @@ import com.theveloper.pixelplay.data.database.NeteaseDao
 import com.theveloper.pixelplay.data.database.SongArtistCrossRef
 import com.theveloper.pixelplay.data.database.SongEntity
 import com.theveloper.pixelplay.data.database.TelegramDao // Added
+import com.theveloper.pixelplay.data.navidrome.NavidromeRepository
 import com.theveloper.pixelplay.data.media.AudioMetadataReader
 import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
@@ -66,7 +67,8 @@ constructor(
         private val userPreferencesRepository: UserPreferencesRepository,
         private val lyricsRepository: LyricsRepository,
         private val telegramDao: TelegramDao,
-        private val neteaseDao: NeteaseDao
+        private val neteaseDao: NeteaseDao,
+        private val navidromeRepository: NavidromeRepository
 ) : CoroutineWorker(appContext, workerParams) {
 
     private val contentResolver: ContentResolver = appContext.contentResolver
@@ -192,7 +194,8 @@ constructor(
                         .i("Fetched ${songsToInsert.size} new/modified songs from MediaStore.")
 
                     // --- PROCESSING PHASE ---
-                    if (songsToInsert.isNotEmpty()) {
+                    val anySongsFetched = songsToInsert.isNotEmpty()
+                    if (anySongsFetched) {
 
                         val allExistingArtists =
                                 if (syncMode == SyncMode.REBUILD) {
@@ -254,121 +257,81 @@ constructor(
                         userPreferencesRepository.markDirectoryRulesVersionApplied(
                             directoryRulesVersion
                         )
-
-                        // Count total songs for the output
-                        val totalSongs = musicDao.getSongCount().first()
-
-                        // --- LRC SCANNING PHASE ---
-                        val autoScanLrc = userPreferencesRepository.autoScanLrcFilesFlow.first()
-                        if (autoScanLrc) {
-                            Timber.tag(TAG).i("Auto-scan LRC files enabled. Starting scan phase in chunks...")
-
-                            // Get ALL media store song IDs to scan in manageable chunks
-                            val mediaStoreSongIds = musicDao.getAllMediaStoreSongIds()
-                            val totalToScan = mediaStoreSongIds.size
-                            var totalScannedCount = 0
-                            
-                            mediaStoreSongIds.chunked(1000).forEach { idBatch ->
-                                val batchEntities = musicDao.getSongsByIdsListSimple(idBatch)
-                                val batchSongs = batchEntities.map { entity ->
-                                    Song(
-                                        id = entity.id.toString(),
-                                        title = entity.title,
-                                        artist = entity.artistName,
-                                        artistId = entity.artistId,
-                                        album = entity.albumName,
-                                        albumId = entity.albumId,
-                                        path = entity.filePath,
-                                        contentUriString = entity.contentUriString,
-                                        albumArtUriString = entity.albumArtUriString,
-                                        duration = entity.duration,
-                                        lyrics = entity.lyrics,
-                                        dateAdded = entity.dateAdded,
-                                        trackNumber = entity.trackNumber,
-                                        year = entity.year,
-                                        mimeType = entity.mimeType,
-                                        bitrate = entity.bitrate,
-                                        sampleRate = entity.sampleRate
-                                    )
-                                }
-                                
-                                val batchScannedCount = lyricsRepository.scanAndAssignLocalLrcFiles(batchSongs) { current, total ->
-                                    // Progress within the current batch
-                                    val overallCurrent = totalScannedCount + current
-                                    setProgress(
-                                        workDataOf(
-                                            PROGRESS_CURRENT to overallCurrent,
-                                            PROGRESS_TOTAL to totalToScan,
-                                            PROGRESS_PHASE to SyncProgress.SyncPhase.SCANNING_LRC.ordinal
-                                        )
-                                    )
-                                }
-                                totalScannedCount += idBatch.size
-                                Log.d(TAG, "LRC Scan: Processed batch of ${idBatch.size}, total assigned so far: $batchScannedCount")
-                            }
-
-                            Log.i(TAG, "LRC Scan finished for $totalToScan songs.")
-                        }
-                        
-                        // Clean orphaned album art cache files
-                        val allSongIds = musicDao.getAllSongIds().toSet()
-                        AlbumArtCacheManager.cleanOrphanedCacheFiles(applicationContext, allSongIds)
-                        
-                        // Sync cloud songs (Telegram + Netease)
-                        syncTelegramData()
-                        syncNeteaseData()
-
-                        // Recalculate total after cloud sync
-                        val finalTotalSongs = musicDao.getSongCount().first()
-
-                        Result.success(workDataOf(OUTPUT_TOTAL_SONGS to finalTotalSongs))
-                    } else {
-                        Log.i(TAG, "No new or modified songs found.")
-
-                        // If it is a fresh install and we found nothing, keep DB empty.
-                        // For REBUILD on an existing library, do not clear existing data on
-                        // empty fetch to prevent accidental data loss from transient MediaStore issues.
-                        if (isFreshInstall && songsToInsert.isEmpty()) {
-                            musicDao.clearAllMusicDataWithCrossRefs()
-                            Log.w(
-                                    TAG,
-                                    "MediaStore fetch resulted in empty list. Local music data cleared."
-                            )
-                        } else if (syncMode == SyncMode.REBUILD && songsToInsert.isEmpty()) {
-                            Log.e(
-                                    TAG,
-                                    "Rebuild returned 0 songs. Preserving existing library to avoid destructive data loss."
-                            )
-                            return@withContext Result.failure(
-                                workDataOf(OUTPUT_TOTAL_SONGS to musicDao.getSongCount().first())
-                            )
-                        }
-
-                        val endTime = System.currentTimeMillis()
-                        Log.i(
-                                TAG,
-                                "Synchronization (No Changes) finished in ${endTime - startTime}ms."
-                        )
-                        userPreferencesRepository.setLastSyncTimestamp(System.currentTimeMillis())
-                        userPreferencesRepository.markDirectoryRulesVersionApplied(
-                            directoryRulesVersion
-                        )
-
-                        val totalSongs = musicDao.getSongCount().first()
-                        
-                        // Clean orphaned album art cache files
-                        val allSongIds = musicDao.getAllSongIds().toSet()
-                        AlbumArtCacheManager.cleanOrphanedCacheFiles(applicationContext, allSongIds)
-                        
-                        // Sync cloud songs (Telegram + Netease)
-                        syncTelegramData()
-                        syncNeteaseData()
-
-                        // Recalculate total after cloud sync
-                        val finalTotalSongs = musicDao.getSongCount().first()
-
-                        Result.success(workDataOf(OUTPUT_TOTAL_SONGS to finalTotalSongs))
                     }
+
+                    // Count total songs for the output
+                    val totalSongs = musicDao.getSongCount().first()
+
+                    // --- LRC SCANNING PHASE ---
+                    val autoScanLrc = userPreferencesRepository.autoScanLrcFilesFlow.first()
+                    if (autoScanLrc) {
+                        Timber.tag(TAG)
+                            .i("Auto-scan LRC files enabled. Starting scan phase in chunks...")
+
+                        // Get ALL media store song IDs to scan in manageable chunks
+                        val mediaStoreSongIds = musicDao.getAllMediaStoreSongIds()
+                        val totalToScan = mediaStoreSongIds.size
+                        var totalScannedCount = 0
+
+                        mediaStoreSongIds.chunked(1000).forEach { idBatch ->
+                            val batchEntities = musicDao.getSongsByIdsListSimple(idBatch)
+                            val batchSongs =
+                                    batchEntities.map { entity ->
+                                        Song(
+                                                id = entity.id.toString(),
+                                                title = entity.title,
+                                                artist = entity.artistName,
+                                                artistId = entity.artistId,
+                                                album = entity.albumName,
+                                                albumId = entity.albumId,
+                                                path = entity.filePath,
+                                                contentUriString = entity.contentUriString,
+                                                albumArtUriString = entity.albumArtUriString,
+                                                duration = entity.duration,
+                                                lyrics = entity.lyrics,
+                                                dateAdded = entity.dateAdded,
+                                                trackNumber = entity.trackNumber,
+                                                year = entity.year,
+                                                mimeType = entity.mimeType,
+                                                bitrate = entity.bitrate,
+                                                sampleRate = entity.sampleRate
+                                        )
+                                    }
+
+                            val batchScannedCount =
+                                    lyricsRepository.scanAndAssignLocalLrcFiles(batchSongs) {
+                                            current,
+                                            total ->
+                                        // Progress within the current batch
+                                        val overallCurrent = totalScannedCount + current
+                                        setProgress(
+                                                workDataOf(
+                                                        PROGRESS_CURRENT to overallCurrent,
+                                                        PROGRESS_TOTAL to totalToScan,
+                                                        PROGRESS_PHASE to
+                                                                SyncProgress.SyncPhase.SCANNING_LRC
+                                                                        .ordinal
+                                                )
+                                        )
+                                    }
+                            totalScannedCount += idBatch.size
+                            Log.d(
+                                    TAG,
+                                    "LRC Scan: Processed batch of ${idBatch.size}, total assigned so far: $batchScannedCount"
+                            )
+                        }
+
+                        Log.i(TAG, "LRC Scan finished for $totalToScan songs.")
+                    }
+
+                    // Clean orphaned album art cache files
+                    val allSongIds = musicDao.getAllSongIds().toSet()
+                    AlbumArtCacheManager.cleanOrphanedCacheFiles(applicationContext, allSongIds)
+
+                    // Recalculate total
+                    val finalTotalSongs = musicDao.getSongCount().first()
+
+                    Result.success(workDataOf(OUTPUT_TOTAL_SONGS to finalTotalSongs.toLong()))
                 } catch (e: Exception) {
                     Log.e(TAG, "Error during MediaStore synchronization", e)
                     Result.failure()
@@ -377,68 +340,12 @@ constructor(
                 }
             }
 
-    /**
-     * Efficiently fetches ONLY the IDs of all songs in MediaStore. Used for fast deletion
-     * detection.
-     */
-    private fun getBaseSelection(minDurationMs: Int = 10000): Pair<String, Array<String>> {
-        val selectionBuilder = StringBuilder()
-        val selectionArgsList = mutableListOf<String>()
-
-        // Apply min duration to every accepted audio entry, including extension-based fallbacks.
-        selectionBuilder.append("(${MediaStore.Audio.Media.DURATION} >= ? AND (")
-        selectionBuilder.append("(${MediaStore.Audio.Media.IS_MUSIC} != 0) ")
-        selectionArgsList.add(minDurationMs.toString())
-
-        selectionBuilder.append("OR ${MediaStore.Audio.Media.DATA} LIKE '%.m4a' ")
-        selectionBuilder.append("OR ${MediaStore.Audio.Media.DATA} LIKE '%.flac' ")
-        selectionBuilder.append("OR ${MediaStore.Audio.Media.DATA} LIKE '%.wav' ")
-        selectionBuilder.append("OR ${MediaStore.Audio.Media.DATA} LIKE '%.opus' ")
-        selectionBuilder.append("OR ${MediaStore.Audio.Media.DATA} LIKE '%.ogg'))")
-
-        return Pair(selectionBuilder.toString(), selectionArgsList.toTypedArray())
-    }
-
-    /**
-     * Efficiently fetches ONLY the IDs of all songs in MediaStore. Used for fast deletion
-     * detection.
-     */
-    private fun fetchMediaStoreIds(directoryResolver: DirectoryRuleResolver): Set<Long> {
-        val ids = HashSet<Long>()
-        // We need DATA to check path filtering
-        val projection = arrayOf(MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA)
-        val (selection, selectionArgs) = getBaseSelection(minSongDurationMs)
-
-        contentResolver.query(
-                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null
-                )
-                ?.use { cursor ->
-                    val idCol = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
-                    val dataCol = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
-                    if (idCol >= 0 && dataCol >= 0) {
-                        while (cursor.moveToNext()) {
-                            val path = cursor.getString(dataCol)
-                            val parentPath = File(path).parent
-                            if (parentPath != null && directoryResolver.isBlocked(parentPath)) {
-                                continue 
-                            }
-                            ids.add(cursor.getLong(idCol))
-                        }
-                    }
-                }
-        return ids
-    }
-
     /** Data class to hold the result of multi-artist preprocessing. */
     private data class MultiArtistProcessResult(
-            val songs: List<SongEntity>,
-            val albums: List<AlbumEntity>,
-            val artists: List<ArtistEntity>,
-            val crossRefs: List<SongArtistCrossRef>
+        val songs: List<SongEntity>,
+        val albums: List<AlbumEntity>,
+        val artists: List<ArtistEntity>,
+        val crossRefs: List<SongArtistCrossRef>
     )
 
     /**
@@ -1254,6 +1161,43 @@ constructor(
     }
 
     /**
+     * Fetches all IDs currently available in MediaStore to identify deleted songs.
+     */
+    private fun fetchMediaStoreIds(directoryResolver: DirectoryRuleResolver): Set<Long> {
+        val ids = mutableSetOf<Long>()
+        val projection = arrayOf(MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA)
+        val (selection, selectionArgs) = getBaseSelection(minSongDurationMs)
+
+        contentResolver.query(
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            null
+        )?.use { cursor ->
+            val idCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+            val dataCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+            while (cursor.moveToNext()) {
+                val data = cursor.getString(dataCol)
+                if (data != null) {
+                    val parentPath = File(data).parent
+                    if (parentPath != null && directoryResolver.isBlocked(File(parentPath).absolutePath)) {
+                        continue
+                    }
+                }
+                ids.add(cursor.getLong(idCol))
+            }
+        }
+        return ids
+    }
+
+    private fun getBaseSelection(minDuration: Int): Pair<String, Array<String>> {
+        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0 AND ${MediaStore.Audio.Media.DURATION} >= ?"
+        val selectionArgs = arrayOf(minDuration.toString())
+        return selection to selectionArgs
+    }
+
+    /**
      * Fetches all file paths currently known to MediaStore.
      * Used to identify new files that need scanning.
      */
@@ -1655,5 +1599,16 @@ constructor(
 
     private fun toUnifiedNeteaseArtistId(artistName: String): Long {
         return -(NETEASE_ARTIST_ID_OFFSET + artistName.lowercase().hashCode().toLong().absoluteValue)
+    }
+
+    private suspend fun syncNavidromeData() {
+        Log.i(TAG, "Syncing Navidrome songs to main database from local cache (Non-network mode)...")
+        try {
+            // This only syncs what is already in our Navidrome database to the Unified library.
+            // It does NOT connect to the server or refresh from remote.
+            navidromeRepository.syncUnifiedLibrarySongsFromNavidrome()
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to sync Navidrome local data to unified library", e)
+        }
     }
 }

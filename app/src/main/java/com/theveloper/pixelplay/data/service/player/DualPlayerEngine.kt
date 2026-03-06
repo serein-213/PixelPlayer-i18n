@@ -27,6 +27,7 @@ import com.theveloper.pixelplay.data.model.TransitionSettings
 import com.theveloper.pixelplay.utils.envelope
 import dagger.hilt.android.qualifiers.ApplicationContext
 import timber.log.Timber
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -40,6 +41,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.resume
 
 import com.theveloper.pixelplay.data.netease.NeteaseStreamProxy
+import com.theveloper.pixelplay.data.navidrome.NavidromeStreamProxy
 import com.theveloper.pixelplay.data.qqmusic.QqMusicStreamProxy
 import com.theveloper.pixelplay.data.telegram.TelegramRepository
 import androidx.media3.datasource.ResolvingDataSource
@@ -64,6 +66,7 @@ class DualPlayerEngine @Inject constructor(
     private val telegramStreamProxy: com.theveloper.pixelplay.data.telegram.TelegramStreamProxy,
     private val neteaseStreamProxy: NeteaseStreamProxy,
     private val qqMusicStreamProxy: QqMusicStreamProxy,
+    private val navidromeStreamProxy: NavidromeStreamProxy,
     private val telegramCacheManager: com.theveloper.pixelplay.data.telegram.TelegramCacheManager,
     private val connectivityStateHolder: com.theveloper.pixelplay.presentation.viewmodel.ConnectivityStateHolder
 ) {
@@ -159,7 +162,7 @@ class DualPlayerEngine @Inject constructor(
                         val nextUri = nextItem.localConfiguration?.uri
                         if (nextUri?.scheme == "telegram") {
                             telegramRepository.preResolveTelegramUri(nextUri.toString())
-                        } else if (nextUri?.scheme == "netease" || nextUri?.scheme == "qqmusic") {
+                        } else if (nextUri?.scheme == "netease" || nextUri?.scheme == "qqmusic" || nextUri?.scheme == "navidrome") {
                             scope.launch { resolveCloudUri(nextUri) }
                         }
                     }
@@ -169,7 +172,7 @@ class DualPlayerEngine @Inject constructor(
                         val prevUri = prevItem.localConfiguration?.uri
                         if (prevUri?.scheme == "telegram") {
                             telegramRepository.preResolveTelegramUri(prevUri.toString())
-                        } else if (prevUri?.scheme == "netease" || prevUri?.scheme == "qqmusic") {
+                        } else if (prevUri?.scheme == "netease" || prevUri?.scheme == "qqmusic" || prevUri?.scheme == "navidrome") {
                             scope.launch { resolveCloudUri(prevUri) }
                         }
                     }
@@ -326,17 +329,32 @@ class DualPlayerEngine @Inject constructor(
         // in resolveCloudUri() which is called from coroutines before ExoPlayer sees the URI.
         val resolver = object : ResolvingDataSource.Resolver {
             override fun resolveDataSpec(dataSpec: DataSpec): DataSpec {
-                val scheme = dataSpec.uri.scheme
-                if (scheme == "telegram" || scheme == "netease" || scheme == "qqmusic") {
-                    val originalUri = dataSpec.uri.toString()
+                val uri = dataSpec.uri
+                val scheme = uri.scheme
+                if (scheme == "telegram" || scheme == "netease" || scheme == "qqmusic" || scheme == "navidrome") {
+                    val originalUri = uri.toString()
                     val resolved = resolvedUriCache[originalUri]
                     if (resolved != null) {
                         Timber.tag("DualPlayerEngine").d("resolveDataSpec: cache hit for $scheme URI")
                         return dataSpec.buildUpon().setUri(resolved).build()
                     }
-                    // Cache miss — URI was not pre-resolved. Log warning but do NOT block.
-                    // This can happen if the URI was added to the queue without pre-resolution
-                    // (e.g., via external intent or legacy code path).
+                    
+                    // Cache miss — URI was not pre-resolved.
+                    // Instead of just logging a warning, we perform a synchronous resolution inside runBlocking.
+                    // This ensures the data source gets a valid URI, which fixes the "loop of death" or loading hang.
+                    Timber.tag("DualPlayerEngine").w("resolveDataSpec: cache MISS for $originalUri — performing synchronous resolution")
+                    try {
+                        val resolvedUri = runBlocking(Dispatchers.IO) {
+                            resolveCloudUri(uri)
+                        }
+                        if (resolvedUri != uri) {
+                            Timber.tag("DualPlayerEngine").i("resolveDataSpec: Synchronous resolution successful for $originalUri")
+                            return dataSpec.buildUpon().setUri(resolvedUri).build()
+                        }
+                    } catch (e: Exception) {
+                        Timber.tag("DualPlayerEngine").e(e, "resolveDataSpec: Synchronous resolution failed for $originalUri")
+                    }
+                    
                     Timber.tag("DualPlayerEngine").w("resolveDataSpec: cache MISS for $originalUri — playback may fail")
                 }
                 return dataSpec
@@ -405,6 +423,7 @@ class DualPlayerEngine @Inject constructor(
             "telegram" -> resolveTelegramUriAsync(uri, uriString)
             "netease" -> resolveNeteaseUriAsync(uriString)
             "qqmusic" -> resolveQqMusicUriAsync(uriString)
+            "navidrome" -> resolveNavidromeUriAsync(uriString)
             else -> null
         }
 
@@ -510,6 +529,31 @@ class DualPlayerEngine @Inject constructor(
         return null
     }
 
+    private suspend fun resolveNavidromeUriAsync(uriString: String): Uri? {
+        Timber.tag("DualPlayerEngine").d("Async resolving Navidrome URI: $uriString")
+
+        if (!navidromeStreamProxy.isReady()) {
+            Timber.tag("DualPlayerEngine").w("NavidromeStreamProxy not ready, awaiting...")
+            val proxyReady = navidromeStreamProxy.awaitReady(5_000L)
+            if (!proxyReady) {
+                Timber.tag("DualPlayerEngine").e("NavidromeStreamProxy not ready after timeout")
+                return null
+            }
+        }
+
+        // Pre-fetch the real stream URL now (network call) so the proxy cache is
+        // warm by the time ExoPlayer makes its HTTP request to the local proxy.
+        navidromeStreamProxy.warmUpStreamUrl(uriString)
+
+        val proxyUrl = navidromeStreamProxy.resolveNavidromeUri(uriString)
+        if (!proxyUrl.isNullOrBlank()) {
+            return Uri.parse(proxyUrl)
+        }
+
+        Timber.tag("DualPlayerEngine").w("Failed to resolve Navidrome URI: $uriString")
+        return null
+    }
+
     /**
      * Resolves a MediaItem's cloud URI (if any) and returns a copy with the resolved URI.
      * For non-cloud URIs, returns the original MediaItem unchanged.
@@ -517,7 +561,7 @@ class DualPlayerEngine @Inject constructor(
     suspend fun resolveMediaItem(mediaItem: MediaItem): MediaItem {
         val uri = mediaItem.localConfiguration?.uri ?: return mediaItem
         val scheme = uri.scheme
-        if (scheme != "telegram" && scheme != "netease" && scheme != "qqmusic") return mediaItem
+        if (scheme != "telegram" && scheme != "netease" && scheme != "qqmusic" && scheme != "navidrome") return mediaItem
 
         val resolvedUri = resolveCloudUri(uri)
         if (resolvedUri == uri) return mediaItem // Resolution failed or not needed

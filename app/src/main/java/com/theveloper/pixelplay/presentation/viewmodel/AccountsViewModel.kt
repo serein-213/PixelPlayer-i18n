@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.gdrive.GDriveRepository
+import com.theveloper.pixelplay.data.navidrome.NavidromeRepository
 import com.theveloper.pixelplay.data.netease.NeteaseRepository
 import com.theveloper.pixelplay.data.qqmusic.QqMusicRepository
 import com.theveloper.pixelplay.data.repository.MusicRepository
@@ -26,7 +27,8 @@ enum class ExternalServiceAccount {
     TELEGRAM,
     GOOGLE_DRIVE,
     NETEASE,
-    QQ_MUSIC
+    QQ_MUSIC,
+    NAVIDROME
 }
 
 data class ExternalAccountUiModel(
@@ -49,7 +51,8 @@ class AccountsViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
     private val gDriveRepository: GDriveRepository,
     private val neteaseRepository: NeteaseRepository,
-    private val qqMusicRepository: QqMusicRepository
+    private val qqMusicRepository: QqMusicRepository,
+    private val navidromeRepository: NavidromeRepository
 ) : ViewModel() {
 
     private val loggingOutServices = MutableStateFlow<Set<ExternalServiceAccount>>(emptySet())
@@ -84,17 +87,30 @@ class AccountsViewModel @Inject constructor(
         connected to playlistCount
     }
 
+    private val navidromeStateFlow = combine(
+        navidromeRepository.isLoggedInFlow,
+        navidromeRepository.getPlaylists().map { it.size }
+    ) { connected, playlistCount ->
+        connected to playlistCount
+    }
+
     val uiState: StateFlow<AccountsUiState> = combine(
-        telegramStateFlow,
-        gDriveStateFlow,
-        neteaseStateFlow,
-        qqMusicStateFlow,
+        combine(
+            telegramStateFlow,
+            gDriveStateFlow,
+            neteaseStateFlow,
+            qqMusicStateFlow,
+            navidromeStateFlow
+        ) { telegram, gdrive, netease, qq, navidrome ->
+            listOf(telegram, gdrive, netease, qq, navidrome)
+        },
         loggingOutServices
-    ) { telegramState, gDriveState, neteaseState, qqMusicState, activeLogouts ->
-        val (telegramConnected, telegramChannelCount) = telegramState
-        val (gDriveConnected, gDriveFolderCount) = gDriveState
-        val (neteaseConnected, neteasePlaylistCount) = neteaseState
-        val (qqConnected, qqPlaylistCount) = qqMusicState
+    ) { states, activeLogouts ->
+        val (telegramConnected, telegramChannelCount) = states[0] as Pair<Boolean, Int>
+        val (gDriveConnected, gDriveFolderCount) = states[1] as Pair<Boolean, Int>
+        val (neteaseConnected, neteasePlaylistCount) = states[2] as Pair<Boolean, Int>
+        val (qqConnected, qqPlaylistCount) = states[3] as Pair<Boolean, Int>
+        val (navidromeConnected, navidromePlaylistCount) = states[4] as Pair<Boolean, Int>
 
         val connectedAccounts = buildList {
             if (telegramConnected) {
@@ -165,6 +181,23 @@ class AccountsViewModel @Inject constructor(
                     )
                 )
             }
+            if (navidromeConnected) {
+                add(
+                    ExternalAccountUiModel(
+                        service = ExternalServiceAccount.NAVIDROME,
+                        title = "Navidrome",
+                        accountLabel = navidromeRepository.username
+                            ?.takeIf { it.isNotBlank() }
+                            ?: "Navidrome account connected",
+                        syncedContentLabel = formatCount(
+                            count = navidromePlaylistCount,
+                            singular = "synced playlist",
+                            plural = "synced playlists"
+                        ),
+                        isLoggingOut = ExternalServiceAccount.NAVIDROME in activeLogouts
+                    )
+                )
+            }
         }
 
         val disconnectedServices = buildList {
@@ -172,6 +205,7 @@ class AccountsViewModel @Inject constructor(
             if (!gDriveConnected) add(ExternalServiceAccount.GOOGLE_DRIVE)
             if (!neteaseConnected) add(ExternalServiceAccount.NETEASE)
             if (!qqConnected) add(ExternalServiceAccount.QQ_MUSIC)
+            if (!navidromeConnected) add(ExternalServiceAccount.NAVIDROME)
         }
 
         AccountsUiState(
@@ -196,6 +230,7 @@ class AccountsViewModel @Inject constructor(
                         ExternalServiceAccount.GOOGLE_DRIVE -> gDriveRepository.logout()
                         ExternalServiceAccount.NETEASE -> neteaseRepository.logout()
                         ExternalServiceAccount.QQ_MUSIC -> qqMusicRepository.logout()
+                        ExternalServiceAccount.NAVIDROME -> navidromeRepository.logout()
                     }
                 }
             } finally {

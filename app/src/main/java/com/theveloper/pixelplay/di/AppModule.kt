@@ -132,7 +132,8 @@ object AppModule {
             PixelPlayDatabase.MIGRATION_24_25,
             PixelPlayDatabase.MIGRATION_25_26,
             PixelPlayDatabase.MIGRATION_26_27,
-            PixelPlayDatabase.MIGRATION_27_28
+            PixelPlayDatabase.MIGRATION_27_28,
+            PixelPlayDatabase.MIGRATION_28_29
         )
             .addCallback(
                 object : RoomDatabase.Callback() {
@@ -204,6 +205,12 @@ object AppModule {
     @Provides
     fun provideQqMusicDao(database: PixelPlayDatabase): com.theveloper.pixelplay.data.database.QqMusicDao {
         return database.qqmusicDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideNavidromeDao(database: PixelPlayDatabase): com.theveloper.pixelplay.data.database.NavidromeDao {
+        return database.navidromeDao()
     }
 
     @Provides

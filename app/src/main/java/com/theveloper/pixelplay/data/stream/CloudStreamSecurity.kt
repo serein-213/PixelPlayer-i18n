@@ -17,6 +17,7 @@ object CloudStreamSecurity {
 
     private val GDRIVE_FILE_ID_REGEX = Regex("^[A-Za-z0-9_-]{10,200}$")
     private val QQMUSIC_SONG_MID_REGEX = Regex("^[A-Za-z0-9_-]{6,50}$")
+    private val NAVIDROME_SONG_ID_REGEX = Regex("^[A-Za-z0-9_-]{1,100}$")
     private val FORBIDDEN_HOSTS = setOf("localhost", "127.0.0.1", "0.0.0.0", "::1", "[::1]")
     private val EXTRA_ALLOWED_AUDIO_TYPES = setOf(
         "application/octet-stream",
@@ -40,6 +41,8 @@ object CloudStreamSecurity {
     fun validateGDriveFileId(fileId: String): Boolean = GDRIVE_FILE_ID_REGEX.matches(fileId)
 
     fun validateQqMusicSongMid(songMid: String): Boolean = QQMUSIC_SONG_MID_REGEX.matches(songMid)
+
+    fun validateNavidromeSongId(songId: String): Boolean = NAVIDROME_SONG_ID_REGEX.matches(songId)
 
     fun validateRangeHeader(rawHeader: String?): RangeHeaderValidation {
         if (rawHeader.isNullOrBlank()) {
@@ -122,9 +125,15 @@ object CloudStreamSecurity {
         val httpUrl = url.toHttpUrlOrNull() ?: return false
         val host = httpUrl.host.lowercase()
 
-        if (host in FORBIDDEN_HOSTS) return false
-        if (host.endsWith(".local")) return false
-        if (isPrivateIpv4Literal(host)) return false
+        // Allow private IPs and .local for Subsonic/Navidrome servers which are often self-hosted
+        val isNavidromeStream = httpUrl.pathSegments.contains("stream.view")
+        
+        if (!isNavidromeStream) {
+            if (host in FORBIDDEN_HOSTS) return false
+            if (host.endsWith(".local")) return false
+            if (isPrivateIpv4Literal(host)) return false
+        }
+        
         if (httpUrl.username.isNotEmpty() || httpUrl.password.isNotEmpty()) return false
 
         val hostAllowed = hostMatchesAllowedSuffix(host, allowedHostSuffixes)

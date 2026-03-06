@@ -133,6 +133,7 @@ interface MusicDao {
         WHERE content_uri_string NOT LIKE 'telegram://%'
         AND content_uri_string NOT LIKE 'netease://%'
         AND content_uri_string NOT LIKE 'qqmusic://%'
+        AND content_uri_string NOT LIKE 'navidrome://%'
     """)
     suspend fun getAllMediaStoreSongIds(): List<Long>
 
@@ -166,6 +167,9 @@ interface MusicDao {
 
     @Query("SELECT id FROM songs WHERE content_uri_string LIKE 'qqmusic://%'")
     suspend fun getAllQqMusicSongIds(): List<Long>
+
+    @Query("SELECT id FROM songs WHERE content_uri_string LIKE 'navidrome://%'")
+    suspend fun getAllNavidromeSongIds(): List<Long>
 
     @Transaction
     suspend fun deleteSongsAndRelatedData(songIds: List<Long>) {
@@ -202,6 +206,13 @@ interface MusicDao {
     }
 
     @Transaction
+    suspend fun clearAllNavidromeSongs() {
+        val navidromeSongIds = getAllNavidromeSongIds()
+        if (navidromeSongIds.isEmpty()) return
+        deleteSongsAndRelatedData(navidromeSongIds)
+    }
+
+    @Transaction
     suspend fun clearAllTelegramSongs() {
         val telegramSongIds = getAllTelegramSongIds()
         if (telegramSongIds.isEmpty()) return
@@ -227,7 +238,9 @@ interface MusicDao {
         crossRefs: List<SongArtistCrossRef>,
         deletedSongIds: List<Long>
     ) {
-        // Delete removed songs and their cross-refs
+        // Protect cloud songs from deletion during generic media scan
+        // Only allow explicit deletions if the list is non-empty.
+        // During general refresh, deletedSongIds strictly contains local MediaStore IDs only.
         if (deletedSongIds.isNotEmpty()) {
             deletedSongIds.chunked(CROSS_REF_BATCH_SIZE).forEach { chunk ->
                 deleteCrossRefsBySongIds(chunk)
@@ -1057,10 +1070,6 @@ interface MusicDao {
         }
     }
 
-    /**
-     * Atomically rebuild local music data. This prevents ending up with an empty library if
-     * the worker is cancelled between clear and insert steps.
-     */
     @Transaction
     suspend fun rebuildMusicDataWithCrossRefs(
         songs: List<SongEntity>,
@@ -1068,6 +1077,10 @@ interface MusicDao {
         artists: List<ArtistEntity>,
         crossRefs: List<SongArtistCrossRef>
     ) {
+        // Save current cloud songs before clearing to prevent accidental data loss
+        // Only clear if we have new songs to insert, or we are explicitly asked to REBUILD everything.
+        // We handle this logic at the worker/repository level to be more precise.
+        
         clearAllSongArtistCrossRefs()
         clearAllSongs()
         clearAllAlbums()

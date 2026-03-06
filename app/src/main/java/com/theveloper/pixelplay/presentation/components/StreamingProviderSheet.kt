@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.theveloper.pixelplay.R
+import com.theveloper.pixelplay.presentation.navidrome.auth.NavidromeLoginActivity
 import com.theveloper.pixelplay.presentation.netease.auth.NeteaseLoginActivity
 import com.theveloper.pixelplay.presentation.qqmusic.auth.QqMusicLoginActivity
 import com.theveloper.pixelplay.presentation.telegram.auth.TelegramLoginActivity
@@ -47,6 +48,8 @@ fun StreamingProviderSheet(
     onNavigateToNeteaseDashboard: () -> Unit = {},
     isQqMusicLoggedIn: Boolean = false,
     onNavigateToQqMusicDashboard: () -> Unit = {},
+    isNavidromeLoggedIn: Boolean = false,
+    onNavigateToNavidromeDashboard: () -> Unit = {},
     sheetState: SheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
@@ -138,6 +141,30 @@ fun StreamingProviderSheet(
                 shape = cardShape,
                 enabled = false,
                 onClick = { }
+            )
+
+            Spacer(Modifier.height(12.dp))
+
+            // Navidrome Provider
+            ProviderCard(
+                iconPainter = painterResource(R.drawable.ic_navidrome),
+                title = "Navidrome",
+                subtitle = if (isNavidromeLoggedIn)
+                    "✓ Connected"
+                else
+                    "Sign in",
+                containerColor = Color(0xFFE3F2FD), // 改为淡蓝色 (Material Blue 50)
+                contentColor = Color(0xFF1565C0), // 使用 Navidrome 官方深蓝色
+                iconColor = Color.Unspecified, // 保持原始色彩
+                shape = cardShape,
+                onClick = {
+                    if (isNavidromeLoggedIn) {
+                        onNavigateToNavidromeDashboard()
+                    } else {
+                        context.startActivity(Intent(context, NavidromeLoginActivity::class.java))
+                    }
+                    onDismissRequest()
+                }
             )
 
             Spacer(Modifier.height(12.dp))

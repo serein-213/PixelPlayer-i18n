@@ -87,6 +87,12 @@
             android:label="QQ Music Login"
             android:theme="@style/Theme.PixelPlay" />
 
+        <activity
+            android:name=".presentation.navidrome.auth.NavidromeLoginActivity"
+            android:exported="false"
+            android:label="Navidrome Login"
+            android:theme="@style/Theme.PixelPlay" />
+
 
         <activity
             android:name=".ExternalPlayerActivity"

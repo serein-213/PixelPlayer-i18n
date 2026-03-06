@@ -228,6 +228,9 @@ fun AppNavigation(
                         },
                         onOpenQqMusicDashboard = {
                             navController.navigateSafely(Screen.QqMusicDashboard.route)
+                        },
+                        onOpenNavidromeDashboard = {
+                            navController.navigateSafely(Screen.NavidromeDashboard.route)
                         }
                     )
                 }
@@ -529,6 +532,19 @@ fun AppNavigation(
             ) {
                 ScreenWrapper(navController = navController, playerViewModel = playerViewModel) {
                     com.theveloper.pixelplay.presentation.qqmusic.dashboard.QqMusicDashboardScreen(
+                        onBack = { navController.popBackStack() }
+                    )
+                }
+            }
+            composable(
+                Screen.NavidromeDashboard.route,
+                enterTransition = { enterTransition() },
+                exitTransition = { exitTransition() },
+                popEnterTransition = { popEnterTransition() },
+                popExitTransition = { popExitTransition() },
+            ) {
+                ScreenWrapper(navController = navController, playerViewModel = playerViewModel) {
+                    com.theveloper.pixelplay.presentation.navidrome.dashboard.NavidromeDashboardScreen(
                         onBack = { navController.popBackStack() }
                     )
                 }
