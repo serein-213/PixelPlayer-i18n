@@ -678,8 +678,8 @@ private fun serviceTitle(context: Context, service: ExternalServiceAccount): Str
         ExternalServiceAccount.TELEGRAM -> context.getString(R.string.accounts_service_telegram)
         ExternalServiceAccount.GOOGLE_DRIVE -> context.getString(R.string.accounts_service_google_drive)
         ExternalServiceAccount.NETEASE -> context.getString(R.string.accounts_service_netease)
-        ExternalServiceAccount.QQ_MUSIC -> "QQ Music"
-        ExternalServiceAccount.NAVIDROME -> "Subsonic"
+        ExternalServiceAccount.QQ_MUSIC -> context.getString(R.string.accounts_service_qqmusic)
+        ExternalServiceAccount.NAVIDROME -> context.getString(R.string.accounts_service_navidrome)
     }
 }
 

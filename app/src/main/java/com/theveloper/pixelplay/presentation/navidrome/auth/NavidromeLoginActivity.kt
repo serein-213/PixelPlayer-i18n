@@ -1,5 +1,6 @@
 package com.theveloper.pixelplay.presentation.navidrome.auth
 
+import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,9 +24,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.CloudQueue
-import androidx.compose.material.icons.rounded.Lock
-import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.Button
@@ -36,13 +33,11 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -60,6 +55,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -68,9 +65,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
 import com.theveloper.pixelplay.ui.theme.PixelPlayTheme
@@ -80,7 +74,7 @@ import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
 @AndroidEntryPoint
 class NavidromeLoginActivity : ComponentActivity() {
 
-    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -110,7 +104,8 @@ fun NavidromeLoginScreen(
     LaunchedEffect(loginState) {
         when (val state = loginState) {
             is NavidromeLoginState.Success -> {
-                Toast.makeText(context, "Welcome, ${state.username}!", Toast.LENGTH_SHORT).show()
+                val welcomeMessage = context.getString(R.string.navidrome_welcome, state.username)
+                Toast.makeText(context, welcomeMessage, Toast.LENGTH_SHORT).show()
                 onClose()
             }
             is NavidromeLoginState.Error -> {
@@ -122,7 +117,6 @@ fun NavidromeLoginScreen(
     }
 
     val isLoading = loginState is NavidromeLoginState.Loading
-    val inputShape = AbsoluteSmoothCornerShape(18.dp, 60)
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -130,7 +124,7 @@ fun NavidromeLoginScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Subsonic / Navidrome",
+                        text = stringResource(R.string.navidrome_login_title),
                         fontFamily = GoogleSansRounded,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -147,7 +141,7 @@ fun NavidromeLoginScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.common_back)
                         )
                     }
                 },
@@ -168,13 +162,11 @@ fun NavidromeLoginScreen(
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Protocol Icons (Tiled/Horizontal)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Navidrome Icon
                 androidx.compose.material3.Surface(
                     shape = CircleShape,
                     color = androidx.compose.ui.graphics.Color.White,
@@ -194,7 +186,6 @@ fun NavidromeLoginScreen(
 
                 Spacer(modifier = Modifier.width(24.dp))
 
-                // Subsonic Icon
                 androidx.compose.material3.Surface(
                     shape = CircleShape,
                     color = androidx.compose.ui.graphics.Color.White,
@@ -205,7 +196,7 @@ fun NavidromeLoginScreen(
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = androidx.compose.ui.graphics.vector.ImageVector.vectorResource(id = R.drawable.ic_subsonic),
-                            contentDescription = "Subsonic",
+                            contentDescription = stringResource(R.string.navidrome_subsonic_icon_desc),
                             tint = androidx.compose.ui.graphics.Color.Unspecified,
                             modifier = Modifier.size(42.dp)
                         )
@@ -216,7 +207,7 @@ fun NavidromeLoginScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Subsonic / Navidrome",
+                text = stringResource(R.string.navidrome_login_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontFamily = GoogleSansRounded,
                 fontWeight = FontWeight.Bold,
@@ -224,14 +215,13 @@ fun NavidromeLoginScreen(
             )
 
             Text(
-                text = "Connect to your self-hosted music server",
+                text = stringResource(R.string.navidrome_connect_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Info Card
             Card(
                 shape = AbsoluteSmoothCornerShape(20.dp, 60),
                 colors = CardDefaults.cardColors(
@@ -240,7 +230,7 @@ fun NavidromeLoginScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Supports Navidrome, Airsonic, Gonic, Ampache and other servers compatible with the Subsonic API.",
+                    text = stringResource(R.string.navidrome_support_hint),
                     modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -250,137 +240,99 @@ fun NavidromeLoginScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = AbsoluteSmoothCornerShape(28.dp, 60),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(18.dp)
-                ) {
+            OutlinedTextField(
+                value = serverUrl,
+                onValueChange = { serverUrl = it },
+                label = {
                     Text(
-                        text = "Connection details",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontFamily = GoogleSansRounded,
-                        fontWeight = FontWeight.Bold
+                        stringResource(R.string.navidrome_server_url_label),
+                        fontFamily = GoogleSansRounded
                     )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
+                },
+                placeholder = {
                     Text(
-                        text = "Enter your server URL and account credentials.",
-                        style = MaterialTheme.typography.bodySmall,
-                        fontFamily = GoogleSansRounded,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        stringResource(R.string.navidrome_server_url_placeholder),
+                        fontFamily = GoogleSansRounded
                     )
+                },
+                singleLine = true,
+                enabled = !isLoading,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Uri,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
 
-                    Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-                    ExpressiveLoginField(
-                        value = serverUrl,
-                        onValueChange = { serverUrl = it },
-                        label = "Server URL",
-                        placeholder = "https://music.example.com",
-                        supportingText = "Use the full base address of your server.",
-                        leadingIcon = Icons.Rounded.CloudQueue,
-                        enabled = !isLoading,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Uri,
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                        ),
-                        shape = inputShape
+            OutlinedTextField(
+                value = username,
+                onValueChange = { username = it },
+                label = {
+                    Text(
+                        stringResource(R.string.navidrome_username_label),
+                        fontFamily = GoogleSansRounded
                     )
+                },
+                singleLine = true,
+                enabled = !isLoading,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
 
-                    Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-                    ExpressiveLoginField(
-                        value = username,
-                        onValueChange = { username = it },
-                        label = "Username",
-                        placeholder = "admin",
-                        supportingText = "This is your Subsonic or Navidrome account name.",
-                        leadingIcon = Icons.Rounded.Person,
-                        enabled = !isLoading,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                        ),
-                        shape = inputShape
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = {
+                    Text(
+                        stringResource(R.string.navidrome_password_label),
+                        fontFamily = GoogleSansRounded
                     )
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    ExpressiveLoginField(
-                        value = password,
-                        onValueChange = { password = it },
-                        label = "Password",
-                        placeholder = "Enter password",
-                        supportingText = "App password also works if your server supports it.",
-                        leadingIcon = Icons.Rounded.Lock,
-                        enabled = !isLoading,
-                        visualTransformation = if (passwordVisible) {
-                            VisualTransformation.None
-                        } else {
-                            PasswordVisualTransformation()
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                focusManager.clearFocus()
-                                if (serverUrl.isNotBlank() && username.isNotBlank() && password.isNotBlank()) {
-                                    viewModel.login(serverUrl, username, password)
-                                }
-                            }
-                        ),
-                        trailingContent = {
-                            IconButton(
-                                onClick = { passwordVisible = !passwordVisible },
-                                enabled = !isLoading
-                            ) {
-                                Icon(
-                                    imageVector = if (passwordVisible) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
-                                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
-                                )
-                            }
-                        },
-                        shape = inputShape
-                    )
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    FilledTonalButton(
-                        onClick = {
-                            if (serverUrl.isBlank()) {
-                                serverUrl = "https://"
-                            }
-                        },
-                        enabled = !isLoading && serverUrl.isBlank(),
-                        shape = inputShape,
-                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
-                    ) {
-                        Text(
-                            text = "Prefill https://",
-                            fontFamily = GoogleSansRounded,
-                            fontWeight = FontWeight.Medium
+                },
+                singleLine = true,
+                enabled = !isLoading,
+                visualTransformation = if (passwordVisible) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                        if (serverUrl.isNotBlank() && username.isNotBlank() && password.isNotBlank()) {
+                            viewModel.login(serverUrl, username, password)
+                        }
+                    }
+                ),
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = if (passwordVisible) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
+                            contentDescription = null
                         )
                     }
-                }
-            }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Login Button
             Button(
                 onClick = {
                     focusManager.clearFocus()
@@ -399,17 +351,23 @@ fun NavidromeLoginScreen(
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Connecting...", fontFamily = GoogleSansRounded)
+                    Text(
+                        stringResource(R.string.navidrome_connecting),
+                        fontFamily = GoogleSansRounded
+                    )
                 } else {
-                    Text("Connect", fontFamily = GoogleSansRounded, fontWeight = FontWeight.SemiBold)
+                    Text(
+                        stringResource(R.string.navidrome_connect_button),
+                        fontFamily = GoogleSansRounded,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Help text
             Text(
-                text = "Compatible with Navidrome, Gonic, Airsonic, and other Subsonic-compatible servers",
+                text = stringResource(R.string.navidrome_compatibility_info),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontFamily = GoogleSansRounded
@@ -418,85 +376,4 @@ fun NavidromeLoginScreen(
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
-}
-
-@Composable
-private fun ExpressiveLoginField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: String,
-    placeholder: String,
-    supportingText: String,
-    leadingIcon: ImageVector,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
-    trailingContent: @Composable (() -> Unit)? = null,
-    shape: AbsoluteSmoothCornerShape
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier.fillMaxWidth(),
-        enabled = enabled,
-        singleLine = true,
-        shape = shape,
-        textStyle = MaterialTheme.typography.bodyLarge.copy(
-            fontFamily = GoogleSansRounded
-        ),
-        label = {
-            Text(
-                text = label,
-                fontFamily = GoogleSansRounded
-            )
-        },
-        placeholder = {
-            Text(
-                text = placeholder,
-                fontFamily = GoogleSansRounded
-            )
-        },
-        supportingText = {
-            Text(
-                text = supportingText,
-                fontFamily = GoogleSansRounded
-            )
-        },
-        leadingIcon = {
-            Icon(
-                imageVector = leadingIcon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
-        },
-        trailingIcon = trailingContent,
-        visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            disabledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = Color.Transparent,
-            disabledBorderColor = Color.Transparent
-        )
-    )
-}
-
-@Composable
-private fun Surface(
-    shape: androidx.compose.ui.graphics.Shape,
-    color: androidx.compose.ui.graphics.Color,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    androidx.compose.material3.Surface(
-        shape = shape,
-        color = color,
-        modifier = modifier,
-        content = content
-    )
 }

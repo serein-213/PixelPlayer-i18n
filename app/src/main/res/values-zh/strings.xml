@@ -1441,6 +1441,8 @@
 
     
     <string name="nav_telegram">Telegram</string>
+    <string name="navidrome">Navidrome</string>
+    <string name="qq_music">QQ 音乐</string>
 
     <string name="cloud_streaming_title">云端串流</string>
     <string name="cloud_streaming_subtitle">从您的云端账户播放音乐</string>
@@ -1454,6 +1456,12 @@
     <string name="cloud_streaming_provider_qqmusic_title">QQ音乐</string>
     <string name="cloud_streaming_provider_qqmusic_subtitle_connected">已连接</string>
     <string name="cloud_streaming_provider_qqmusic_subtitle_sign_in">点击登录</string>
+    <string name="cloud_streaming_provider_navidrome_title">Subsonic / Navidrome</string>
+    <string name="cloud_streaming_provider_navidrome_subtitle_connected">已连接 - 打开仪表盘</string>
+    <string name="cloud_streaming_provider_navidrome_subtitle_sign_in">Subsonic - 云端串流</string>
+    <string name="cloud_streaming_provider_qq_title">QQ 音乐</string>
+    <string name="cloud_streaming_provider_qq_subtitle_connected">已连接</string>
+    <string name="cloud_streaming_provider_qq_subtitle_sign_in">点击登录</string>
     <string name="cloud_streaming_netease_security_note">安全提示：您的密码仅在网易云音乐网页内输入。PixelPlay 仅存储会话 Cookie (MUSIC_U) 以同步您的音乐库。</string>
     <string name="cloud_streaming_qqmusic_security_note">安全提示：您的密码仅在 QQ 音乐网页内输入。PixelPlay 仅存储会话 Cookie 以同步您的音乐库。</string>
     <string name="cloud_streaming_netease_login_exit_title">退出网易云登录？</string>
@@ -1681,6 +1689,20 @@
     <string name="synced_playlists_and_songs_failed_format">已同步 %1$d 个播放列表，%2$d 首歌曲（%3$d 个失败）</string>
     <string name="sync_status_playlists">同步播放列表</string>
     <string name="sync_label">同步</string>
+    <string name="navidrome_login_title">Subsonic / Navidrome</string>
+    <string name="navidrome_connect_subtitle">连接到您的自建音乐服务器</string>
+    <string name="navidrome_support_hint">支持 Navidrome, Airsonic, Gonic, Ampache 以及其他兼容 Subsonic API 的服务器。</string>
+    <string name="navidrome_server_url_label">服务器地址</string>
+    <string name="navidrome_server_url_placeholder">https://music.example.com</string>
+    <string name="navidrome_username_label">用户名</string>
+    <string name="navidrome_password_label">密码</string>
+    <string name="navidrome_connect_button">连接</string>
+    <string name="navidrome_connecting">正在连接...</string>
+    <string name="navidrome_compatibility_info">兼容 Navidrome, Gonic, Airsonic 以及其他 Subsonic 兼容服务器</string>
+    <string name="navidrome_welcome">欢迎，%s！</string>
+    <string name="navidrome_sync_all_message">正在同步所有播放列表和歌曲...</string>
+    <string name="navidrome_sync_playlists_message">正在同步播放列表...</string>
+    <string name="navidrome_sync_songs_message">正在同步歌曲...</string>
     <string name="tap_sync_to_fetch_your_playlists">点击同步以获取您的播放列表</string>
     <string name="queue_item_removed">已移除</string>
     <string name="undo">撤销</string>
@@ -1934,4 +1956,19 @@
     <string name="telegram_login_two_step_password_title">两步验证密码</string>
     <string name="telegram_login_enter_password_subtitle">输入您的 Telegram 密码。您仍然可以返回并修正您的号码。</string>
     <string name="telegram_login_password_input_label">密码</string>
+
+    <!-- Navidrome Dashboard UI Strings -->
+    <string name="navidrome_dashboard_title">Subsonic</string>
+    <string name="navidrome_quick_actions">快速操作</string>
+    <string name="navidrome_manage_servers">管理 Navidrome、Airsonic 和其他兼容 Subsonic 的服务器。</string>
+    <string name="navidrome_syncing">同步中</string>
+    <string name="navidrome_sync_library">同步库</string>
+    <string name="navidrome_disconnect">断开连接</string>
+    <string name="navidrome_subsonic_icon_desc">Subsonic</string>
+    
+    <!-- Accounts - Navidrome Service Strings -->
+    <string name="accounts_service_navidrome">Subsonic</string>
+    <string name="accounts_navidrome_logged_in_label">Subsonic 账户已连接</string>
+    <string name="accounts_service_qqmusic">QQ 音乐</string>
+
 </resources>

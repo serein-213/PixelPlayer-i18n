@@ -151,11 +151,11 @@ fun StreamingProviderSheet(
             ProviderCard(
                 icon = null,
                 iconPainter = painterResource(R.drawable.ic_navidrome_md3),
-                title = "Subsonic",
+                title = stringResource(R.string.cloud_streaming_provider_navidrome_title),
                 subtitle = if (isNavidromeLoggedIn)
-                    "✓ Connected (Navidrome/Airsonic)"
+                    stringResource(R.string.cloud_streaming_provider_navidrome_subtitle_connected)
                 else
-                    "Connect Navidrome & others",
+                    stringResource(R.string.cloud_streaming_provider_navidrome_subtitle_sign_in),
                 containerColor = providerContainerColor,
                 contentColor = providerContentColor,
                 iconColor = providerContentColor,

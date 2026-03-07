@@ -185,14 +185,14 @@ class AccountsViewModel @Inject constructor(
                 add(
                     ExternalAccountUiModel(
                         service = ExternalServiceAccount.NAVIDROME,
-                        title = "Subsonic",
+                        title = application.getString(R.string.accounts_service_navidrome),
                         accountLabel = navidromeRepository.username
                             ?.takeIf { it.isNotBlank() }
-                            ?: "Subsonic account connected",
+                            ?: application.getString(R.string.accounts_navidrome_logged_in_label),
                         syncedContentLabel = formatCount(
                             count = navidromePlaylistCount,
-                            singular = "synced playlist",
-                            plural = "synced playlists"
+                            singularResId = R.string.accounts_synced_playlist,
+                            pluralResId = R.string.accounts_synced_playlists
                         ),
                         isLoggingOut = ExternalServiceAccount.NAVIDROME in activeLogouts
                     )

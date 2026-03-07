@@ -1503,6 +1503,8 @@
 
     
     <string name="nav_telegram">Telegram</string>
+    <string name="navidrome">Navidrome</string>
+    <string name="qq_music">QQ Music</string>
 
     <string name="cloud_streaming_title">Cloud Streaming</string>
     <string name="cloud_streaming_subtitle">Stream music from your cloud accounts</string>
@@ -1516,6 +1518,12 @@
     <string name="cloud_streaming_provider_qqmusic_title">QQ Music</string>
     <string name="cloud_streaming_provider_qqmusic_subtitle_connected">Connected - Open dashboard</string>
     <string name="cloud_streaming_provider_qqmusic_subtitle_sign_in">QQ Music - Sign in to stream</string>
+    <string name="cloud_streaming_provider_navidrome_title">Subsonic / Navidrome</string>
+    <string name="cloud_streaming_provider_navidrome_subtitle_connected">Connected - Open dashboard</string>
+    <string name="cloud_streaming_provider_navidrome_subtitle_sign_in">Subsonic - Cloud Streaming</string>
+    <string name="cloud_streaming_provider_qq_title">QQ Music</string>
+    <string name="cloud_streaming_provider_qq_subtitle_connected">Connected - Open dashboard</string>
+    <string name="cloud_streaming_provider_qq_subtitle_sign_in">QQ Music - Sign in to stream</string>
     <string name="cloud_streaming_netease_security_note">Security note: your password is entered only in NetEase web pages. PixelPlay stores session cookies (MUSIC_U) to sync your library.</string>
     <string name="cloud_streaming_qqmusic_security_note">Security note: your password is entered only in QQ Music web pages. PixelPlay stores session cookies to sync your library.</string>
     <string name="cloud_streaming_netease_login_exit_title">Exit NetEase login?</string>
@@ -1749,6 +1757,20 @@
     <string name="synced_playlists_and_songs_failed_format">Synced %1$d playlists, %2$d songs (%3$d failed)</string>
     <string name="sync_status_playlists">Sync Playlists</string>
     <string name="sync_label">Sync</string>
+    <string name="navidrome_login_title">Subsonic / Navidrome</string>
+    <string name="navidrome_connect_subtitle">Connect to your self-hosted music server</string>
+    <string name="navidrome_support_hint">Supports Navidrome, Airsonic, Gonic, Ampache and other servers compatible with the Subsonic API.</string>
+    <string name="navidrome_server_url_label">Server URL</string>
+    <string name="navidrome_server_url_placeholder">https://music.example.com</string>
+    <string name="navidrome_username_label">Username</string>
+    <string name="navidrome_password_label">Password</string>
+    <string name="navidrome_connect_button">Connect</string>
+    <string name="navidrome_connecting">Connecting...</string>
+    <string name="navidrome_compatibility_info">Compatible with Navidrome, Gonic, Airsonic, and other Subsonic-compatible servers</string>
+    <string name="navidrome_welcome">Welcome, %s!</string>
+    <string name="navidrome_sync_all_message">Syncing all playlists and songs...</string>
+    <string name="navidrome_sync_playlists_message">Syncing playlists...</string>
+    <string name="navidrome_sync_songs_message">Syncing songs...</string>
     <string name="tap_sync_to_fetch_your_playlists">Tap sync to fetch your playlists</string>
     <string name="queue_item_removed">removed</string>
     <string name="undo">Undo</string>
@@ -2007,4 +2029,19 @@
     <string name="telegram_login_two_step_password_title">Two-Step Password</string>
     <string name="telegram_login_enter_password_subtitle">Enter your Telegram password. You can still go back to fix your number.</string>
     <string name="telegram_login_password_input_label">Password</string>
+
+    <!-- Navidrome Dashboard UI Strings -->
+    <string name="navidrome_dashboard_title">Subsonic</string>
+    <string name="navidrome_quick_actions">Quick actions</string>
+    <string name="navidrome_manage_servers">Manage Navidrome, Airsonic and other Subsonic-compatible servers.</string>
+    <string name="navidrome_syncing">Syncing</string>
+    <string name="navidrome_sync_library">Sync library</string>
+    <string name="navidrome_disconnect">Disconnect</string>
+    <string name="navidrome_subsonic_icon_desc">Subsonic</string>
+    
+    <!-- Accounts - Navidrome Service Strings -->
+    <string name="accounts_service_navidrome">Subsonic</string>
+    <string name="accounts_navidrome_logged_in_label">Subsonic account connected</string>
+    <string name="accounts_service_qqmusic">QQ Music</string>
+
 </resources>

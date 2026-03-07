@@ -1179,4 +1179,19 @@
     <string name="settings_collage_pattern_subtitle">為您的混合拼貼圖選擇形狀排列。</string>
     <string name="settings_collage_auto_rotate_title">自動輪換樣式</string>
     <string name="settings_collage_auto_rotate_subtitle">每次訪問主頁時循環更換拼貼圖樣式。</string>
+
+    <!-- Navidrome Dashboard UI Strings -->
+    <string name="navidrome_dashboard_title">Subsonic</string>
+    <string name="navidrome_quick_actions">快速操作</string>
+    <string name="navidrome_manage_servers">管理 Navidrome、Airsonic 和其他相容 Subsonic 的伺服器。</string>
+    <string name="navidrome_syncing">同步中</string>
+    <string name="navidrome_sync_library">同步庫</string>
+    <string name="navidrome_disconnect">中斷連線</string>
+    <string name="navidrome_subsonic_icon_desc">Subsonic</string>
+    
+    <!-- Accounts - Navidrome Service Strings -->
+    <string name="accounts_service_navidrome">Subsonic</string>
+    <string name="accounts_navidrome_logged_in_label">Subsonic 帳戶已連接</string>
+    <string name="accounts_service_qqmusic">QQ 音樂</string>
+
 </resources>
