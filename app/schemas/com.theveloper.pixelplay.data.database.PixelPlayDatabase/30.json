@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 29,
-    "identityHash": "5e8c7d6268e4801fd778858978bae6fe",
+    "version": 30,
+    "identityHash": "0f410e9ae407c7ca8c6367164fedb1f3",
     "entities": [
       {
         "tableName": "album_art_themes",
@@ -2067,7 +2067,7 @@
       },
       {
         "tableName": "navidrome_songs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `navidrome_id` TEXT NOT NULL, `playlist_id` INTEGER NOT NULL, `title` TEXT NOT NULL, `artist` TEXT NOT NULL, `artist_id` TEXT, `album` TEXT NOT NULL, `album_id` TEXT, `cover_art_id` TEXT, `duration` INTEGER NOT NULL, `track_number` INTEGER NOT NULL, `disc_number` INTEGER NOT NULL, `year` INTEGER NOT NULL, `genre` TEXT, `bitRate` INTEGER, `mime_type` TEXT, `suffix` TEXT, `path` TEXT NOT NULL, `date_added` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `navidrome_id` TEXT NOT NULL, `playlist_id` TEXT NOT NULL, `title` TEXT NOT NULL, `artist` TEXT NOT NULL, `artist_id` TEXT, `album` TEXT NOT NULL, `album_id` TEXT, `cover_art_id` TEXT, `duration` INTEGER NOT NULL, `track_number` INTEGER NOT NULL, `disc_number` INTEGER NOT NULL, `year` INTEGER NOT NULL, `genre` TEXT, `bitRate` INTEGER, `mime_type` TEXT, `suffix` TEXT, `path` TEXT NOT NULL, `date_added` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -2084,7 +2084,7 @@
           {
             "fieldPath": "playlistId",
             "columnName": "playlist_id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -2280,7 +2280,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5e8c7d6268e4801fd778858978bae6fe')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0f410e9ae407c7ca8c6367164fedb1f3')"
     ]
   }
 }
