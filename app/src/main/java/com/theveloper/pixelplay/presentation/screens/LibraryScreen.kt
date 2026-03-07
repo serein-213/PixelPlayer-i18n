@@ -2077,17 +2077,18 @@ fun LibraryNavigationPill(
                 softWrap = false,
             ).size.width.toDp()
         }
-        val idealTitleWidth = idealTextWidth +
-            titleHorizontalPadding * 2 +
-            titleIconSize +
-            titleIconSpacing
+        val targetArrowWidth = arrowContentWidth + (targetArrowHorizontalPadding * 2)
         val availableWidth = if (availableWidthPx > 0) {
             with(density) { availableWidthPx.toDp() }
         } else {
-            idealTitleWidth + arrowContentWidth + (targetArrowHorizontalPadding * 2) + pillGap
+            // High fallback value for initial composition
+            1000.dp
         }
-        val targetArrowWidth = arrowContentWidth + (targetArrowHorizontalPadding * 2)
-        val maxTitleWidth = (availableWidth - targetArrowWidth - pillGap).coerceAtLeast(0.dp)
+        val maxTitleWidth = (availableWidth - targetArrowWidth - pillGap - 40.dp).coerceAtLeast(0.dp)
+        val idealTitleWidth = idealTextWidth +
+            titleHorizontalPadding * 2 +
+            (if (showIcon) (titleIconSize + titleIconSpacing) else 0.dp) +
+            4.dp // Tiny safety buffer
         val naturalTitleWidth = minOf(idealTitleWidth, maxTitleWidth)
         val minCompressedTitleWidth = (
             titleHorizontalPadding * 2 +
@@ -2195,13 +2196,15 @@ fun LibraryNavigationPill(
                                     Spacer(modifier = Modifier.width(titleIconSpacing))
                                 }
                             }
-                            Text(
-                                modifier = Modifier.weight(1f, fill = false),
+            Text(
+                                modifier = Modifier
+                                    .weight(1f, fill = false)
+                                    .padding(end = 4.dp), // Add slight end padding for safety
                                 text = targetState.title,
                                 style = titleStyle,
                                 maxLines = 1,
                                 softWrap = false,
-                                overflow = TextOverflow.Ellipsis,
+                                overflow = TextOverflow.Visible, // Change to Visible to prevent early ellipsis
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
