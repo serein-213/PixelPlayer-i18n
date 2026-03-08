@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyListItemInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.UnfoldMore
 import androidx.compose.material3.Icon
@@ -30,10 +32,52 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+
+private data class ScrollMetrics(
+    val progress: Float,
+    val totalItemsCount: Int,
+    val maxScrollIndex: Int,
+    val scrollableHeight: Float
+)
+
+private fun estimateListItemStridePx(visibleItems: List<LazyListItemInfo>): Float {
+    val firstVisibleItem = visibleItems.firstOrNull() ?: return 1f
+    val strideSamples = visibleItems
+        .zipWithNext()
+        .mapNotNull { (current, next) ->
+            (next.offset - current.offset)
+                .takeIf { it > 0 }
+                ?.toFloat()
+        }
+
+    val averageStride = strideSamples
+        .takeIf { it.isNotEmpty() }
+        ?.average()
+        ?.toFloat()
+
+    return (averageStride ?: firstVisibleItem.size.toFloat()).coerceAtLeast(1f)
+}
+
+private fun estimateGridRowMetrics(visibleItems: List<LazyGridItemInfo>): Pair<Int, Float> {
+    val firstVisibleItem = visibleItems.firstOrNull() ?: return 1 to 1f
+    val firstRowOffset = firstVisibleItem.offset.y
+    val itemsInFirstRow = visibleItems.count { it.offset.y == firstRowOffset }.coerceAtLeast(1)
+    val nextRowOffset = visibleItems
+        .asSequence()
+        .map { it.offset.y }
+        .filter { it > firstRowOffset }
+        .minOrNull()
+
+    val rowStridePx = ((nextRowOffset ?: (firstRowOffset + firstVisibleItem.size.height)) - firstRowOffset)
+        .toFloat()
+        .coerceAtLeast(1f)
+
+    return itemsInFirstRow to rowStridePx
+}
 
 @Composable
 fun ExpressiveScrollBar(
@@ -48,7 +92,6 @@ fun ExpressiveScrollBar(
     paddingEnd: Dp = 4.dp,
     trackGap: Dp = 8.dp
 ) {
-    val coroutineScope = rememberCoroutineScope()
     var isPressed by remember { mutableStateOf(false) }
     var isDragging by remember { mutableStateOf(false) }
     var dragProgress by remember { mutableFloatStateOf(-1f) }
@@ -88,59 +131,102 @@ fun ExpressiveScrollBar(
         
         if (!canScrollForward && !canScrollBackward) return@BoxWithConstraints
 
-        fun getScrollStats(): Triple<Float, Int, Float> {
+        fun getScrollStats(): ScrollMetrics {
             val totalItemsCount: Int
-            val firstVisibleItemIndex: Int
-            val visibleCount: Int
+            val currentScrollPx: Float
+            val totalScrollableContentPx: Float
+            val approximateMaxScrollIndex: Int
 
             if (listState != null) {
                 val layoutInfo = listState.layoutInfo
                 totalItemsCount = layoutInfo.totalItemsCount
-                firstVisibleItemIndex = listState.firstVisibleItemIndex
-                visibleCount = layoutInfo.visibleItemsInfo.size
+                val itemStridePx = estimateListItemStridePx(layoutInfo.visibleItemsInfo)
+                val viewportHeightPx =
+                    (layoutInfo.viewportEndOffset - layoutInfo.viewportStartOffset).toFloat()
+                        .coerceAtLeast(1f)
+                val estimatedVisibleItems = (viewportHeightPx / itemStridePx).coerceAtLeast(1f)
+
+                currentScrollPx =
+                    (listState.firstVisibleItemIndex * itemStridePx) + listState.firstVisibleItemScrollOffset
+                totalScrollableContentPx =
+                    ((totalItemsCount * itemStridePx) - viewportHeightPx).coerceAtLeast(1f)
+                approximateMaxScrollIndex =
+                    (totalItemsCount - estimatedVisibleItems).toInt().coerceAtLeast(1)
             } else if (gridState != null) {
                 val layoutInfo = gridState.layoutInfo
                 totalItemsCount = layoutInfo.totalItemsCount
-                firstVisibleItemIndex = gridState.firstVisibleItemIndex
-                visibleCount = layoutInfo.visibleItemsInfo.size
+                val (itemsPerRow, rowStridePx) = estimateGridRowMetrics(layoutInfo.visibleItemsInfo)
+                val viewportHeightPx =
+                    (layoutInfo.viewportEndOffset - layoutInfo.viewportStartOffset).toFloat()
+                        .coerceAtLeast(1f)
+                val totalRows = ((totalItemsCount + itemsPerRow - 1) / itemsPerRow).coerceAtLeast(1)
+                val estimatedVisibleRows = (viewportHeightPx / rowStridePx).coerceAtLeast(1f)
+                val currentRow = gridState.firstVisibleItemIndex / itemsPerRow
+
+                currentScrollPx = (currentRow * rowStridePx) + gridState.firstVisibleItemScrollOffset
+                totalScrollableContentPx =
+                    ((totalRows * rowStridePx) - viewportHeightPx).coerceAtLeast(1f)
+                approximateMaxScrollIndex =
+                    (((totalRows - estimatedVisibleRows).toInt().coerceAtLeast(1)) * itemsPerRow)
+                        .coerceAtMost((totalItemsCount - 1).coerceAtLeast(1))
             } else {
-                return Triple(0f, 0, 1f)
+                return ScrollMetrics(
+                    progress = 0f,
+                    totalItemsCount = 0,
+                    maxScrollIndex = 1,
+                    scrollableHeight = 1f
+                )
             }
 
-            if (totalItemsCount == 0) return Triple(0f, 0, 1f)
+            if (totalItemsCount == 0) {
+                return ScrollMetrics(
+                    progress = 0f,
+                    totalItemsCount = 0,
+                    maxScrollIndex = 1,
+                    scrollableHeight = 1f
+                )
+            }
 
-            val maxScrollIndex = (totalItemsCount - visibleCount).coerceAtLeast(1)
-            
             val forward = listState?.canScrollForward ?: gridState?.canScrollForward ?: false
             val backward = listState?.canScrollBackward ?: gridState?.canScrollBackward ?: false
-            
-            val realProgress = if (!forward && totalItemsCount > 0) 1f
-            else if (!backward) 0f
-            else (firstVisibleItemIndex.toFloat() / maxScrollIndex.toFloat()).coerceIn(0f, 0.99f)
+
+            val boundedScrollPx = currentScrollPx.coerceIn(0f, totalScrollableContentPx)
+            val realProgress = if (!forward && totalItemsCount > 0) {
+                1f
+            } else if (!backward) {
+                0f
+            } else {
+                (boundedScrollPx / totalScrollableContentPx).coerceIn(0f, 0.999f)
+            }
 
             val availableHeight = with(density) { constraintsMaxHeight.toPx() }
             val handleHeightPx = with(density) { minHeight.toPx() }
             val scrollableHeight = (availableHeight - handleHeightPx).coerceAtLeast(1f)
 
-            return Triple(realProgress, totalItemsCount, scrollableHeight)
+            return ScrollMetrics(
+                progress = realProgress,
+                totalItemsCount = totalItemsCount,
+                maxScrollIndex = approximateMaxScrollIndex,
+                scrollableHeight = scrollableHeight
+            )
         }
 
         fun updateProgressFromTouch(touchY: Float, grabOffset: Float) {
             val stats = getScrollStats()
-            val scrollableHeight = stats.third
-            val totalItemsCount = stats.second
-            
+            val scrollableHeight = stats.scrollableHeight
+
             val targetHandleTop = touchY - grabOffset
             val newProgress = (targetHandleTop / scrollableHeight).coerceIn(0f, 1f)
-            
+
             dragProgress = newProgress
-            pendingScrollIndex = (newProgress * totalItemsCount).toInt()
+            pendingScrollIndex = ((newProgress * stats.maxScrollIndex).toInt())
+                .coerceIn(0, (stats.totalItemsCount - 1).coerceAtLeast(0))
         }
 
-        // Throttled scroll: coalesces rapid drag updates into one scroll per frame
         LaunchedEffect(Unit) {
             snapshotFlow { pendingScrollIndex }
-                .collect { index ->
+                .distinctUntilChanged()
+                .collectLatest { index ->
                     if (index >= 0) {
                         listState?.scrollToItem(index)
                         gridState?.scrollToItem(index)
@@ -171,20 +257,20 @@ fun ExpressiveScrollBar(
                     detectDragGestures(
                         onDragStart = { offset ->
                             isDragging = true
-                            
+
                             val stats = getScrollStats()
-                            val realProgress = stats.first
-                            val scrollableHeight = stats.third
+                            val realProgress = stats.progress
+                            val scrollableHeight = stats.scrollableHeight
                             val handleHeightPx = with(density) { minHeight.toPx() }
-                            
+
                             val displayProgress = if (isDragging && dragProgress >= 0f) dragProgress else realProgress
                             val handleY = displayProgress * scrollableHeight
 
                             val isTouchOnHandle = offset.y >= handleY && offset.y <= (handleY + handleHeightPx)
-                            
+
                             if (isTouchOnHandle) {
                                 grabOffset = offset.y - handleY
-                                dragProgress = realProgress 
+                                dragProgress = realProgress
                             } else {
                                 grabOffset = handleHeightPx / 2f
                                 updateProgressFromTouch(offset.y, grabOffset)
@@ -193,10 +279,12 @@ fun ExpressiveScrollBar(
                         onDragEnd = {
                             isDragging = false
                             dragProgress = -1f
+                            pendingScrollIndex = -1
                         },
                         onDragCancel = {
                             isDragging = false
                             dragProgress = -1f
+                            pendingScrollIndex = -1
                         },
                         onDrag = { change, _ ->
                             change.consume()
@@ -210,9 +298,9 @@ fun ExpressiveScrollBar(
 
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val stats = getScrollStats()
-                val realProgress = stats.first
-                val scrollableHeight = stats.third
-                
+                val realProgress = stats.progress
+                val scrollableHeight = stats.scrollableHeight
+
                 val displayProgress = if (isDragging && dragProgress >= 0f) dragProgress else realProgress
                 val handleY = displayProgress * scrollableHeight
                 val handleHeightPx = minHeight.toPx()
@@ -271,8 +359,8 @@ fun ExpressiveScrollBar(
                    modifier = Modifier
                        .offset {
                            val stats = getScrollStats()
-                           val realProgress = stats.first
-                           val scrollableHeight = stats.third
+                           val realProgress = stats.progress
+                           val scrollableHeight = stats.scrollableHeight
                            val displayProgress = if (isDragging && dragProgress >= 0f) dragProgress else realProgress
                            val handleY = displayProgress * scrollableHeight
                            val handleHeightPx = with(density) { minHeight.toPx() }
