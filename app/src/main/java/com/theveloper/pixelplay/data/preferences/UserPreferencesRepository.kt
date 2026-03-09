@@ -68,8 +68,14 @@ constructor(
         private val json: Json // Inyectar Json para serialización
 ) {
 
+    private val backupExcludedKeyNames = setOf(
+        PreferencesKeys.INITIAL_SETUP_DONE.name
+    )
+
     private object PreferencesKeys {
         val APP_REBRAND_DIALOG_SHOWN = booleanPreferencesKey("app_rebrand_dialog_shown")
+        val BETA_05_CLEAN_INSTALL_DISCLAIMER_DISMISSED =
+            booleanPreferencesKey("beta_05_clean_install_disclaimer_dismissed")
         val ALLOWED_DIRECTORIES = stringSetPreferencesKey("allowed_directories")
         val BLOCKED_DIRECTORIES = stringSetPreferencesKey("blocked_directories")
         val INITIAL_SETUP_DONE = booleanPreferencesKey("initial_setup_done")
@@ -223,6 +229,17 @@ constructor(
     suspend fun setAppRebrandDialogShown(wasShown: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.APP_REBRAND_DIALOG_SHOWN] = wasShown
+        }
+    }
+
+    val beta05CleanInstallDisclaimerDismissedFlow: Flow<Boolean> =
+        dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.BETA_05_CLEAN_INSTALL_DISCLAIMER_DISMISSED] ?: false
+        }
+
+    suspend fun setBeta05CleanInstallDisclaimerDismissed(dismissed: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.BETA_05_CLEAN_INSTALL_DISCLAIMER_DISMISSED] = dismissed
         }
     }
 
@@ -1478,6 +1495,9 @@ constructor(
         val snapshot = dataStore.data.first().asMap()
         return snapshot.mapNotNull { (key, value) ->
             val keyName = key.name
+            if (keyName in backupExcludedKeyNames) {
+                return@mapNotNull null
+            }
             when (value) {
                 is String -> PreferenceBackupEntry(
                     key = keyName,
@@ -1532,6 +1552,9 @@ constructor(
             }
 
             entries.forEach { entry ->
+                if (entry.key in backupExcludedKeyNames) {
+                    return@forEach
+                }
                 when (entry.type) {
                     "string" -> {
                         val value = entry.stringValue ?: return@forEach

@@ -41,6 +41,13 @@ class ThemePreferencesRepository @Inject constructor(
             preferences[Keys.APP_THEME_MODE] = themeMode
         }
 
+    suspend fun initializeAppThemeMode(themeMode: String) =
+        dataStore.edit { preferences ->
+            if (preferences[Keys.APP_THEME_MODE] == null) {
+                preferences[Keys.APP_THEME_MODE] = themeMode
+            }
+        }
+
     suspend fun setAlbumArtPaletteStyle(style: AlbumArtPaletteStyle) =
         dataStore.edit { preferences ->
             preferences[Keys.ALBUM_ART_PALETTE_STYLE] = style.storageKey

@@ -69,6 +69,7 @@ import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.data.preferences.CollagePattern
 import com.theveloper.pixelplay.presentation.components.AlbumArtCollage
 import com.theveloper.pixelplay.presentation.components.BetaInfoBottomSheet
+import com.theveloper.pixelplay.presentation.components.Beta05CleanInstallDisclaimerDialog
 import com.theveloper.pixelplay.presentation.components.ChangelogBottomSheet
 import com.theveloper.pixelplay.presentation.netease.dashboard.NeteaseDashboardViewModel
 import com.theveloper.pixelplay.presentation.navidrome.dashboard.NavidromeDashboardViewModel
@@ -167,6 +168,7 @@ fun HomeScreen(
     var showChangelogBottomSheet by remember { mutableStateOf(false) }
     var showBetaInfoBottomSheet by remember { mutableStateOf(false) }
     var showStreamingProviderSheet by remember { mutableStateOf(false) }
+    var cleanInstallDisclaimerDismissedThisSession by rememberSaveable { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val betaSheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -176,6 +178,9 @@ fun HomeScreen(
 
     // Drawer state for sidebar
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val shouldShowCleanInstallDisclaimer =
+        settingsUiState.beta05CleanInstallDisclaimerDismissed == false &&
+            !cleanInstallDisclaimerDismissedThisSession
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -396,6 +401,16 @@ fun HomeScreen(
             isNavidromeLoggedIn = isNavidromeLoggedIn,
             onNavigateToNavidromeDashboard = {
                 navController.navigateSafely(Screen.NavidromeDashboard.route)
+            }
+        )
+    }
+    if (shouldShowCleanInstallDisclaimer) {
+        Beta05CleanInstallDisclaimerDialog(
+            onDismiss = { dontShowAgain ->
+                cleanInstallDisclaimerDismissedThisSession = true
+                if (dontShowAgain) {
+                    settingsViewModel.setBeta05CleanInstallDisclaimerDismissed(true)
+                }
             }
         )
     }

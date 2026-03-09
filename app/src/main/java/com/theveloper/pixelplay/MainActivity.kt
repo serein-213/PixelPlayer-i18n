@@ -207,7 +207,6 @@ class MainActivity : ComponentActivity() {
                 else -> systemDarkTheme
             }
             val isSetupComplete by mainViewModel.isSetupComplete.collectAsStateWithLifecycle()
-            var showSetupScreen by remember { mutableStateOf<Boolean?>(null) }
             
             // Crash report dialog state
             var showCrashReportDialog by remember { mutableStateOf(false) }
@@ -226,15 +225,12 @@ class MainActivity : ComponentActivity() {
 
             // Determine if we need to show Setup based on completion OR missing permissions
             val permissionsValid = permissionState.allPermissionsGranted && !needsAllFilesAccess
-
-            LaunchedEffect(isSetupComplete, permissionsValid, isBenchmarkMode) {
-                if (isBenchmarkMode) {
-                    showSetupScreen = false
-                    return@LaunchedEffect
+            val showSetupScreen = remember(isSetupComplete, permissionsValid, isBenchmarkMode) {
+                when {
+                    isBenchmarkMode -> false
+                    isSetupComplete == null -> null
+                    else -> !isSetupComplete!! || !permissionsValid
                 }
-
-                val setupComplete = isSetupComplete ?: return@LaunchedEffect
-                showSetupScreen = !setupComplete || !permissionsValid
             }
 
             // Sync Trigger: When we are NOT showing setup (meaning permissions are good and setup is done)
@@ -273,27 +269,30 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize().graphicsLayer { alpha = contentAlpha }, 
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val isSetupReadyByValue = isSetupComplete ?: true
-                    AnimatedContent(
-                        targetState = isSetupReadyByValue,
-                        transitionSpec = {
-                            if (targetState == false) {
-                                // Transition to Setup
-                                fadeIn(animationSpec = tween(400)) togetherWith fadeOut(animationSpec = tween(400))
+                    if (showSetupScreen == null) {
+                        SetupGateLoadingScreen()
+                    } else {
+                        AnimatedContent(
+                            targetState = showSetupScreen,
+                            transitionSpec = {
+                                if (targetState) {
+                                    // Transition to Setup
+                                    fadeIn(animationSpec = tween(400)) togetherWith fadeOut(animationSpec = tween(400))
+                                } else {
+                                    // Transition from Setup to Main App
+                                    scaleIn(initialScale = 0.95f, animationSpec = tween(450)) + fadeIn(animationSpec = tween(450)) togetherWith
+                                            slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(450)) + fadeOut(animationSpec = tween(450))
+                                }
+                            },
+                            label = "SetupTransition"
+                        ) { shouldShowSetup ->
+                            if (shouldShowSetup) {
+                                SetupScreen(onSetupComplete = {
+                                    // Repository-backed setup completion updates the gate automatically.
+                                })
                             } else {
-                                // Transition from Setup to Main App
-                                scaleIn(initialScale = 0.95f, animationSpec = tween(450)) + fadeIn(animationSpec = tween(450)) togetherWith
-                                        slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(450)) + fadeOut(animationSpec = tween(450))
+                                MainAppContent(playerViewModel, mainViewModel)
                             }
-                        },
-                        label = "SetupTransition"
-                    ) { targetIsSetupComplete ->
-                        if (targetIsSetupComplete == false) {
-                            SetupScreen(onSetupComplete = {
-                                // Manual override or repository update logic
-                            })
-                        } else {
-                            MainAppContent(playerViewModel, mainViewModel)
                         }
                     }
 
@@ -442,6 +441,29 @@ class MainActivity : ComponentActivity() {
             dismissActionLabel = dismissActionLabel ?: fallback.dismissActionLabel,
             linkPendingMessage = linkPendingMessage ?: fallback.linkPendingMessage,
         )
+    }
+
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+    @Composable
+    private fun SetupGateLoadingScreen() {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularWavyProgressIndicator()
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = "Preparing setup…",
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
     }
 
     @androidx.annotation.OptIn(UnstableApi::class)
