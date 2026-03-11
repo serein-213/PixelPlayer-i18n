@@ -13,7 +13,6 @@ import com.google.android.material.color.utilities.MathUtils
 import com.google.android.material.color.utilities.QuantizerCelebi
 import com.google.android.material.color.utilities.SchemeExpressive
 import com.google.android.material.color.utilities.SchemeFruitSalad
-import com.google.android.material.color.utilities.SchemeMonochrome
 import com.google.android.material.color.utilities.SchemeTonalSpot
 import com.google.android.material.color.utilities.SchemeVibrant
 import com.theveloper.pixelplay.data.preferences.AlbumArtPaletteStyle
@@ -53,7 +52,7 @@ private const val HIGH_CHROMA_THRESHOLD = 18.0
 private const val REQUIRED_NEUTRAL_POPULATION = 0.92
 private const val MAX_HIGH_CHROMA_POPULATION = 0.03
 private const val MAX_WEIGHTED_CHROMA_FOR_NEUTRAL = 9.0
-private const val MAX_GRAYSCALE_CHANNEL_DELTA = 14
+private const val MAX_GRAYSCALE_CHANNEL_DELTA = 10
 
 fun clearExtractedColorCache() {
     extractedColorCache.evictAll()
@@ -111,8 +110,7 @@ fun generateColorSchemeFromSeed(
     return runCatching {
         val seedArgb = seedColor.toArgb()
         val sourceHct = Hct.fromInt(seedArgb)
-        val shouldForceNeutral = paletteStyle != AlbumArtPaletteStyle.MONOCHROME &&
-            shouldUseNeutralArtworkScheme(seedArgb, sourceHct)
+        val shouldForceNeutral = shouldUseNeutralArtworkScheme(seedArgb, sourceHct)
 
         val lightScheme = createDynamicScheme(
             sourceHct = sourceHct,
@@ -229,7 +227,6 @@ private fun createDynamicScheme(
         AlbumArtPaletteStyle.VIBRANT -> SchemeVibrant(sourceHct, isDark, 0.0)
         AlbumArtPaletteStyle.EXPRESSIVE -> SchemeExpressive(sourceHct, isDark, 0.0)
         AlbumArtPaletteStyle.FRUIT_SALAD -> SchemeFruitSalad(sourceHct, isDark, 0.0)
-        AlbumArtPaletteStyle.MONOCHROME -> SchemeMonochrome(sourceHct, isDark, 0.0)
     }
 }
 

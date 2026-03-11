@@ -8,7 +8,6 @@ import com.google.android.material.color.utilities.DynamicScheme
 import com.google.android.material.color.utilities.Hct
 import com.google.android.material.color.utilities.SchemeExpressive
 import com.google.android.material.color.utilities.SchemeFruitSalad
-import com.google.android.material.color.utilities.SchemeMonochrome
 import com.google.android.material.color.utilities.SchemeTonalSpot
 import com.google.android.material.color.utilities.SchemeVibrant
 import com.google.common.truth.Truth.assertThat
@@ -16,15 +15,12 @@ import com.theveloper.pixelplay.data.preferences.AlbumArtPaletteStyle
 import org.junit.Test
 
 class ColorRolesTest {
-    private val nonMonochromeStyles = AlbumArtPaletteStyle.entries.filterNot {
-        it == AlbumArtPaletteStyle.MONOCHROME
-    }
 
     @Test
     fun generateColorSchemeFromSeed_autoNeutralOutputIsPureGrayscale() {
         val seed = Color(0xFF7F7F7F)
 
-        nonMonochromeStyles.forEach { style ->
+        AlbumArtPaletteStyle.entries.forEach { style ->
             val actual = generateColorSchemeFromSeed(seed, style)
             val nonGrayscaleLight = actual.light.toArgbList().filterNot(::isGrayscaleArgb)
             val nonGrayscaleDark = actual.dark.toArgbList().filterNot(::isGrayscaleArgb)
@@ -39,7 +35,7 @@ class ColorRolesTest {
         val seed = Color(0xFF556B2F)
         val sourceHct = Hct.fromInt(seed.toArgb())
 
-        nonMonochromeStyles.forEach { style ->
+        AlbumArtPaletteStyle.entries.forEach { style ->
             val actual = generateColorSchemeFromSeed(seed, style)
 
             assertThat(actual.light.toArgbList())
@@ -55,24 +51,6 @@ class ColorRolesTest {
         }
     }
 
-    @Test
-    fun generateColorSchemeFromSeed_keepsMonochromeStyleExplicit() {
-        val seed = Color(0xFF7F7F7F)
-        val sourceHct = Hct.fromInt(seed.toArgb())
-        val actual = generateColorSchemeFromSeed(seed, AlbumArtPaletteStyle.MONOCHROME)
-
-        assertThat(actual.light.toArgbList())
-            .containsExactlyElementsIn(
-                SchemeMonochrome(sourceHct, false, 0.0).toArgbList()
-            )
-            .inOrder()
-        assertThat(actual.dark.toArgbList())
-            .containsExactlyElementsIn(
-                SchemeMonochrome(sourceHct, true, 0.0).toArgbList()
-            )
-            .inOrder()
-    }
-
     private fun expectedScheme(
         style: AlbumArtPaletteStyle,
         sourceHct: Hct,
@@ -83,7 +61,6 @@ class ColorRolesTest {
             AlbumArtPaletteStyle.VIBRANT -> SchemeVibrant(sourceHct, isDark, 0.0)
             AlbumArtPaletteStyle.EXPRESSIVE -> SchemeExpressive(sourceHct, isDark, 0.0)
             AlbumArtPaletteStyle.FRUIT_SALAD -> SchemeFruitSalad(sourceHct, isDark, 0.0)
-            AlbumArtPaletteStyle.MONOCHROME -> SchemeMonochrome(sourceHct, isDark, 0.0)
         }
     }
 

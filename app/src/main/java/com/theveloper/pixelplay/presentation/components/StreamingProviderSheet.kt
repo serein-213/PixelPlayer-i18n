@@ -54,8 +54,23 @@ fun StreamingProviderSheet(
     )
 ) {
     val context = LocalContext.current
-    val providerContainerColor = MaterialTheme.colorScheme.secondaryContainer
-    val providerContentColor = MaterialTheme.colorScheme.onSecondaryContainer
+    val isDark = com.theveloper.pixelplay.ui.theme.LocalPixelPlayDarkTheme.current
+
+    // Brand colors for each provider
+    val telegramContainerColor = if (isDark) Color(0xFF1B3A4B) else Color(0xFFD6EEFB)
+    val telegramContentColor = if (isDark) Color(0xFF59B3E8) else Color(0xFF1B6FA0)
+
+    val googleDriveContainerColor = if (isDark) Color(0xFF2A3A2A) else Color(0xFFE0F0D8)
+    val googleDriveContentColor = if (isDark) Color(0xFF7BC67B) else Color(0xFF2E7D32)
+
+    val subsonicContainerColor = if (isDark) Color(0xFF3B2A1A) else Color(0xFFFDE8D0)
+    val subsonicContentColor = if (isDark) Color(0xFFE8A54B) else Color(0xFFB06A1A)
+
+    val neteaseContainerColor = if (isDark) Color(0xFF3B1A1A) else Color(0xFFFDD8D8)
+    val neteaseContentColor = if (isDark) Color(0xFFE85959) else Color(0xFFBF1B1B)
+
+    val qqMusicContainerColor = if (isDark) Color(0xFF1A3B2A) else Color(0xFFD0F5E0)
+    val qqMusicContentColor = if (isDark) Color(0xFF4BCB7B) else Color(0xFF1A8A40)
 
     val cardShape = AbsoluteSmoothCornerShape(
         cornerRadiusTR = 20.dp, cornerRadiusTL = 20.dp,
@@ -118,9 +133,9 @@ fun StreamingProviderSheet(
                 icon = Icons.Rounded.Cloud,
                 title = "Telegram",
                 subtitle = "Stream from channels & chats",
-                containerColor = providerContainerColor,
-                contentColor = providerContentColor,
-                iconColor = providerContentColor,
+                containerColor = telegramContainerColor,
+                contentColor = telegramContentColor,
+                iconColor = telegramContentColor,
                 shape = cardShape,
                 onClick = {
                     context.startActivity(Intent(context, TelegramLoginActivity::class.java))
@@ -136,9 +151,9 @@ fun StreamingProviderSheet(
                 iconPainter = painterResource(R.drawable.rounded_drive_export_24),
                 title = "Google Drive",
                 subtitle = "Coming soon",
-                containerColor = providerContainerColor,
-                contentColor = providerContentColor,
-                iconColor = providerContentColor,
+                containerColor = googleDriveContainerColor,
+                contentColor = googleDriveContentColor,
+                iconColor = googleDriveContentColor,
                 shape = cardShape,
                 enabled = false,
                 onClick = { }
@@ -155,9 +170,9 @@ fun StreamingProviderSheet(
                     "✓ Connected (Navidrome/Airsonic)"
                 else
                     "Connect Navidrome & others",
-                containerColor = providerContainerColor,
-                contentColor = providerContentColor,
-                iconColor = providerContentColor,
+                containerColor = subsonicContainerColor,
+                contentColor = subsonicContentColor,
+                iconColor = subsonicContentColor,
                 shape = cardShape,
                 onClick = {
                     if (isNavidromeLoggedIn) {
@@ -185,9 +200,9 @@ fun StreamingProviderSheet(
                         "✓ Connected"
                     else
                         "Sign in",
-                    containerColor = providerContainerColor,
-                    contentColor = providerContentColor,
-                    iconColor = providerContentColor,
+                    containerColor = neteaseContainerColor,
+                    contentColor = neteaseContentColor,
+                    iconColor = neteaseContentColor,
                     shape = neteaseCardShape,
                     onClick = {
                         if (isNeteaseLoggedIn) {
@@ -208,9 +223,9 @@ fun StreamingProviderSheet(
                         "✓ Connected"
                     else
                         "Sign in",
-                    containerColor = providerContainerColor,
-                    contentColor = providerContentColor,
-                    iconColor = providerContentColor,
+                    containerColor = qqMusicContainerColor,
+                    contentColor = qqMusicContentColor,
+                    iconColor = qqMusicContentColor,
                     shape = qqCardShape,
                     onClick = {
                         if (isQqMusicLoggedIn) {

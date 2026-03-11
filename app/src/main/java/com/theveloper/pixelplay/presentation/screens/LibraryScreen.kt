@@ -98,6 +98,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
@@ -761,136 +763,109 @@ fun LibraryScreen(
     val currentTab = tabTitles.getOrNull(currentTabIndex)?.toLibraryTabIdOrNull() ?: currentTabId
     val currentTabTitle = currentTab.displayTitle()
 
-    Scaffold(
-        modifier = Modifier.background(brush = gradientBrush),
-        topBar = {
-            TopAppBar(
-                title = {
-                    if (isCompactNavigation) {
-                        LibraryNavigationPill(
-                            modifier = Modifier,
-                            title = currentTabTitle,
-                            isExpanded = showTabSwitcherSheet,
-                            showIcon = !isSendingToWatch,
-                            iconRes = currentTab.iconRes(),
-                            pageIndex = pagerState.currentPage,
-                            compressForWatchTransfer = isSendingToWatch,
-                            onClick = {
-                                showTabSwitcherSheet = true
-                            },
-                            onArrowClick = { showTabSwitcherSheet = true }
-                        )
-                    } else {
-                        Text(
-                            modifier = Modifier.padding(start = 8.dp),
-                            text = "Library",
-                            fontFamily = GoogleSansRounded,
-                            //style = ExpTitleTypography.titleMedium,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 40.sp,
-                            letterSpacing = 1.sp
-                        )
-                    }
-                },
-                actions = {
-                    if (isSendingToWatch) {
-                        val watchTransferProgress = activeWatchTransfer?.progress ?: 0f
-                        val watchTransferPercent = (watchTransferProgress * 100f).toInt().coerceIn(0, 100)
-                        Surface(
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .wrapContentWidth()
-                                .height(40.dp)
-                                .clip(CircleShape)
-                                .clickable(enabled = activeWatchTransfer != null) {
-                                    showWatchTransferDialog = true
-                                },
-                            shape = CircleShape,
-                            color = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.rounded_watch_arrow_down_24),
-                                    contentDescription = "Watch transfer",
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Text(
-                                    text = "$watchTransferPercent%",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        }
-                    }
-                    FilledIconButton(
-                        modifier = Modifier.padding(end = 14.dp),
-                        colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ),
-                        onClick = {
-                            navController.navigateSafely(Screen.Settings.route)
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.rounded_settings_24),
-                            contentDescription = "Ajustes"
-                        )
-                    }
-//                    FilledTonalIconButton(
-//                        modifier = Modifier.padding(end = 14.dp),
-//                        onClick = { /* TODO: User profile action */ },
-//                        colors = IconButtonDefaults.filledTonalIconButtonColors(
-//                            containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
-//                        )
-//                    ) {
-//                        Icon(
-//                            imageVector = Icons.Rounded.Person,
-//                            contentDescription = "User Profile",
-//                            tint = MaterialTheme.colorScheme.primary
-//                        )
-//                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
-                )
-            )
-        }
-    ) { innerScaffoldPadding ->
-        val playerUiState by remember(playerViewModel) {
-            playerViewModel.playerUiState
-                .map { uiState -> uiState.toLibraryScreenProjection() }
-                .distinctUntilChanged()
-        }.collectAsStateWithLifecycle(initialValue = LibraryScreenPlayerProjection())
-        val isLibraryContentEmpty by remember(playerViewModel) {
-            combine(
-                playerViewModel.allSongsFlow,
-                playerViewModel.albumsFlow,
-                playerViewModel.artistsFlow
-            ) { allSongs, albums, artists ->
-                allSongs.isEmpty() && albums.isEmpty() && artists.isEmpty()
-            }.distinctUntilChanged()
-        }.collectAsStateWithLifecycle(initialValue = true)
+    val headerContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-        Box( // Box para permitir superposición del indicador de carga
-            modifier = Modifier
-                .padding(top = innerScaffoldPadding.calculateTopPadding())
-                .fillMaxSize()
-        ) {
+    Scaffold(
+        modifier = Modifier
+            .background(brush = gradientBrush)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            val collapsedFraction = if (scrollBehavior.state.heightOffsetLimit != 0f) {
+                (scrollBehavior.state.heightOffset / scrollBehavior.state.heightOffsetLimit).coerceIn(0f, 1f)
+            } else 0f
+
             Column(
                 modifier = Modifier
-                    // .padding(innerScaffoldPadding) // El padding ya está en el Box contenedor
-//                    .background(brush = Brush.verticalGradient(gradientColors))
-                    .background(color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f))
-                    .fillMaxSize()
+                    .background(headerContainerColor)
             ) {
+                TopAppBar(
+                    title = {
+                        if (isCompactNavigation) {
+                            LibraryNavigationPill(
+                                modifier = Modifier,
+                                title = currentTabTitle,
+                                isExpanded = showTabSwitcherSheet,
+                                showIcon = !isSendingToWatch,
+                                iconRes = currentTab.iconRes(),
+                                pageIndex = pagerState.currentPage,
+                                compressForWatchTransfer = isSendingToWatch,
+                                onClick = {
+                                    showTabSwitcherSheet = true
+                                },
+                                onArrowClick = { showTabSwitcherSheet = true }
+                            )
+                        } else {
+                            Text(
+                                modifier = Modifier.padding(start = 8.dp),
+                                text = "Library",
+                                fontFamily = GoogleSansRounded,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 40.sp,
+                                letterSpacing = 1.sp
+                            )
+                        }
+                    },
+                    actions = {
+                        if (isSendingToWatch) {
+                            val watchTransferProgress = activeWatchTransfer?.progress ?: 0f
+                            val watchTransferPercent = (watchTransferProgress * 100f).toInt().coerceIn(0, 100)
+                            Surface(
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .wrapContentWidth()
+                                    .height(40.dp)
+                                    .clip(CircleShape)
+                                    .clickable(enabled = activeWatchTransfer != null) {
+                                        showWatchTransferDialog = true
+                                    },
+                                shape = CircleShape,
+                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.rounded_watch_arrow_down_24),
+                                        contentDescription = "Watch transfer",
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                    Text(
+                                        text = "$watchTransferPercent%",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
+                        FilledIconButton(
+                            modifier = Modifier.padding(end = 14.dp),
+                            colors = IconButtonDefaults.filledIconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            ),
+                            onClick = {
+                                navController.navigateSafely(Screen.Settings.route)
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.rounded_settings_24),
+                                contentDescription = "Ajustes"
+                            )
+                        }
+                    },
+                    scrollBehavior = scrollBehavior,
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color.Transparent
+                    )
+                )
+                AnimatedVisibility(visible = collapsedFraction < 0.5f) {
                 if (!isCompactNavigation) {
                     val showTabIndicator = false
                     PrimaryScrollableTabRow(
@@ -935,8 +910,7 @@ fun LibraryScreen(
                             }
                         }
                         TabAnimation(
-//                        modifier = Modifier.aspectRatio(1f),
-                            index = -1, // A non-matching index to keep it unselected
+                            index = -1,
                             title = "Edit",
                             selectedIndex = currentTabIndex,
                             onClick = { showReorderTabsSheet = true }
@@ -955,7 +929,35 @@ fun LibraryScreen(
                         modifier = Modifier.padding(top = 8.dp, bottom = 10.dp)
                     )
                 }
+                }
+            }
+        }
+    ) { innerScaffoldPadding ->
+        val playerUiState by remember(playerViewModel) {
+            playerViewModel.playerUiState
+                .map { uiState -> uiState.toLibraryScreenProjection() }
+                .distinctUntilChanged()
+        }.collectAsStateWithLifecycle(initialValue = LibraryScreenPlayerProjection())
+        val isLibraryContentEmpty by remember(playerViewModel) {
+            combine(
+                playerViewModel.allSongsFlow,
+                playerViewModel.albumsFlow,
+                playerViewModel.artistsFlow
+            ) { allSongs, albums, artists ->
+                allSongs.isEmpty() && albums.isEmpty() && artists.isEmpty()
+            }.distinctUntilChanged()
+        }.collectAsStateWithLifecycle(initialValue = true)
 
+        Box(
+            modifier = Modifier
+                .padding(top = innerScaffoldPadding.calculateTopPadding())
+                .fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(color = headerContainerColor)
+                    .fillMaxSize()
+            ) {
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
@@ -3125,10 +3127,10 @@ fun ArtistListItem(artist: Artist, onClick: () -> Unit, isLoading: Boolean = fal
                         .background(MaterialTheme.colorScheme.primaryContainer),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (!artist.imageUrl.isNullOrEmpty()) {
+                    if (!artist.effectiveImageUrl.isNullOrEmpty()) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(artist.imageUrl)
+                                .data(artist.effectiveImageUrl)
                                 .crossfade(true)
                                 .build(),
                             contentDescription = artist.name,
