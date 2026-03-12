@@ -458,9 +458,20 @@ abstract class PixelPlayDatabase : RoomDatabase() {
 
         /**
          * Add missing indexes for frequently filtered and sorted queries.
+         *
+         * Safety: the `date_added` column may be absent on databases that were
+         * created before it was part of the songs schema and later restored via
+         * Android auto-backup, so we add it defensively before indexing.
          */
         val MIGRATION_23_24 = object : Migration(23, 24) {
             override fun migrate(db: SupportSQLiteDatabase) {
+                // Ensure date_added column exists before creating its index.
+                try {
+                    db.execSQL("ALTER TABLE songs ADD COLUMN date_added INTEGER NOT NULL DEFAULT 0")
+                } catch (_: Exception) {
+                    // Column already exists — expected for normal upgrade paths.
+                }
+
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_songs_content_uri_string ON songs(content_uri_string)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_songs_date_added ON songs(date_added)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_songs_duration ON songs(duration)")
