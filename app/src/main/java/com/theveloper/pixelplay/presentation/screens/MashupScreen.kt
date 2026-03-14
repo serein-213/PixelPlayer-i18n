@@ -44,8 +44,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -67,13 +69,13 @@ fun MashupScreen(
 ) {
     val mashupUiState by mashupViewModel.uiState.collectAsStateWithLifecycle()
     val sheetState = rememberModalBottomSheetState()
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val loadingMessage = stringResource(R.string.mashup_loading)
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("DJ Space") },
+                title = { Text(stringResource(R.string.mashup_screen_title)) },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f))
             )
         }
@@ -101,7 +103,7 @@ fun MashupScreen(
                         deckNumber = 1,
                         deckState = mashupUiState.deck1,
                         isLoading = isLoading1,
-                        loadingMessage = "Loading...",
+                        loadingMessage = loadingMessage,
                         onPlayPause = { mashupViewModel.playPause(1) },
                         onVolumeChange = { mashupViewModel.setVolume(1, it) },
                         onSelectSong = { mashupViewModel.openSongPicker(1) },
@@ -113,7 +115,7 @@ fun MashupScreen(
                         deckNumber = 2,
                         deckState = mashupUiState.deck2,
                         isLoading = isLoading2,
-                        loadingMessage = "Loading...",
+                        loadingMessage = loadingMessage,
                         onPlayPause = { mashupViewModel.playPause(2) },
                         onVolumeChange = { mashupViewModel.setVolume(2, it) },
                         onSelectSong = { mashupViewModel.openSongPicker(2) },
@@ -175,7 +177,7 @@ private fun DeckUi(
         Box(contentAlignment = Alignment.Center) {
             Column(modifier = Modifier.padding(12.dp)) {
                 Text(
-                    text = "Deck $deckNumber",
+                    text = stringResource(R.string.mashup_deck_label, deckNumber),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
@@ -199,16 +201,31 @@ private fun DeckUi(
                         if (deckState.song != null) {
                             SmartImage(
                                 model = deckState.song.albumArtUriString,
-                                contentDescription = "Song Cover",
+                                contentDescription = stringResource(R.string.mashup_song_cover_cd),
                                 modifier = Modifier.fillMaxSize()
                             )
                         } else {
-                            Icon(painterResource(id = R.drawable.rounded_playlist_add_24), "Load Song", modifier = Modifier.size(40.dp))
+                            Icon(
+                                painterResource(id = R.drawable.rounded_playlist_add_24),
+                                contentDescription = stringResource(R.string.mashup_load_song_cd),
+                                modifier = Modifier.size(40.dp)
+                            )
                         }
                     }
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(deckState.song?.title ?: "No song loaded", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        Text(deckState.song?.artist ?: "...", style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(
+                            deckState.song?.title ?: stringResource(R.string.mashup_no_song_loaded),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            deckState.song?.artist ?: stringResource(R.string.mashup_artist_placeholder),
+                            style = MaterialTheme.typography.bodyMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                         Spacer(Modifier.height(8.dp))
                         Slider(
                             value = deckState.progress,
@@ -229,7 +246,7 @@ private fun DeckUi(
                             .padding(16.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Stem Separation not available yet.", style = MaterialTheme.typography.bodyMedium)
+                        Text(stringResource(R.string.mashup_stem_unavailable), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
 
@@ -240,16 +257,24 @@ private fun DeckUi(
                     horizontalArrangement = Arrangement.SpaceAround,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    OutlinedButton(onClick = { onNudge(-100) }, enabled = deckState.song != null) { Text("<<") }
-                    IconButton(onClick = onPlayPause, enabled = deckState.song != null, modifier = Modifier.size(56.dp)) {
-                        Icon(painter = painterResource(if (deckState.isPlaying) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24), contentDescription = "Play/Pause", modifier = Modifier.fillMaxSize())
+                    OutlinedButton(onClick = { onNudge(-100) }, enabled = deckState.song != null) {
+                        Text(stringResource(R.string.mashup_nudge_left_label))
                     }
-                    OutlinedButton(onClick = { onNudge(100) }, enabled = deckState.song != null) { Text(">>") }
+                    IconButton(onClick = onPlayPause, enabled = deckState.song != null, modifier = Modifier.size(56.dp)) {
+                        Icon(
+                            painter = painterResource(if (deckState.isPlaying) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24),
+                            contentDescription = stringResource(R.string.mashup_play_pause_cd),
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                    OutlinedButton(onClick = { onNudge(100) }, enabled = deckState.song != null) {
+                        Text(stringResource(R.string.mashup_nudge_right_label))
+                    }
                 }
 
                 Column(modifier = Modifier.padding(top = 8.dp)) {
-                    SliderControl(label = "Volume", value = deckState.volume, onValueChange = onVolumeChange, valueRange = 0f..1f, enabled = deckState.song != null)
-                    SliderControl(label = "Speed", value = deckState.speed, onValueChange = onSpeedChange, valueRange = 0.5f..2f, steps = 14, enabled = deckState.song != null) {
+                    SliderControl(label = stringResource(R.string.mashup_volume_label), value = deckState.volume, onValueChange = onVolumeChange, valueRange = 0f..1f, enabled = deckState.song != null)
+                    SliderControl(label = stringResource(R.string.mashup_speed_label), value = deckState.speed, onValueChange = onSpeedChange, valueRange = 0.5f..2f, steps = 14, enabled = deckState.song != null) {
                         Text(text = "x${"%.2f".format(deckState.speed)}", style = MaterialTheme.typography.labelSmall)
                     }
                 }
@@ -289,13 +314,13 @@ private fun SliderControl(
 @Composable
 private fun Crossfader(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Crossfader", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.mashup_crossfader_title), style = MaterialTheme.typography.titleMedium)
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("Deck 1", style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(R.string.mashup_deck_label, 1), style = MaterialTheme.typography.bodyMedium)
             Slider(value = value, onValueChange = onValueChange, valueRange = -1f..1f, modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 8.dp))
-            Text("Deck 2", style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(R.string.mashup_deck_label, 2), style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
@@ -303,7 +328,7 @@ private fun Crossfader(value: Float, onValueChange: (Float) -> Unit, modifier: M
 @Composable
 private fun SongPickerSheet(songs: List<Song>, onSongSelected: (Song) -> Unit) {
     Column(modifier = Modifier.navigationBarsPadding()) {
-        Text("Select a Song", style = MaterialTheme.typography.titleLarge, modifier = Modifier
+        Text(stringResource(R.string.mashup_select_song_title), style = MaterialTheme.typography.titleLarge, modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp), textAlign = TextAlign.Center)
         LazyColumn(modifier = Modifier
@@ -329,7 +354,7 @@ private fun SongPickerItem(song: Song, onClick: () -> Unit) {
     ) {
         SmartImage(
             model = song.albumArtUriString,
-            contentDescription = "Song Cover",
+            contentDescription = stringResource(R.string.mashup_song_cover_cd),
             modifier = Modifier.size(40.dp)
         )
         Column(modifier = Modifier.weight(1f)) {

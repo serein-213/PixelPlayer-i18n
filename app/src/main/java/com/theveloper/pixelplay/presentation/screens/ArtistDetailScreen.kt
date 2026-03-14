@@ -56,6 +56,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -532,13 +533,14 @@ private fun CollapsibleAlbumSectionHeader(
         animationSpec = tween(durationMillis = 260),
         label = "ArtistAlbumExpandRotation"
     )
-    val subtitle = remember(section.year, section.songs.size) {
+    val songsText = stringResource(id = com.theveloper.pixelplay.R.string.common_songs_count, section.songs.size)
+    val subtitle = remember(section.year, section.songs.size, songsText) {
         buildString {
             section.year?.takeIf { it > 0 }?.let {
                 append(it.toString())
                 append(" • ")
             }
-            append("${section.songs.size} songs")
+            append(songsText)
         }
     }
 
@@ -600,11 +602,11 @@ private fun CollapsibleAlbumSectionHeader(
                     contentColor = MaterialTheme.colorScheme.onTertiaryContainer
                 )
             ) {
-                Icon(Icons.Rounded.PlayArrow, contentDescription = "Play ${section.title}")
+                Icon(Icons.Rounded.PlayArrow, contentDescription = stringResource(id = com.theveloper.pixelplay.R.string.artist_play, section.title))
             }
             Icon(
                 imageVector = Icons.Rounded.ExpandMore,
-                contentDescription = if (isExpanded) "Collapse ${section.title}" else "Expand ${section.title}",
+                contentDescription = if (isExpanded) stringResource(id = com.theveloper.pixelplay.R.string.artist_collapse, section.title) else stringResource(id = com.theveloper.pixelplay.R.string.artist_expand, section.title),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.graphicsLayer {
                     rotationZ = expandIconRotation
@@ -956,7 +958,7 @@ private fun CustomCollapsingTopBar(
                     onClick = onBackPressed,
                     colors = IconButtonDefaults.filledIconButtonColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
                 ) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(id = com.theveloper.pixelplay.R.string.common_back))
                 }
 
                 // Image edit button (visible only when header is mostly expanded)
@@ -973,14 +975,14 @@ private fun CustomCollapsingTopBar(
                             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                             contentColor = MaterialTheme.colorScheme.onSurface
                         ) {
-                            Icon(Icons.Rounded.Edit, contentDescription = "Edit artist image")
+                            Icon(Icons.Rounded.Edit, contentDescription = stringResource(id = com.theveloper.pixelplay.R.string.artist_edit_image_cd))
                         }
                         DropdownMenu(
                             expanded = showImageMenu,
                             onDismissRequest = { showImageMenu = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Change photo") },
+                                text = { Text(stringResource(id = com.theveloper.pixelplay.R.string.artist_change_photo)) },
                                 leadingIcon = { Icon(Icons.Rounded.AddAPhoto, contentDescription = null) },
                                 onClick = {
                                     showImageMenu = false
@@ -989,7 +991,7 @@ private fun CustomCollapsingTopBar(
                             )
                             if (hasCustomImage) {
                                 DropdownMenuItem(
-                                    text = { Text("Reset to default") },
+                                    text = { Text(stringResource(id = com.theveloper.pixelplay.R.string.artist_reset_image)) },
                                     leadingIcon = { Icon(Icons.Rounded.Delete, contentDescription = null) },
                                     onClick = {
                                         showImageMenu = false
@@ -1032,7 +1034,7 @@ private fun CustomCollapsingTopBar(
                         )
 
                         Text(
-                            text = "$songsCount songs",
+                            text = stringResource(id = com.theveloper.pixelplay.R.string.common_songs_count, songsCount),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1,
@@ -1054,7 +1056,7 @@ private fun CustomCollapsingTopBar(
                             alpha = fabScale
                         }
                 ) {
-                    Icon(Icons.Rounded.Shuffle, contentDescription = "Shuffle play album")
+                    Icon(Icons.Rounded.Shuffle, contentDescription = stringResource(id = com.theveloper.pixelplay.R.string.artist_shuffle))
                 }
             }
         }

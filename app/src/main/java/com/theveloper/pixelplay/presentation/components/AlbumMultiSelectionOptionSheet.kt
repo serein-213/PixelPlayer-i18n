@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.ui.res.stringResource
+import com.theveloper.pixelplay.R
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.ButtonDefaults
@@ -95,12 +97,12 @@ fun AlbumMultiSelectionOptionSheet(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "Queue + play respects your selection order.",
+                text = stringResource(R.string.album_queue_play_respects_order),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "Limit: $maxSelection albums per selection.",
+                text = stringResource(R.string.album_selection_limit, maxSelection),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -133,7 +135,7 @@ fun AlbumMultiSelectionOptionSheet(
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(
-                    text = "Add to Queue & Play",
+                    text = stringResource(R.string.album_add_to_queue_and_play),
                     style = MaterialTheme.typography.titleMedium
                 )
             }

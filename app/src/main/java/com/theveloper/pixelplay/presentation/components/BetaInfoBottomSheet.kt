@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -69,7 +70,7 @@ fun BetaInfoBottomSheet(modifier: Modifier = Modifier) {
             item(key = "header") {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "Beta 0.6.0",
+                        text = stringResource(R.string.beta_info_title),
                         fontFamily = GoogleSansRounded,
                         style = ExpTitleTypography.displaySmall,
                         color = MaterialTheme.colorScheme.onSurface
@@ -139,12 +140,12 @@ fun BetaInfoBottomSheet(modifier: Modifier = Modifier) {
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = "Welcome to PixelPlayer 0.6.0-beta",
+                                text = stringResource(R.string.beta_info_welcome_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = "This beta is now focused on stability, performance, and cross-device playback while shipping major new integrations.",
+                                text = stringResource(R.string.beta_info_welcome_desc),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -183,28 +184,28 @@ fun BetaInfoBottomSheet(modifier: Modifier = Modifier) {
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "What to expect",
+                                text = stringResource(R.string.beta_info_expect_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold
                             )
                         }
                         Text(
-                            text = "Faster daily use: smoother startup, navigation, and player interactions across the app.",
+                            text = stringResource(R.string.beta_info_expect_item_1),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "Broader device support: Android Auto, Wear OS upgrades, and stronger Cast reliability.",
+                            text = stringResource(R.string.beta_info_expect_item_2),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "Expanded cloud ecosystem: Telegram playlists, NetEase sync, QQ Music, and Google Drive streaming updates.",
+                            text = stringResource(R.string.beta_info_expect_item_3),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "Large reliability pass: queue/shuffle logic, background playback behavior, and many UI fixes.",
+                            text = stringResource(R.string.beta_info_expect_item_4),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -242,13 +243,13 @@ fun BetaInfoBottomSheet(modifier: Modifier = Modifier) {
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Report an issue",
+                                text = stringResource(R.string.beta_info_report_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold
                             )
                         }
                         Text(
-                            text = "Share steps to reproduce, expected result, actual result, and your device/OS details. A short screen recording is very helpful.",
+                            text = stringResource(R.string.beta_info_report_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -283,7 +284,7 @@ fun BetaInfoBottomSheet(modifier: Modifier = Modifier) {
                                     modifier = Modifier.size(18.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text(text = "Open GitHub issues")
+                                Text(text = stringResource(R.string.beta_info_open_github_issues))
                             }
                             FilledTonalButton(
                                 onClick = { launchUrl(context, reportUrl) },
@@ -307,7 +308,7 @@ fun BetaInfoBottomSheet(modifier: Modifier = Modifier) {
                                     tint = MaterialTheme.colorScheme.primary
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
-                                Text(text = "Report a bug")
+                                Text(text = stringResource(R.string.beta_info_report_bug))
                             }
                         }
                     }

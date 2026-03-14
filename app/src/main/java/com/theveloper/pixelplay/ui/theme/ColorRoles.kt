@@ -13,6 +13,7 @@ import com.google.android.material.color.utilities.MathUtils
 import com.google.android.material.color.utilities.QuantizerCelebi
 import com.google.android.material.color.utilities.SchemeExpressive
 import com.google.android.material.color.utilities.SchemeFruitSalad
+import com.google.android.material.color.utilities.SchemeMonochrome
 import com.google.android.material.color.utilities.SchemeTonalSpot
 import com.google.android.material.color.utilities.SchemeVibrant
 import com.theveloper.pixelplay.data.preferences.AlbumArtPaletteStyle
@@ -227,6 +228,7 @@ private fun createDynamicScheme(
         AlbumArtPaletteStyle.VIBRANT -> SchemeVibrant(sourceHct, isDark, 0.0)
         AlbumArtPaletteStyle.EXPRESSIVE -> SchemeExpressive(sourceHct, isDark, 0.0)
         AlbumArtPaletteStyle.FRUIT_SALAD -> SchemeFruitSalad(sourceHct, isDark, 0.0)
+        AlbumArtPaletteStyle.MONOCHROME -> SchemeMonochrome(sourceHct, isDark, 0.0)
     }
 }
 

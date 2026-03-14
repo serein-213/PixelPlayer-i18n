@@ -63,6 +63,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -138,7 +139,7 @@ private fun QqMusicLoginScreen(
     LaunchedEffect(loginState) {
         when (val state = loginState) {
             is QqMusicLoginState.Success -> {
-                Toast.makeText(context, "Welcome, ${state.nickname}!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.cloud_streaming_login_welcome, state.nickname), Toast.LENGTH_SHORT).show()
                 onClose()
             }
 
@@ -160,7 +161,7 @@ private fun QqMusicLoginScreen(
         delay(20_000)
         if (webUiState.isLoadingPage) {
             pageLoadTimeout = true
-            snackbarHostState.showSnackbar("Page load timed out. You can retry without losing your progress.")
+            snackbarHostState.showSnackbar(context.getString(R.string.cloud_streaming_login_error_timeout))
         }
     }
 
@@ -199,11 +200,11 @@ private fun QqMusicLoginScreen(
         AlertDialog(
             onDismissRequest = { showExitDialog = false },
             title = {
-                Text(text = "Exit QQ Music login?", fontFamily = GoogleSansRounded)
+                Text(text = stringResource(R.string.cloud_streaming_qqmusic_login_exit_title), fontFamily = GoogleSansRounded)
             },
             text = {
                 Text(
-                    text = "You can come back later. Current page state will be discarded when closing.",
+                    text = stringResource(R.string.cloud_streaming_login_exit_text),
                     fontFamily = GoogleSansRounded
                 )
             },
@@ -214,12 +215,12 @@ private fun QqMusicLoginScreen(
                         onClose()
                     }
                 ) {
-                    Text(text = "Exit", fontFamily = GoogleSansRounded)
+                    Text(text = stringResource(R.string.cloud_streaming_login_exit_confirm), fontFamily = GoogleSansRounded)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showExitDialog = false }) {
-                    Text(text = "Stay", fontFamily = GoogleSansRounded)
+                    Text(text = stringResource(R.string.cloud_streaming_login_exit_dismiss), fontFamily = GoogleSansRounded)
                 }
             }
         )
@@ -231,7 +232,7 @@ private fun QqMusicLoginScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Login to QQ Music",
+                        text = stringResource(R.string.cloud_streaming_qqmusic_login_title),
                         style = titleStyle,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1
@@ -354,7 +355,7 @@ private fun QqMusicLoginScreen(
                         }
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = if (loginState is QqMusicLoginState.Loading) "Saving..." else "Done",
+                            text = if (loginState is QqMusicLoginState.Loading) stringResource(R.string.cloud_streaming_login_saving) else stringResource(R.string.cloud_streaming_login_done),
                             fontFamily = GoogleSansRounded,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -384,7 +385,7 @@ private fun QqMusicLoginScreen(
                 )
             ) {
                 Text(
-                    text = "Security note: your password is entered only in QQ Music web pages. PixelPlay stores session cookies to sync your library.",
+                    text = stringResource(R.string.cloud_streaming_qqmusic_security_note),
                     modifier = Modifier.padding(12.dp),
                     style = MaterialTheme.typography.bodySmall,
                     fontFamily = GoogleSansRounded,
@@ -393,7 +394,7 @@ private fun QqMusicLoginScreen(
             }
 
             val effectiveError = when {
-                pageLoadTimeout -> "Page is taking too long to load. Use refresh or try another network."
+                pageLoadTimeout -> stringResource(R.string.cloud_streaming_login_error_timeout)
                 webUiState.lastError != null -> webUiState.lastError
                 else -> null
             }
@@ -428,7 +429,7 @@ private fun QqMusicLoginScreen(
                                 webView?.reload()
                             }
                         ) {
-                            Text(text = "Retry", fontFamily = GoogleSansRounded)
+                            Text(text = stringResource(R.string.cloud_streaming_login_retry), fontFamily = GoogleSansRounded)
                         }
                     }
                 }

@@ -102,6 +102,7 @@ import androidx.compose.ui.window.DialogProperties
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.presentation.components.ImageCropView
 import com.theveloper.pixelplay.data.model.PlaylistShapeType
@@ -145,6 +146,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 
 data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
 
@@ -1121,7 +1123,7 @@ private fun PlaylistFormContent(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "Smart Rule",
+                        text = stringResource(R.string.playlist_smart_rule),
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -1165,7 +1167,7 @@ private fun PlaylistFormContent(
                      // Colors
                      Text(
                          modifier = Modifier.padding(start = 22.dp),
-                         text = "Background Color",
+                         text = stringResource(R.string.playlist_background_color),
                          style = MaterialTheme.typography.titleSmall,
                          color = MaterialTheme.colorScheme.onSurfaceVariant
                      )
@@ -1222,7 +1224,7 @@ private fun PlaylistFormContent(
                      // Icons
                      Text(
                          modifier = Modifier.padding(start = 22.dp),
-                         text = "Icon Symbol",
+                         text = stringResource(R.string.playlist_icon_symbol),
                          style = MaterialTheme.typography.titleSmall,
                          color = MaterialTheme.colorScheme.onSurfaceVariant
                      )
@@ -1264,7 +1266,7 @@ private fun PlaylistFormContent(
                      // Shapes
                      Text(
                          modifier = Modifier.padding(start = 22.dp),
-                         text = "Shape Style",
+                         text = stringResource(R.string.playlist_shape_style),
                          style = MaterialTheme.typography.titleSmall,
                          color = MaterialTheme.colorScheme.onSurfaceVariant
                      )

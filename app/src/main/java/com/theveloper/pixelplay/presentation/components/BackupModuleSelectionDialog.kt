@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -144,7 +145,7 @@ fun BackupModuleSelectionDialog(
                             CenterAlignedTopAppBar(
                                 title = {
                                     Text(
-                                        text = "Restore Modules",
+                                        text = stringResource(R.string.backup_restore_modules),
                                         style = MaterialTheme.typography.titleMedium.copy(
                                             fontSize = 24.sp,
                                             textGeometricTransform = TextGeometricTransform(scaleX = 1.2f),
@@ -231,7 +232,7 @@ fun BackupModuleSelectionDialog(
                                             LoadingIndicator(modifier = Modifier.height(20.dp))
                                             androidx.compose.foundation.layout.Spacer(modifier = Modifier.size(8.dp))
                                             Text(
-                                                text = "Restoring",
+                                                text = stringResource(R.string.status_restoring),
                                                 style = MaterialTheme.typography.labelLarge,
                                                 fontWeight = FontWeight.SemiBold
                                             )
@@ -245,7 +246,7 @@ fun BackupModuleSelectionDialog(
                                                     contentDescription = null
                                                 )
                                                 Text(
-                                                    text = "Restore Selected",
+                                                    text = stringResource(R.string.backup_restore_selected),
                                                     style = MaterialTheme.typography.labelLarge,
                                                     fontWeight = FontWeight.SemiBold
                                                 )
@@ -275,7 +276,7 @@ fun BackupModuleSelectionDialog(
                                     verticalArrangement = Arrangement.spacedBy(6.dp)
                                 ) {
                                     Text(
-                                        text = "Backup Details",
+                                        text = stringResource(R.string.backup_details),
                                         style = MaterialTheme.typography.titleSmall,
                                         color = MaterialTheme.colorScheme.onSurface,
                                         fontWeight = FontWeight.SemiBold
@@ -287,7 +288,7 @@ fun BackupModuleSelectionDialog(
                                     ) {
                                         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                                             Text(
-                                                text = "Created",
+                                                text = stringResource(R.string.backup_created),
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
@@ -305,7 +306,7 @@ fun BackupModuleSelectionDialog(
                                     ) {
                                         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                                             Text(
-                                                text = "App Version",
+                                                text = stringResource(R.string.backup_app_version),
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
@@ -317,7 +318,7 @@ fun BackupModuleSelectionDialog(
                                         }
                                         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                                             Text(
-                                                text = "Schema",
+                                                text = stringResource(R.string.backup_schema),
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
@@ -330,7 +331,7 @@ fun BackupModuleSelectionDialog(
                                         if (plan.manifest.deviceInfo.model.isNotBlank()) {
                                             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                                                 Text(
-                                                    text = "Device",
+                                                    text = stringResource(R.string.backup_device),
                                                     style = MaterialTheme.typography.labelSmall,
                                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                                 )
@@ -359,7 +360,7 @@ fun BackupModuleSelectionDialog(
                                         ) {
                                             LoadingIndicator(modifier = Modifier.height(24.dp))
                                             Text(
-                                                text = "Transfer in progress...",
+                                                text = stringResource(R.string.backup_transfer_in_progress),
                                                 style = MaterialTheme.typography.bodySmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )

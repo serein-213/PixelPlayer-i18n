@@ -56,6 +56,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -126,7 +127,7 @@ fun NavBarCornerRadiusContent(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                             )
                     ) {
-                        Icon(painterResource(R.drawable.rounded_arrow_back_24), contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurface)
+                        Icon(painterResource(R.drawable.rounded_arrow_back_24), contentDescription = stringResource(R.string.cd_back), tint = MaterialTheme.colorScheme.onSurface)
                     }
                 },
                 actions = {
@@ -147,7 +148,7 @@ fun NavBarCornerRadiusContent(
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.size(8.dp))
-                        Text("Done")
+                        Text(stringResource(R.string.nav_bar_corner_radius_done))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -174,7 +175,7 @@ fun NavBarCornerRadiusContent(
                 Spacer(modifier = Modifier.height(24.dp))
                 
                 Text(
-                    text = "Adjust Corner Radius",
+                    text = stringResource(R.string.nav_bar_corner_radius_adjust_title),
                     style = MaterialTheme.typography.displaySmall.copy(
                         fontWeight = FontWeight.Bold
                     ),
@@ -185,7 +186,7 @@ fun NavBarCornerRadiusContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Match the navbar shape's corners with your device's physical corners for a seamless look.",
+                    text = stringResource(R.string.nav_bar_corner_radius_description),
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -221,7 +222,7 @@ fun NavBarCornerRadiusContent(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Corner Radius",
+                                text = stringResource(R.string.nav_bar_corner_radius_label),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
@@ -241,11 +242,11 @@ fun NavBarCornerRadiusContent(
                                 ) {
                                     Icon(
                                         Icons.Rounded.Refresh,
-                                        contentDescription = "Reset",
+                                        contentDescription = stringResource(R.string.nav_bar_corner_radius_reset),
                                         modifier = Modifier.size(14.dp)
                                     )
                                     Spacer(modifier = Modifier.size(6.dp))
-                                    Text("Reset", style = MaterialTheme.typography.labelMedium)
+                                    Text(stringResource(R.string.nav_bar_corner_radius_reset), style = MaterialTheme.typography.labelMedium)
                                 }
                             }
                         }
@@ -294,7 +295,7 @@ fun NavBarCornerRadiusContent(
                             
                             Text(
                                 modifier = Modifier.width(46.dp),
-                                text = "${sliderValue.toInt()} dp",
+                                text = stringResource(R.string.nav_bar_corner_radius_value_format, sliderValue.toInt()),
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onSurface

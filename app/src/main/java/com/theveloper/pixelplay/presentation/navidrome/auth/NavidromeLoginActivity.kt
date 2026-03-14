@@ -60,6 +60,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -110,7 +111,8 @@ fun NavidromeLoginScreen(
     LaunchedEffect(loginState) {
         when (val state = loginState) {
             is NavidromeLoginState.Success -> {
-                Toast.makeText(context, "Welcome, ${state.username}!", Toast.LENGTH_SHORT).show()
+                val welcomeMessage = context.getString(R.string.navidrome_welcome, state.username)
+                Toast.makeText(context, welcomeMessage, Toast.LENGTH_SHORT).show()
                 onClose()
             }
             is NavidromeLoginState.Error -> {
@@ -130,7 +132,7 @@ fun NavidromeLoginScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Subsonic / Navidrome",
+                        text = stringResource(R.string.navidrome_login_title),
                         fontFamily = GoogleSansRounded,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -147,7 +149,7 @@ fun NavidromeLoginScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.common_back)
                         )
                     }
                 },
@@ -205,7 +207,7 @@ fun NavidromeLoginScreen(
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = androidx.compose.ui.graphics.vector.ImageVector.vectorResource(id = R.drawable.ic_subsonic),
-                            contentDescription = "Subsonic",
+                            contentDescription = stringResource(R.string.navidrome_subsonic_icon_desc),
                             tint = androidx.compose.ui.graphics.Color.Unspecified,
                             modifier = Modifier.size(42.dp)
                         )
@@ -216,7 +218,7 @@ fun NavidromeLoginScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Subsonic / Navidrome",
+                text = stringResource(R.string.navidrome_login_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontFamily = GoogleSansRounded,
                 fontWeight = FontWeight.Bold,
@@ -224,7 +226,7 @@ fun NavidromeLoginScreen(
             )
 
             Text(
-                text = "Connect to your self-hosted music server",
+                text = stringResource(R.string.navidrome_connect_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -240,7 +242,7 @@ fun NavidromeLoginScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Supports Navidrome, Airsonic, Gonic, Ampache and other servers compatible with the Subsonic API.",
+                    text = stringResource(R.string.navidrome_support_hint),
                     modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -261,7 +263,7 @@ fun NavidromeLoginScreen(
                     modifier = Modifier.padding(18.dp)
                 ) {
                     Text(
-                        text = "Connection details",
+                        text = stringResource(R.string.navidrome_connection_details),
                         style = MaterialTheme.typography.titleMedium,
                         fontFamily = GoogleSansRounded,
                         fontWeight = FontWeight.Bold
@@ -270,7 +272,7 @@ fun NavidromeLoginScreen(
                     Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
-                        text = "Enter your server URL and account credentials.",
+                        text = stringResource(R.string.navidrome_enter_credentials),
                         style = MaterialTheme.typography.bodySmall,
                         fontFamily = GoogleSansRounded,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -281,9 +283,9 @@ fun NavidromeLoginScreen(
                     ExpressiveLoginField(
                         value = serverUrl,
                         onValueChange = { serverUrl = it },
-                        label = "Server URL",
-                        placeholder = "https://music.example.com",
-                        supportingText = "Use the full base address of your server.",
+                        label = stringResource(R.string.navidrome_server_url_label),
+                        placeholder = stringResource(R.string.navidrome_server_url_placeholder),
+                        supportingText = stringResource(R.string.navidrome_server_url_hint),
                         leadingIcon = Icons.Rounded.CloudQueue,
                         enabled = !isLoading,
                         keyboardOptions = KeyboardOptions(
@@ -301,9 +303,9 @@ fun NavidromeLoginScreen(
                     ExpressiveLoginField(
                         value = username,
                         onValueChange = { username = it },
-                        label = "Username",
-                        placeholder = "admin",
-                        supportingText = "This is your Subsonic or Navidrome account name.",
+                        label = stringResource(R.string.navidrome_username_label),
+                        placeholder = stringResource(R.string.navidrome_username_placeholder),
+                        supportingText = stringResource(R.string.navidrome_username_hint),
                         leadingIcon = Icons.Rounded.Person,
                         enabled = !isLoading,
                         keyboardOptions = KeyboardOptions(
@@ -321,9 +323,9 @@ fun NavidromeLoginScreen(
                     ExpressiveLoginField(
                         value = password,
                         onValueChange = { password = it },
-                        label = "Password",
-                        placeholder = "Enter password",
-                        supportingText = "App password also works if your server supports it.",
+                        label = stringResource(R.string.navidrome_password_label),
+                        placeholder = stringResource(R.string.navidrome_password_placeholder),
+                        supportingText = stringResource(R.string.navidrome_password_hint),
                         leadingIcon = Icons.Rounded.Lock,
                         enabled = !isLoading,
                         visualTransformation = if (passwordVisible) {
@@ -350,7 +352,7 @@ fun NavidromeLoginScreen(
                             ) {
                                 Icon(
                                     imageVector = if (passwordVisible) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
-                                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                                    contentDescription = if (passwordVisible) stringResource(R.string.common_hide_password) else stringResource(R.string.common_show_password)
                                 )
                             }
                         },
@@ -370,7 +372,7 @@ fun NavidromeLoginScreen(
                         contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
                     ) {
                         Text(
-                            text = "Prefill https://",
+                            text = stringResource(R.string.navidrome_prefill_https),
                             fontFamily = GoogleSansRounded,
                             fontWeight = FontWeight.Medium
                         )
@@ -399,9 +401,9 @@ fun NavidromeLoginScreen(
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Connecting...", fontFamily = GoogleSansRounded)
+                    Text(stringResource(R.string.navidrome_connecting), fontFamily = GoogleSansRounded)
                 } else {
-                    Text("Connect", fontFamily = GoogleSansRounded, fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.navidrome_connect_button), fontFamily = GoogleSansRounded, fontWeight = FontWeight.SemiBold)
                 }
             }
 
@@ -409,7 +411,7 @@ fun NavidromeLoginScreen(
 
             // Help text
             Text(
-                text = "Compatible with Navidrome, Gonic, Airsonic, and other Subsonic-compatible servers",
+                text = stringResource(R.string.navidrome_compatible_servers),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontFamily = GoogleSansRounded

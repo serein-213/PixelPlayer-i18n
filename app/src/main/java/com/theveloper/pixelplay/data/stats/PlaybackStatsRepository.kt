@@ -1037,10 +1037,10 @@ class PlaybackStatsRepository @Inject constructor(
     }
 }
 
-enum class StatsTimeRange(val displayName: String) {
-    DAY("Today"),
-    WEEK("This Week"),
-    MONTH("This Month"),
-    YEAR("This Year"),
-    ALL("All Time")
+enum class StatsTimeRange(val displayName: String, val displayNameResId: Int) {
+    DAY("Today", com.theveloper.pixelplay.R.string.range_today),
+    WEEK("This Week", com.theveloper.pixelplay.R.string.range_this_week),
+    MONTH("This Month", com.theveloper.pixelplay.R.string.range_this_month),
+    YEAR("This Year", com.theveloper.pixelplay.R.string.range_this_year),
+    ALL("All Time", com.theveloper.pixelplay.R.string.range_all_time)
 }

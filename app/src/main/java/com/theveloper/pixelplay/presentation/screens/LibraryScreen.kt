@@ -302,7 +302,7 @@ private fun WatchTransferProgressDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Sending to Watch",
+                    text = stringResource(R.string.library_sending_to_watch),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold
@@ -338,7 +338,7 @@ private fun WatchTransferProgressDialog(
                     trackColor = MaterialTheme.colorScheme.surfaceContainerHighest
                 )
                 Text(
-                    text = transfer.songTitle.ifBlank { "Preparing transfer..." },
+                    text = transfer.songTitle.ifBlank { stringResource(R.string.library_preparing_transfer) },
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 2,
@@ -367,7 +367,7 @@ private fun WatchTransferProgressDialog(
                         contentColor = MaterialTheme.colorScheme.onError
                     )
                 ) {
-                    Text(text = "Cancel transfer")
+                    Text(text = stringResource(R.string.library_cancel_transfer))
                 }
             }
         }
@@ -798,7 +798,7 @@ fun LibraryScreen(
                         } else {
                             Text(
                                 modifier = Modifier.padding(start = 8.dp),
-                                text = "Library",
+                                text = stringResource(R.string.library_title),
                                 fontFamily = GoogleSansRounded,
                                 fontWeight = FontWeight.ExtraBold,
                                 color = MaterialTheme.colorScheme.primary,
@@ -903,7 +903,7 @@ fun LibraryScreen(
                                 }
                             ) {
                                 Text(
-                                    text = tabId.title,
+                                    text = stringResource(tabId.titleResId),
                                     style = MaterialTheme.typography.labelLarge,
                                     fontWeight = if (currentTabIndex == index) FontWeight.Bold else FontWeight.Medium
                                 )
@@ -1246,7 +1246,7 @@ fun LibraryScreen(
                                                 inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 activeCornerRadius = 32.dp,
                                                 onClick = { playerViewModel.setAlbumsListView(false) },
-                                                text = "Grid",
+                                                text = stringResource(R.string.library_view_grid),
                                                 imageVector = Icons.Rounded.ViewModule
                                             )
 
@@ -1260,7 +1260,7 @@ fun LibraryScreen(
                                                 inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 activeCornerRadius = 32.dp,
                                                 onClick = { playerViewModel.setAlbumsListView(true) },
-                                                text = "List",
+                                                text = stringResource(R.string.library_view_list),
                                                 imageVector = Icons.AutoMirrored.Rounded.ViewList
                                             )
                                         }
@@ -1282,7 +1282,7 @@ fun LibraryScreen(
                                                 inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 activeCornerRadius = 32.dp,
                                                 onClick = { playerViewModel.setFoldersSource(FolderSource.INTERNAL) },
-                                                text = "Internal"
+                                                text = stringResource(R.string.library_source_internal)
                                             )
                                             ToggleSegmentButton(
                                                 modifier = Modifier
@@ -1299,12 +1299,12 @@ fun LibraryScreen(
                                                         playerViewModel.setFoldersSource(FolderSource.SD_CARD)
                                                     }
                                                 },
-                                                text = "SD Card"
+                                                text = stringResource(R.string.library_source_sd_card)
                                             )
                                         }
                                         if (!playerUiState.isSdCardAvailable) {
                                             Text(
-                                                text = "SD card is not available right now.",
+                                                text = stringResource(R.string.library_sd_card_unavailable),
                                                 style = MaterialTheme.typography.bodySmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 modifier = Modifier.padding(top = 8.dp, start = 2.dp)
@@ -1543,7 +1543,7 @@ fun LibraryScreen(
                                 LoadingIndicator(modifier = Modifier.size(64.dp))
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Text(
-                                    text = "Generating metadata with AI...",
+                                    text = stringResource(R.string.library_generating_metadata_ai),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
@@ -1902,7 +1902,7 @@ fun LibraryScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "This will merge ${pendingMergePlaylistIds.size} selected playlists into one.",
+                        text = stringResource(R.string.library_merge_playlists_description, pendingMergePlaylistIds.size),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -2340,12 +2340,12 @@ private fun LibraryTabSwitcherSheet(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Library tabs",
+                text = stringResource(R.string.library_tabs_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontFamily = GoogleSansRounded
             )
             Text(
-                text = "Jump directly to any tab or reorder them.",
+                text = stringResource(R.string.library_tabs_description),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -2439,7 +2439,7 @@ private fun LibraryTabGridItem(
             ) {
                 Icon(
                     painter = painterResource(id = tabId.iconRes()),
-                    contentDescription = tabId.title,
+                    contentDescription = stringResource(tabId.titleResId),
                     tint = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
@@ -2500,10 +2500,9 @@ private fun LibraryTabId.iconRes(): Int = when (this) {
     LibraryTabId.LIKED -> R.drawable.rounded_favorite_24
 }
 
+@Composable
 private fun LibraryTabId.displayTitle(): String =
-    title.lowercase().replaceFirstChar { char ->
-        if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
-    }
+    stringResource(titleResId)
 
 internal fun resolveFolderNavigationDirection(initialPath: String?, targetPath: String?): Int =
     when {

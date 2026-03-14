@@ -43,11 +43,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil.size.Size
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.presentation.components.SmartImage
 import com.theveloper.pixelplay.ui.theme.GoogleSansRounded
@@ -175,7 +177,7 @@ fun SelectionHeader(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "Play",
+                    text = stringResource(R.string.selection_play),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = GoogleSansRounded

@@ -42,6 +42,7 @@ import com.theveloper.pixelplay.data.ai.provider.AiClientFactory
 import com.theveloper.pixelplay.data.ai.provider.AiProvider
 import com.theveloper.pixelplay.data.preferences.LaunchTab
 import com.theveloper.pixelplay.data.model.Song
+import com.theveloper.pixelplay.R
 import java.io.File
 
 data class SettingsUiState(
@@ -994,8 +995,8 @@ class SettingsViewModel @Inject constructor(
                 _dataTransferProgress.value = progress
             }
             result.fold(
-                onSuccess = { _dataTransferEvents.emit("Data exported successfully") },
-                onFailure = { _dataTransferEvents.emit("Export failed: ${it.localizedMessage ?: "Unknown error"}") }
+                onSuccess = { _dataTransferEvents.emit(context.getString(R.string.backup_export_success)) },
+                onFailure = { _dataTransferEvents.emit(context.getString(R.string.backup_export_failed, it.localizedMessage ?: "Unknown error")) }
             )
             delay(300)
             _uiState.update { it.copy(isDataTransferInProgress = false) }
@@ -1013,7 +1014,7 @@ class SettingsViewModel @Inject constructor(
                     _uiState.update { it.copy(restorePlan = plan, isInspectingBackup = false) }
                 },
                 onFailure = { error ->
-                    _dataTransferEvents.emit("Invalid backup: ${error.localizedMessage ?: "Unknown error"}")
+                    _dataTransferEvents.emit(context.getString(R.string.backup_invalid, error.localizedMessage ?: "Unknown error"))
                     _uiState.update { it.copy(isInspectingBackup = false) }
                 }
             )
@@ -1045,20 +1046,20 @@ class SettingsViewModel @Inject constructor(
             }
             when (result) {
                 is RestoreResult.Success -> {
-                    _dataTransferEvents.emit("Data restored successfully")
+                    _dataTransferEvents.emit(context.getString(R.string.backup_restore_success))
                     syncManager.sync()
                 }
                 is RestoreResult.PartialFailure -> {
                     val failedNames = result.failed.entries.joinToString { "${it.key.label}: ${it.value}" }
                     _dataTransferEvents.emit(
-                        "Restore completed with unresolved issues. Failed: $failedNames"
+                        context.getString(R.string.backup_restore_partial, failedNames)
                     )
                     if (result.succeeded.isNotEmpty() || !result.rolledBack) {
                         syncManager.sync()
                     }
                 }
                 is RestoreResult.TotalFailure -> {
-                    _dataTransferEvents.emit("Restore failed: ${result.error}")
+                    _dataTransferEvents.emit(context.getString(R.string.backup_restore_failed, result.error))
                 }
             }
             delay(300)

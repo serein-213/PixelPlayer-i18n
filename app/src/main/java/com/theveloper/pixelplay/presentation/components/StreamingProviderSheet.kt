@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -108,7 +109,7 @@ fun StreamingProviderSheet(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Cloud Streaming",
+                text = stringResource(R.string.cloud_streaming_title),
                 style = MaterialTheme.typography.titleLarge,
                 fontFamily = GoogleSansRounded,
                 fontWeight = FontWeight.Bold,
@@ -118,7 +119,7 @@ fun StreamingProviderSheet(
             Spacer(Modifier.height(8.dp))
 
             Text(
-                text = "Stream music from your cloud accounts",
+                text = stringResource(R.string.cloud_streaming_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 fontFamily = GoogleSansRounded,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -131,11 +132,11 @@ fun StreamingProviderSheet(
             ProviderCard(
                 iconPainter = painterResource(R.drawable.telegram),
                 icon = Icons.Rounded.Cloud,
-                title = "Telegram",
-                subtitle = "Stream from channels & chats",
-                containerColor = telegramContainerColor,
-                contentColor = telegramContentColor,
-                iconColor = telegramContentColor,
+                title = stringResource(R.string.cloud_streaming_provider_telegram_title),
+                subtitle = stringResource(R.string.cloud_streaming_provider_telegram_subtitle),
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                iconColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 shape = cardShape,
                 onClick = {
                     context.startActivity(Intent(context, TelegramLoginActivity::class.java))
@@ -149,11 +150,11 @@ fun StreamingProviderSheet(
             ProviderCard(
                 icon = Icons.Rounded.CloudQueue,
                 iconPainter = painterResource(R.drawable.rounded_drive_export_24),
-                title = "Google Drive",
-                subtitle = "Coming soon",
-                containerColor = googleDriveContainerColor,
-                contentColor = googleDriveContentColor,
-                iconColor = googleDriveContentColor,
+                title = stringResource(R.string.cloud_streaming_provider_gdrive_title),
+                subtitle = stringResource(R.string.cloud_streaming_provider_gdrive_subtitle_coming_soon),
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+                contentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                iconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 shape = cardShape,
                 enabled = false,
                 onClick = { }
@@ -165,11 +166,11 @@ fun StreamingProviderSheet(
             ProviderCard(
                 icon = null,
                 iconPainter = painterResource(R.drawable.ic_navidrome_md3),
-                title = "Subsonic",
+                title = stringResource(R.string.cloud_streaming_provider_navidrome_title),
                 subtitle = if (isNavidromeLoggedIn)
-                    "✓ Connected (Navidrome/Airsonic)"
+                    stringResource(R.string.cloud_streaming_provider_navidrome_subtitle_connected)
                 else
-                    "Connect Navidrome & others",
+                    stringResource(R.string.cloud_streaming_provider_navidrome_subtitle_sign_in),
                 containerColor = subsonicContainerColor,
                 contentColor = subsonicContentColor,
                 iconColor = subsonicContentColor,
@@ -195,14 +196,15 @@ fun StreamingProviderSheet(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Rounded.MusicNote,
                     iconPainter = painterResource(R.drawable.netease_cloud_music_logo_icon_206716__1_),
-                    title = "Netease",
-                    subtitle = if (isNeteaseLoggedIn)
-                        "✓ Connected"
-                    else
-                        "Sign in",
-                    containerColor = neteaseContainerColor,
-                    contentColor = neteaseContentColor,
-                    iconColor = neteaseContentColor,
+                    title = stringResource(R.string.cloud_streaming_provider_netease_title),
+                    subtitle = if (isNeteaseLoggedIn) {
+                        stringResource(R.string.cloud_streaming_provider_netease_subtitle_connected)
+                    } else {
+                        stringResource(R.string.cloud_streaming_provider_netease_subtitle_sign_in)
+                    },
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                    iconColor = MaterialTheme.colorScheme.onErrorContainer,
                     shape = neteaseCardShape,
                     onClick = {
                         if (isNeteaseLoggedIn) {
@@ -218,14 +220,15 @@ fun StreamingProviderSheet(
                  ProviderCard(
                     modifier = Modifier.weight(1f),
                     iconPainter = painterResource(R.drawable.qq_music),
-                    title = "QQ",
-                    subtitle = if (isQqMusicLoggedIn)
-                        "✓ Connected"
-                    else
-                        "Sign in",
-                    containerColor = qqMusicContainerColor,
-                    contentColor = qqMusicContentColor,
-                    iconColor = qqMusicContentColor,
+                    title = stringResource(R.string.cloud_streaming_provider_qqmusic_title),
+                    subtitle = if (isQqMusicLoggedIn) {
+                        stringResource(R.string.cloud_streaming_provider_qqmusic_subtitle_connected)
+                    } else {
+                        stringResource(R.string.cloud_streaming_provider_qqmusic_subtitle_sign_in)
+                    },
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    iconColor = MaterialTheme.colorScheme.onTertiaryContainer,
                     shape = qqCardShape,
                     onClick = {
                         if (isQqMusicLoggedIn) {

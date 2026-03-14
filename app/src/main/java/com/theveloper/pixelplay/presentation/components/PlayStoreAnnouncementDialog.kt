@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -123,13 +124,13 @@ fun PlayStoreAnnouncementDialog(
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                     ) {
                         Text(
-                            text = "PixelPlay",
+                            text = stringResource(R.string.app_name),
                             fontFamily = GoogleSansRounded,
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                         )
                         Text(
-                            text = "Release announcement",
+                            text = stringResource(R.string.playstore_release_announcement),
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

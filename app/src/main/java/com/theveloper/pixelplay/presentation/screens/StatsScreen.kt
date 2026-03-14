@@ -103,6 +103,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.theveloper.pixelplay.R
@@ -702,7 +703,7 @@ private fun ListeningHabitsCard(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
-                text = "Listening habits",
+                text = stringResource(R.string.stats_listening_habits),
                 style = MaterialTheme.typography.titleLargeEmphasized,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -1044,7 +1045,7 @@ private fun ListeningTimelineSection(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = "Listening timeline",
+                text = stringResource(R.string.stats_listening_timeline),
                 style = sectionTitleStyle,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -1193,12 +1194,12 @@ private fun CategoryMetricsSection(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = "Top categories",
+                text = stringResource(R.string.stats_top_categories),
                 style = sectionTitleStyle,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Compare how you listen across genres, artists, albums, and songs.",
+                text = stringResource(R.string.stats_top_categories_description),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -1815,7 +1816,7 @@ private fun TopArtistsCard(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
-                text = "Top artists",
+                text = stringResource(R.string.stats_top_artists),
                 style = MaterialTheme.typography.titleLargeEmphasized,
                 color = contentColor
             )
@@ -1923,7 +1924,7 @@ private fun TopAlbumsCard(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
-                text = "Top albums",
+                text = stringResource(R.string.stats_top_albums),
                 style = MaterialTheme.typography.titleLargeEmphasized,
                 color = contentColor
             )
@@ -2016,13 +2017,13 @@ private fun SongStatsCard(
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
-                    text = "Tracks in this range",
+                    text = stringResource(R.string.stats_tracks_in_range),
                     style = MaterialTheme.typography.titleLargeEmphasized,
                     fontWeight = FontWeight.SemiBold,
                     color = contentColor
                 )
                 Text(
-                    text = "Most played tracks for the selected time range.",
+                    text = stringResource(R.string.stats_tracks_in_range_description),
                     style = MaterialTheme.typography.bodySmall,
                     color = supportingColor
                 )
@@ -2168,14 +2169,14 @@ private fun TrackConcentrationCard(
             ) {
                 Text(
                     modifier = Modifier.padding(start = 6.dp),
-                    text = "Track concentration",
+                    text = stringResource(R.string.stats_track_concentration),
                     style = MaterialTheme.typography.titleLargeEmphasized,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     modifier = Modifier.padding(start = 6.dp),
-                    text = "How your listening time is distributed across your top tracks.",
+                    text = stringResource(R.string.stats_track_concentration_description),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.78f)
                 )
@@ -2363,12 +2364,12 @@ private fun TrackDistributionStats(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Text(
-            text = "Listening concentration",
+            text = stringResource(R.string.stats_listening_concentration),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurface
         )
         Text(
-            text = "Top 3 tracks account for ${(topThreeShare * 100f).roundToInt()}% of your listening time.",
+            text = stringResource(R.string.stats_top_3_share_description, (topThreeShare * 100f).roundToInt()),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -2388,7 +2389,7 @@ private fun TrackDistributionStats(
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     Text(
-                        text = "Avg plays/track",
+                        text = stringResource(R.string.stats_avg_plays_per_track),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.76f)
                     )
@@ -2409,7 +2410,7 @@ private fun TrackDistributionStats(
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                     Text(
-                        text = "Unique tracks",
+                        text = stringResource(R.string.stats_unique_tracks),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.76f)
                     )
@@ -2502,7 +2503,7 @@ private fun TrackDistributionDonut(
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Top 3 share",
+                text = stringResource(R.string.stats_top_3_share),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

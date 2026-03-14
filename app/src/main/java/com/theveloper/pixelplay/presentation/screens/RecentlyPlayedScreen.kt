@@ -65,6 +65,7 @@ import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
@@ -404,7 +405,7 @@ private fun ExpressiveRecentlyPlayedHeader(
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                text = "Recently Played",
+                text = stringResource(R.string.recently_played),
                 style = titleStyle,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -606,12 +607,12 @@ private fun RecentlyPlayedEmptyState(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "No recent plays in ${range.displayName.lowercase()}",
+                text = stringResource(R.string.stats_no_recent_plays, range.displayName.lowercase()),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
             Text(
-                text = "Change the range or play more songs to fill this timeline.",
+                text = stringResource(R.string.stats_change_range_prompt),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

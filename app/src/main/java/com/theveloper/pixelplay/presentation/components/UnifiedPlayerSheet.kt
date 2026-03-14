@@ -90,6 +90,7 @@ import kotlin.math.roundToInt
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
+import androidx.compose.ui.res.stringResource
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -736,13 +737,13 @@ private fun CastConnectingDialog() {
                 CircularProgressIndicator()
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "Mantén la app abierta",
+                        text = stringResource(R.string.cast_keep_app_open),
                         style = MaterialTheme.typography.titleMedium,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "Estamos transfiriendo la reproducción. Puede tardar unos segundos en desconectarse o reconectarse.",
+                        text = stringResource(R.string.cast_transferring_playback),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center

@@ -87,6 +87,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign // Added
 import androidx.compose.foundation.horizontalScroll
@@ -99,6 +100,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.theveloper.pixelplay.R
+import com.theveloper.pixelplay.data.equalizer.getLocalizedDisplayName
 import com.theveloper.pixelplay.data.equalizer.EqualizerPreset
 import com.theveloper.pixelplay.presentation.components.CollapsibleCommonTopBar
 import com.theveloper.pixelplay.presentation.components.ExpressiveTopBarContent
@@ -177,7 +179,7 @@ fun EqualizerScreen(
     
     renameTarget?.let { preset ->
         RenamePresetDialog(
-            currentName = preset.displayName,
+            currentName = preset.getLocalizedDisplayName(context),
             onDismiss = { renameTarget = null },
             onRename = { newName ->
                 equalizerViewModel.renameCustomPreset(preset.name, newName)
@@ -374,7 +376,7 @@ fun EqualizerScreen(
         }
         
         CollapsibleCommonTopBar(
-            title = "Equalizer",
+            title = stringResource(R.string.equalizer_title),
             collapseFraction = collapseFraction,
             headerHeight = currentTopBarHeightDp,
             onBackClick = { navController.popBackStack() },
@@ -395,7 +397,7 @@ fun EqualizerScreen(
                             EqualizerViewMode.GRAPH -> Icons.AutoMirrored.Rounded.ShowChart
                             EqualizerViewMode.HYBRID -> Icons.AutoMirrored.Rounded.ViewQuilt
                         },
-                        contentDescription = "Change View Mode"
+                        contentDescription = stringResource(R.string.equalizer_view_mode_cd)
                     )
                 }
 
@@ -421,7 +423,7 @@ fun EqualizerScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.PowerSettingsNew,
-                        contentDescription = if (isEnabled) "Disable equalizer" else "Enable equalizer"
+                        contentDescription = if (isEnabled) stringResource(R.string.equalizer_disable_cd) else stringResource(R.string.equalizer_enable_cd)
                     )
                 }
                 
@@ -485,7 +487,7 @@ private fun PresetTabsRow(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = preset.displayName,
+                        text = preset.getLocalizedDisplayName(LocalContext.current),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = if (selectedIndex == index) FontWeight.Bold else FontWeight.Medium
                     )
@@ -493,7 +495,7 @@ private fun PresetTabsRow(
                         Spacer(modifier = Modifier.width(4.dp))
                         Icon(
                             imageVector = Icons.Filled.Star,
-                            contentDescription = "Custom",
+                            contentDescription = stringResource(R.string.equalizer_custom_preset_cd),
                             modifier = Modifier.size(10.dp), // Slightly smaller
                             tint = if (selectedIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary 
                             // Note: TabAnimation handles content color usually, but Icon tint might need explicit handling or use LocalContentColor.
@@ -509,14 +511,14 @@ private fun PresetTabsRow(
         // Edit Button as a specific Tab (unselectable)
         TabAnimation(
             index = -1,
-            title = "Edit",
+            title = stringResource(R.string.equalizer_edit_title),
             unselectedColor = MaterialTheme.colorScheme.surfaceContainerLowest,
             selectedIndex = selectedIndex,
             onClick = onEditClick 
         ) {
              Icon(
                 Icons.Rounded.Edit,
-                contentDescription = "Edit presets",
+                contentDescription = stringResource(R.string.equalizer_edit_presets_cd),
                 modifier = Modifier.size(18.dp)
             )
         }
@@ -539,6 +541,7 @@ private fun BandSlidersSection(
     onPresetsListClick: () -> Unit
 ) {
     val frequencies = EqualizerPreset.BAND_FREQUENCIES
+    val context = LocalContext.current
     
     Card(
         modifier = Modifier
@@ -558,7 +561,7 @@ private fun BandSlidersSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                  val isCustomOrSaved = editingPresetName != null || currentPreset.name == "custom" || currentPreset.isCustom
-                 val displayLabel = editingPresetName ?: currentPreset.displayName
+                 val displayLabel = editingPresetName ?: currentPreset.getLocalizedDisplayName(context)
                  
                  Surface(
                     color = MaterialTheme.colorScheme.secondaryContainer,
@@ -581,7 +584,7 @@ private fun BandSlidersSection(
                             Spacer(modifier = Modifier.width(8.dp))
                             Icon(
                                 imageVector = Icons.Rounded.ExpandMore,
-                                contentDescription = "Presets",
+                                contentDescription = stringResource(R.string.equalizer_presets_cd),
                                 tint = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                         }
@@ -606,7 +609,7 @@ private fun BandSlidersSection(
                              )
                              Spacer(modifier = Modifier.width(6.dp))
                              Text(
-                                 text = "Save",
+                                 text = stringResource(R.string.equalizer_save),
                                  color = MaterialTheme.colorScheme.onTertiaryContainer,
                                  fontWeight = FontWeight.Bold
                              )
@@ -632,7 +635,7 @@ private fun BandSlidersSection(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Update",
+                                text = stringResource(R.string.equalizer_update),
                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 fontWeight = FontWeight.Bold
                             )
@@ -1161,7 +1164,7 @@ private fun EffectControlsSection(
         // Bass Boost
         if (isBassBoostSupported) {
             EffectCard(
-                title = "Bass Boost",
+                title = stringResource(R.string.equalizer_bass_boost),
                 value = bassBoostStrength, // Already Float
                 valueRange = 0f..1000f, // Keeping range as is, assuming VM handles 0-100 normalization? 
                 // Wait, if VM stores 0-100 Float, but repo uses 0-1000 Int.
@@ -1174,7 +1177,7 @@ private fun EffectControlsSection(
             )
         } else if (!isBassBoostDismissed) {
              UnsupportedEffectCard(
-                title = "Bass Boost",
+                title = stringResource(R.string.equalizer_bass_boost),
                 onDismiss = onDismissBassBoost
             )
         }
@@ -1182,7 +1185,7 @@ private fun EffectControlsSection(
         // Virtualizer
         if (isVirtualizerSupported) {
             EffectCard(
-                title = "Virtualizer",
+                title = stringResource(R.string.equalizer_virtualizer),
                 value = virtualizerStrength,
                 valueRange = 0f..1000f,
                 isEnabled = virtualizerEnabled,
@@ -1191,7 +1194,7 @@ private fun EffectControlsSection(
             )
         } else if (!isVirtualizerDismissed) {
              UnsupportedEffectCard(
-                title = "Virtualizer",
+                title = stringResource(R.string.equalizer_virtualizer),
                 onDismiss = onDismissVirtualizer
             )
         }
@@ -1199,7 +1202,7 @@ private fun EffectControlsSection(
         // Loudness Enhancer
         if (isLoudnessEnhancerSupported) {
             EffectCard(
-                title = "Loudness",
+                title = stringResource(R.string.equalizer_loudness),
                 value = loudnessStrength,
                 valueRange = 0f..1000f,
                 isEnabled = loudnessEnabled,
@@ -1208,7 +1211,7 @@ private fun EffectControlsSection(
             )
         } else if (!isLoudnessDismissed) {
              UnsupportedEffectCard(
-                title = "Loudness",
+                title = stringResource(R.string.equalizer_loudness),
                 onDismiss = onDismissLoudness
             )
         }
@@ -1305,7 +1308,7 @@ private fun UnsupportedEffectCard(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Close,
-                    contentDescription = "Dismiss",
+                    contentDescription = stringResource(R.string.common_dismiss),
                     tint = MaterialTheme.colorScheme.error
                 )
             }
@@ -1329,7 +1332,7 @@ private fun UnsupportedEffectCard(
                     color = MaterialTheme.colorScheme.onErrorContainer
                 )
                 Text(
-                    text = "Not supported",
+                    text = stringResource(R.string.equalizer_not_supported),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.8f),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -1380,7 +1383,7 @@ private fun UnsupportedEffectRow(
             IconButton(onClick = onDismiss) {
                 Icon(
                     imageVector = Icons.Rounded.Close,
-                    contentDescription = "Dismiss",
+                    contentDescription = stringResource(R.string.common_dismiss),
                     tint = MaterialTheme.colorScheme.onErrorContainer
                 )
             }
@@ -1475,7 +1478,7 @@ private fun VolumeControlCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Volume",
+                text = stringResource(R.string.equalizer_volume),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -1545,7 +1548,7 @@ private fun HybridBandSliders(
                 .padding(16.dp)
         ) {
              Text(
-                text = "Frequency Response",
+                text = stringResource(R.string.equalizer_frequency_response),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.align(Alignment.TopStart).padding(bottom = 8.dp)
@@ -1580,7 +1583,7 @@ private fun HybridBandSliders(
         
         // Dynamic Tabs
         val tabs = if (pageCount == 4) {
-            listOf("Bass", "Low Mids", "High Mids", "Treble")
+            listOf(stringResource(R.string.equalizer_bass), stringResource(R.string.equalizer_low_mids), stringResource(R.string.equalizer_high_mids), stringResource(R.string.equalizer_treble))
         } else if (pageCount == 2) {
              listOf("Bass / Low", "Mid / High")
         } else {

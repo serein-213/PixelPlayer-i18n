@@ -18,6 +18,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -970,7 +971,7 @@ fun QueueBottomSheet(
                             verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             QueueToolbarMenuButton(
-                                text = "Clear Queue",
+                                text = stringResource(R.string.queue_clear_queue),
                                 icon = Icons.Filled.ClearAll,
                                 containerColor = MaterialTheme.colorScheme.errorContainer,
                                 contentColor = MaterialTheme.colorScheme.onErrorContainer,
@@ -980,7 +981,7 @@ fun QueueBottomSheet(
                                 }
                             )
                             QueueToolbarMenuButton(
-                                text = "Save as Playlist",
+                                text = stringResource(R.string.queue_save_as_playlist),
                                 icon = Icons.Filled.LibraryAdd,
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -1055,7 +1056,7 @@ fun QueueBottomSheet(
                             onClick = { viewModel.undoRemoveSongFromQueue() }
                         ) {
                             Text(
-                                text = "Undo",
+                                text = stringResource(R.string.queue_undo),
                                 color = colors.inversePrimary,
                                 fontWeight = FontWeight.Bold
                             )
@@ -1170,7 +1171,7 @@ private fun QueueHeader(
         horizontalArrangement = Arrangement.Absolute.SpaceBetween
     ) {
         Text(
-            text = "Next Up",
+            text = stringResource(R.string.queue_next_up),
             style = MaterialTheme.typography.displayMedium,
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 8.dp)
@@ -1358,7 +1359,7 @@ fun SaveQueueAsPlaylistSheet(
                             title = {
                                 Text(
                                     modifier = Modifier.padding(start = 4.dp),
-                                    text = "Save as playlist",
+                                    text = stringResource(R.string.queue_save_as_playlist_action),
                                     style = MaterialTheme.typography.headlineMedium,
                                     fontFamily = GoogleSansRounded,
                                     fontWeight = FontWeight.SemiBold,
@@ -1603,7 +1604,7 @@ fun SaveQueueAsPlaylistSheet(
                                     modifier = Modifier.size(48.dp)
                                 )
                                 Text(
-                                    text = "No songs match \"$searchQuery\"",
+                                    text = stringResource(R.string.queue_no_songs_match, searchQuery),
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )

@@ -59,6 +59,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -433,7 +434,7 @@ fun SongInfoBottomSheet(
                                                         contentDescription = "Add to Queue"
                                                     )
                                                     Spacer(Modifier.width(14.dp))
-                                                    Text("Add to Queue")
+                                                    Text(stringResource(R.string.song_info_add_to_queue))
                                                 }
                                                 FilledTonalButton(
                                                     modifier = Modifier
@@ -452,7 +453,7 @@ fun SongInfoBottomSheet(
                                                         contentDescription = "Play Next"
                                                     )
                                                     Spacer(Modifier.width(8.dp))
-                                                    Text("Next")
+                                                    Text(stringResource(R.string.song_info_next))
                                                 }
                                             }
                                         }
@@ -481,7 +482,7 @@ fun SongInfoBottomSheet(
                                                         contentDescription = "Add to Playlist"
                                                     )
                                                     Spacer(Modifier.width(8.dp))
-                                                    Text("Playlist")
+                                                    Text(stringResource(R.string.song_info_playlist))
                                                 }
 
                                                 FilledTonalButton(
@@ -509,7 +510,7 @@ fun SongInfoBottomSheet(
                                                         contentDescription = "Delete"
                                                     )
                                                     Spacer(Modifier.width(8.dp))
-                                                    Text("Delete")
+                                                    Text(stringResource(R.string.song_info_delete))
                                                 }
                                             }
                                         }
@@ -549,7 +550,7 @@ fun SongInfoBottomSheet(
                                                     if (shouldShowWatchTransferLoading) {
                                                         LoadingIndicator(modifier = Modifier.size(18.dp))
                                                         Spacer(Modifier.width(10.dp))
-                                                        Text("Checking Watch")
+                                                        Text(stringResource(R.string.song_info_checking_watch))
                                                     } else if (isSendingToWatch) {
                                                         LoadingIndicator(modifier = Modifier.size(18.dp))
                                                         Spacer(Modifier.width(10.dp))
@@ -599,7 +600,7 @@ fun SongInfoBottomSheet(
                                         item {
                                             ListItem(
                                                 modifier = Modifier.clip(shape = listItemShape),
-                                                headlineContent = { Text("Duration") },
+                                                headlineContent = { Text(stringResource(R.string.song_info_duration)) },
                                                 supportingContent = { Text(formatDuration(song.duration)) },
                                                 leadingContent = { Icon(Icons.Rounded.Schedule, contentDescription = "Duration icon") }
                                             )
@@ -609,7 +610,7 @@ fun SongInfoBottomSheet(
                                             item {
                                                 ListItem(
                                                     modifier = Modifier.clip(shape = listItemShape),
-                                                    headlineContent = { Text("Genre") },
+                                                    headlineContent = { Text(stringResource(R.string.song_info_genre)) },
                                                     supportingContent = { Text(song.genre) },
                                                     leadingContent = { Icon(Icons.Rounded.MusicNote, contentDescription = "Genre icon") }
                                                 )
@@ -621,7 +622,7 @@ fun SongInfoBottomSheet(
                                                 modifier = Modifier
                                                     .clip(shape = listItemShape)
                                                     .clickable(onClick = onNavigateToAlbum),
-                                                headlineContent = { Text("Album") },
+                                                headlineContent = { Text(stringResource(R.string.song_info_album)) },
                                                 supportingContent = { Text(song.album) },
                                                 leadingContent = { Icon(Icons.Rounded.Album, contentDescription = "Album icon") }
                                             )
@@ -632,7 +633,7 @@ fun SongInfoBottomSheet(
                                                 modifier = Modifier
                                                     .clip(shape = listItemShape)
                                                     .clickable(onClick = onNavigateToArtist),
-                                                headlineContent = { Text("Artist") },
+                                                headlineContent = { Text(stringResource(R.string.song_info_artist)) },
                                                 supportingContent = { Text(song.displayArtist) },
                                                 leadingContent = { Icon(Icons.Rounded.Person, contentDescription = "Artist icon") }
                                             )
@@ -641,7 +642,7 @@ fun SongInfoBottomSheet(
                                             ListItem(
                                                 modifier = Modifier
                                                     .clip(shape = listItemShape),
-                                                headlineContent = { Text("Path") },
+                                                headlineContent = { Text(stringResource(R.string.song_info_path)) },
                                                 supportingContent = { Text(song.path) },
                                                 leadingContent = { Icon(Icons.Rounded.AudioFile, contentDescription = "File icon") }
                                             )

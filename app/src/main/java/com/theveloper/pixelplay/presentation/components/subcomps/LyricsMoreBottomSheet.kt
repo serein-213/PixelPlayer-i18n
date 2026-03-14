@@ -104,7 +104,7 @@ fun LyricsMoreBottomSheet(
                 Text(
                     modifier = Modifier
                         .padding(start = 6.dp, bottom = 6.dp),
-                    text = "Lyrics",
+                    text = stringResource(R.string.lyrics_section_title),
                     color = accentColor,
                     style = MaterialTheme.typography.bodyLargeEmphasized
                 )
@@ -202,7 +202,7 @@ fun LyricsMoreBottomSheet(
                      Text(
                          modifier = Modifier
                              .padding(start = 6.dp, bottom = 6.dp),
-                         text = "Controls",
+                         text = stringResource(R.string.lyrics_controls_title),
                          color = accentColor,
                          style = MaterialTheme.typography.bodyLargeEmphasized
                      )

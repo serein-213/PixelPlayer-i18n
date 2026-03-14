@@ -23,7 +23,7 @@ fun AllFilesAccessDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = "Cancelar")
+                Text(text = stringResource(id = R.string.cancel))
             }
         }
     )

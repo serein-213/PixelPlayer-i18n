@@ -97,7 +97,7 @@ fun LyricsFloatingToolbar(
                 inactiveContentColor = onBackgroundColor,
                 activeCornerRadius = 50.dp,
                 onClick = { onShowSyncedLyricsChange(true) },
-                text = "Synced"
+                text = stringResource(R.string.lyrics_synced)
             )
 
             ToggleSegmentButton(
@@ -109,7 +109,7 @@ fun LyricsFloatingToolbar(
                 inactiveContentColor = onBackgroundColor,
                 activeCornerRadius = 50.dp,
                 onClick = { onShowSyncedLyricsChange(false) },
-                text = "Static"
+                text = stringResource(R.string.lyrics_static)
             )
         }
         

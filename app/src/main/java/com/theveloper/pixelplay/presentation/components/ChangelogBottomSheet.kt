@@ -32,6 +32,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -58,180 +60,93 @@ data class ChangelogVersion(
     val sections: List<ChangelogSection>
 )
 
-// The changelog data
-val changelog = listOf(
-    ChangelogVersion(
-        version = "0.6.0-beta",
-        date = "2026-03-05",
-        sections = listOf(
-            ChangelogSection(
-                title = "What's New",
-                items = listOf(
-                    "Android Auto support is now available for in-car playback.",
-                    "Wear OS support is live, including better watch-to-phone playback controls.",
-                    "Cloud integrations expanded with Telegram, NetEase, QQ Music, and Google Drive improvements.",
-                    "Recently Played and persistent queue restoration keep your listening session ready.",
-                    "Backup & Restore v3 and account management tools are now included.",
-                    "Lyrics got smarter with manual search fallback and storage improvements."
-                )
-            ),
-            ChangelogSection(
-                title = "Improvements",
-                items = listOf(
-                    "Big performance pass across startup, library, queue, and player interactions.",
-                    "Player, Cast, Lyrics, Artist, and Genre surfaces were redesigned for smoother use.",
-                    "Navigation and search flows are more reliable, with safer route handling.",
-                    "Audio playback compatibility improved for more devices and formats.",
-                    "Multi-selection workflows were expanded across songs, albums, and playlists."
-                )
-            ),
-            ChangelogSection(
-                title = "Fixes",
-                items = listOf(
-                    "Queue and shuffle behavior is now more stable and predictable.",
-                    "Several background playback and casting edge cases were fixed.",
-                    "Sleep Timer, Files tab navigation, and album artist crash issues were fixed.",
-                    "Widget loading and service stability were improved to reduce overheating/memory issues.",
-                    "General bug fixes and UI polish across the app."
+@Composable
+private fun changelogData(): List<ChangelogVersion> {
+    return listOf(
+        ChangelogVersion(
+            version = "0.6.0-beta",
+            date = "2026-03-05",
+            sections = listOf(
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_whats_new),
+                    items = stringArrayResource(R.array.changelog_060_whats_new).toList()
+                ),
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_improvements),
+                    items = stringArrayResource(R.array.changelog_060_improvements).toList()
+                ),
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_fixes),
+                    items = stringArrayResource(R.array.changelog_060_fixes).toList()
                 )
             )
-        )
-    ),
-    ChangelogVersion(
-        version = "0.5.0-beta",
-        date = "2026-01-14",
-        sections = listOf(
-            ChangelogSection(
-                title = "Highlights",
-                items = listOf(
-                    "Material 3 Expressive UI Update",
-                    "10-band Equalizer & Effects",
-                    "New Library Sync Flow",
-                    "AI Integration (Gemini Models)",
-                    "M3U Playlist Import/Export",
-                    "Deezer Artist Artwork Integration",
-                    "Custom Playlist Covers"
-                )
-            ),
-            ChangelogSection(
-                title = "Improvements",
-                items = listOf(
-                    "Settings Architecture Refactor",
-                    "Queue & Player Animations",
-                    "Baseline Profiles & Performance",
-                    "Better Lyrics System with Sync Offset"
-                )
-            ),
-            ChangelogSection(
-                title = "Fixes",
-                items = listOf(
-                    "Casting Stability Improvements",
-                    "Player Sheet Stability",
-                    "General Bug Fixes & Cleanup"
+        ),
+        ChangelogVersion(
+            version = "0.5.0-beta",
+            date = "2026-01-14",
+            sections = listOf(
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_highlights),
+                    items = stringArrayResource(R.array.changelog_050_highlights).toList()
+                ),
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_improvements),
+                    items = stringArrayResource(R.array.changelog_050_improvements).toList()
+                ),
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_fixes),
+                    items = stringArrayResource(R.array.changelog_050_fixes).toList()
                 )
             )
-        )
-    ),
-    ChangelogVersion(
-        version = "0.4.0-beta",
-        date = "2025-12-15",
-        sections = listOf(
-            ChangelogSection(
-                title = "Highlights",
-                items = listOf(
-                    "Major navigation redesign",
-                    "New file explorer for choosing source directories",
-                    "New Connectivity and casting functionalities",
-                    "Seamless continuity between remote devices",
-                    "Gapless transition between songs",
-                    "Crossfade control",
-                    "New Custom Transitions feature (only for playlists)",
-                    "Keep playing after closed the app",
-                    "UI Optimizations",
-                    "Improved stats feature",
-                    "Redesigned Queue control with more features",
-                    "Improved different filetypes support for playing and metadata editing",
-                    "Improved permission controller",
-                    "Minor bug fixes"
+        ),
+        ChangelogVersion(
+            version = "0.4.0-beta",
+            date = "2025-12-15",
+            sections = listOf(
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_highlights),
+                    items = stringArrayResource(R.array.changelog_040_highlights).toList()
                 )
             )
-        )
-    ),
-    ChangelogVersion(
-        version = "0.3.0-beta",
-        date = "2025-10-28",
-        sections = listOf(
-            ChangelogSection(
-                title = "What's new",
-                items = listOf(
-                    "Introduced a richer listening stats hub with deeper insights into your sessions.",
-                    "Launched a floating quick player to instantly open and preview local files.",
-                    "Added a folders tab with a tree-style navigator and playlist-ready view."
-                )
-            ),
-            ChangelogSection(
-                title = "Improvements",
-                items = listOf(
-                    "Refined the overall Material 3 UI for a cleaner and more cohesive experience.",
-                    "Metadata editing now supports cover art change.",
-                    "Smoothed out animations and transitions across the app for more fluid navigation.",
-                    "Enhanced the artist screen layout with richer details and polish.",
-                    "Upgraded DailyMix and YourMix generation with smarter, more diverse selections.",
-                    "Strengthened the AI playlist generation.",
-                    "Improved search relevance and presentation for faster discovery.",
-                    "Expanded support for a broader range of audio file formats."
-                )
-            ),
-            ChangelogSection(
-                title = "Fixes",
-                items = listOf(
-                    "Resolved metadata quirks so song details stay accurate everywhere.",
-                    "Restored notification shortcuts so they reliably jump back into playback."
+        ),
+        ChangelogVersion(
+            version = "0.3.0-beta",
+            date = "2025-10-28",
+            sections = listOf(
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_whats_new),
+                    items = stringArrayResource(R.array.changelog_030_whats_new).toList()
+                ),
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_improvements),
+                    items = stringArrayResource(R.array.changelog_030_improvements).toList()
+                ),
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_fixes),
+                    items = stringArrayResource(R.array.changelog_030_fixes).toList()
                 )
             )
-        )
-    ),
-    ChangelogVersion(
-        version = "0.2.0-beta",
-        date = "2024-09-15",
-        sections = listOf(
-            ChangelogSection(
-                title = "Added",
-                items = listOf(
-                    "Chromecast support for casting audio from your device.",
-                    "In-app changelog to keep you updated on the latest features.",
-                    "Support for .LRC files, both embedded and external.",
-                    "Offline lyrics support.",
-                    "Synchronized lyrics (synced with the song).",
-                    "New screen to view the full queue.",
-                    "Reorder and remove songs from the queue.",
-                    "Mini-player gestures (swipe down to close).",
-                    "Added more material animations.",
-                    "New settings to customize the look and feel.",
-                    "New settings to clear the cache."
-                )
-            ),
-            ChangelogSection(
-                title = "Changed",
-                items = listOf(
-                    "Complete redesign of the user interface.",
-                    "Complete redesign of the player.",
-                    "Performance improvements in the library.",
-                    "Improved application startup speed.",
-                    "The AI now provides better results."
-                )
-            ),
-            ChangelogSection(
-                title = "Fixed",
-                items = listOf(
-                    "Fixed various bugs in the tag editor.",
-                    "Fixed a bug where the playback notification was not clearing.",
-                    "Fixed several bugs that caused the app to crash."
+        ),
+        ChangelogVersion(
+            version = "0.2.0-beta",
+            date = "2024-09-15",
+            sections = listOf(
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_added),
+                    items = stringArrayResource(R.array.changelog_020_added).toList()
+                ),
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_changed),
+                    items = stringArrayResource(R.array.changelog_020_changed).toList()
+                ),
+                ChangelogSection(
+                    title = stringResource(R.string.changelog_section_fixed),
+                    items = stringArrayResource(R.array.changelog_020_fixed).toList()
                 )
             )
         )
     )
-)
+}
 
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -241,6 +156,7 @@ fun ChangelogBottomSheet(
 ) {
     val context = LocalContext.current
     val changelogUrl = "https://github.com/theovilardo/PixelPlayer/blob/master/CHANGELOG.md"
+    val changelog = changelogData()
 
     val fabCornerRadius = 16.dp
 
@@ -252,7 +168,7 @@ fun ChangelogBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Changelog",
+                text = stringResource(R.string.changelog_title),
                 fontFamily = GoogleSansRounded,
                 style = ExpTitleTypography.displaySmall,
                 color = MaterialTheme.colorScheme.onSurface
@@ -309,7 +225,7 @@ fun ChangelogBottomSheet(
                     contentDescription = null
                 )
             },
-            text = { Text(text = "View on GitHub") },
+            text = { Text(text = stringResource(R.string.changelog_view_github)) },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(horizontal = 24.dp, vertical = 24.dp)

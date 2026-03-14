@@ -48,6 +48,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.theveloper.pixelplay.R
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -153,13 +155,13 @@ fun PaletteStyleSettingsScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Palette style",
+                        text = stringResource(R.string.palette_settings_title),
                         style = MaterialTheme.typography.titleLarge,
                         color = previewScheme.onSurface,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "Choose the album colors for the player UI.",
+                        text = stringResource(R.string.palette_settings_description),
                         style = MaterialTheme.typography.bodyMedium,
                         color = previewScheme.onSurfaceVariant
                     )
@@ -182,7 +184,7 @@ fun PaletteStyleSettingsScreen(
 
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = pendingStyle.label,
+                        text = stringResource(pendingStyle.labelRes),
                         style = MaterialTheme.typography.titleMedium,
                         color = previewScheme.onSurface,
                         fontWeight = FontWeight.Medium
@@ -199,7 +201,7 @@ fun PaletteStyleSettingsScreen(
                             modifier = Modifier
                                 .padding(8.dp)
                                 .padding(start = 4.dp),
-                            text = pendingStyle.description(),
+                            text = stringResource(pendingStyle.descriptionRes),
                             style = MaterialTheme.typography.bodyMedium,
                             color = previewScheme.onTertiaryContainer
                         )
@@ -236,14 +238,14 @@ private fun PaletteStyleHeader(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Close,
-                    contentDescription = "Close"
+                    contentDescription = stringResource(R.string.common_close)
                 )
             }
 
             Spacer(modifier = Modifier.width(12.dp))
 
             Text(
-                text = "Colors",
+                text = stringResource(R.string.palette_settings_header),
                 style = MaterialTheme.typography.headlineMedium,
                 color = scheme.onSurface,
                 modifier = Modifier.weight(1f)
@@ -262,7 +264,7 @@ private fun PaletteStyleHeader(
                 )
             ) {
                 Text(
-                    text = "Apply",
+                    text = stringResource(R.string.palette_settings_apply),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -557,14 +559,5 @@ private fun PaletteSwatchSquare(
                 }
             }
         }
-    }
-}
-
-private fun AlbumArtPaletteStyle.description(): String {
-    return when (this) {
-        AlbumArtPaletteStyle.TONAL_SPOT -> "Balanced and calm."
-        AlbumArtPaletteStyle.VIBRANT -> "High saturation accents."
-        AlbumArtPaletteStyle.EXPRESSIVE -> "Bold hue shifts and contrast."
-        AlbumArtPaletteStyle.FRUIT_SALAD -> "Playful rotated accents."
     }
 }
