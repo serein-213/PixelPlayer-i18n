@@ -1111,7 +1111,7 @@ private fun PlaylistFormContent(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Generate with AI", fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.create_playlist_generate_with_ai), fontWeight = FontWeight.SemiBold)
                 }
             }
 

@@ -360,9 +360,7 @@
     <string name="ai_playlist_size_label">Playlist size</string>
     <string name="ai_playlist_min_songs">Min songs</string>
     <string name="ai_playlist_max_songs">Max songs</string>
-    <string name="ai_playlist_prompt_placeholder">e.g. Chill evening vibes, upbeat workout energy...</string>
     <string name="ai_playlist_generating">Generating...</string>
-    <string name="ai_playlist_generate_button">Generate Playlist</string>
 
     
     <string name="ai_metadata_dialog_title">Generate Metadata with AI</string>
@@ -754,7 +752,6 @@
     <string name="settings_force_palette_regen_title">Force Album Palette Regeneration</string>
     <string name="settings_force_palette_regen_subtitle_empty">No songs with album art were found.</string>
     <string name="settings_force_palette_regen_subtitle">Pick a song to rebuild all album color variants from scratch.</string>
-    <string name="settings_choose_song">Choose Song</string>
     <string name="settings_palette_regen_title">Choose a Song</string>
     <string name="settings_diagnostics_title">Diagnostics</string>
     <string name="settings_trigger_crash_title">Trigger Test Crash</string>
@@ -1136,6 +1133,12 @@
     <string name="settings_ai_loading_models">Loading available models...</string>
     <string name="settings_ai_models_error">Error loading models</string>
     <string name="settings_system_prompt_title">System Prompt</string>
+    <string name="settings_ai_prompt_preset_balanced">Balanced</string>
+    <string name="settings_ai_prompt_preset_creative">Creative</string>
+    <string name="settings_ai_prompt_preset_precise">Precise</string>
+    <string name="settings_ai_prompt_balanced_desc">You are a helpful AI assistant inside a music player app. Build playlists that match the user request first, then optimize flow and variety. Prefer familiar tracks with a small discovery ratio and avoid repetitive artist clustering.</string>
+    <string name="settings_ai_prompt_creative_desc">You are a creative playlist curator. Follow the user request, but add tasteful surprises and deeper cuts when they still fit the mood. Keep transitions smooth and diversify artists, tempos, and eras.</string>
+    <string name="settings_ai_prompt_precise_desc">You are a strict music recommendation assistant. Prioritize exact prompt matching, minimize weak matches, and keep results consistent with requested genres, mood, and activity. Return concise, deterministic selections over novelty.</string>
 
     <string name="settings_ai_provider_title">AI Provider</string>
     <string name="settings_ai_provider_subtitle">Select the AI service provider to use.</string>
@@ -1712,7 +1715,6 @@
     <string name="telegram_last_synced_relative">Synced %1$s</string>
 
     
-    <string name="artist_change_photo">Change photo</string>
     <string name="artist_reset_image">Reset to default</string>
 
     
@@ -1796,7 +1798,6 @@
     <string name="common_error_loading">Error loading</string>
     <string name="common_retry">Retry</string>
     <string name="common_unknown_error">Unknown error</string>
-    <string name="library_error_loading_songs">Error loading songs</string>
     <string name="search_no_recent">No recent searches</string>
     <string name="search_filter_all">All</string>
     <string name="search_filter_songs">Songs</string>
@@ -1837,7 +1838,6 @@
     <string name="album_detail_subtitle">%1$s • %2$d songs</string>
     <string name="album_sort_songs">Sort Songs</string>
     <string name="album_detail_shuffle_cd">Shuffle play album</string>
-    <string name="library_reorder_tabs">Reorder tabs</string>
     <string name="merge_playlists_title">Merge Playlists</string>
     <string name="merge_playlists_enter_name">Enter a name for the merged playlist:</string>
     <string name="merge_playlists_placeholder">Merged Playlist</string>
@@ -2085,7 +2085,6 @@
     <string name="library_tabs_description">Jump directly to any tab or reorder them.</string>
     <string name="library_songs_count">%d Songs</string>
     <string name="library_merge_playlists_title">Merge Playlists</string>
-    <string name="library_merge_playlists_prompt">Enter a name for the merged playlist:</string>
 
     <!-- Common Actions -->
     <string name="common_confirm">Confirm</string>
@@ -2439,5 +2438,37 @@
     <string name="song_info_album">Album</string>
     <string name="song_info_artist">Artist</string>
     <string name="song_info_path">Path</string>
+
+    <!-- Developer Settings -->
+    <string name="settings_no_songs_with_album_art">No songs with album art were found.</string>
+    <string name="settings_pick_song_rebuild_palette">Pick a song to rebuild all album color variants from scratch.</string>
+    <string name="settings_choose_song">Choose Song</string>
+
+    <!-- Create Playlist -->
+    <string name="create_playlist_generate_with_ai">Generate with AI</string>
+    <string name="ai_playlist_prompt_placeholder">e.g., \'Energizing 80s rock for a workout\' or \'Chill lo-fi for studying\'</string>
+    <string name="ai_playlist_generate_button">Generate Playlist</string>
+
+    <!-- Library Errors -->
+    <string name="library_error_loading_songs">Error loading songs</string>
+    <string name="library_retry">Retry</string>
+    <string name="library_no_songs_found">No songs found in your library.</string>
+    <string name="library_try_rescan">Try rescanning your library in settings if you have music on your device.</string>
+
+    <!-- Artist Detail -->
+    <string name="artist_change_photo">Change photo</string>
+    <string name="artist_reset_to_default">Reset to default</string>
+
+    <!-- Folder/Album/Artist Info -->
+    <string name="songs_count">%d Songs</string>
+
+    <!-- Library Actions -->
+    <string name="library_all_files_access_required">All files access is required to browse folders.</string>
+    <string name="library_grant_permission">Grant Permission</string>
+    <string name="library_merge_playlists">Merge Playlists</string>
+    <string name="library_merge_playlists_prompt">Enter a name for the merged playlist:</string>
+    <string name="library_merged_playlist_placeholder">Merged Playlist</string>
+    <string name="library_merge">Merge</string>
+    <string name="library_reorder_tabs">Reorder tabs</string>
 
 </resources>

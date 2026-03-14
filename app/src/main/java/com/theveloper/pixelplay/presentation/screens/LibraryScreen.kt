@@ -1501,14 +1501,14 @@ fun LibraryScreen(
                                                 horizontalAlignment = Alignment.CenterHorizontally,
                                                 verticalArrangement = Arrangement.Center
                                             ) {
-                                                Text("All files access is required to browse folders.")
+                                                Text(stringResource(R.string.library_all_files_access_required))
                                                 Spacer(modifier = Modifier.height(8.dp))
                                                 Button(onClick = {
                                                     val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
                                                     intent.data = Uri.fromParts("package", context.packageName, null)
                                                     launcher.launch(intent)
                                                 }) {
-                                                    Text("Grant Permission")
+                                                    Text(stringResource(R.string.library_grant_permission))
                                                 }
                                             }
                                         }
@@ -1888,15 +1888,15 @@ fun LibraryScreen(
                 pendingMergePlaylistIds = emptyList()
                 mergePlaylistName = ""
             },
-            title = { Text("Merge Playlists") },
+            title = { Text(stringResource(R.string.library_merge_playlists)) },
             text = {
                 Column {
-                    Text("Enter a name for the merged playlist:")
+                    Text(stringResource(R.string.library_merge_playlists_prompt))
                     Spacer(modifier = Modifier.height(12.dp))
                     OutlinedTextField(
                         value = mergePlaylistName,
                         onValueChange = { mergePlaylistName = it },
-                        placeholder = { Text("Merged Playlist") },
+                        placeholder = { Text(stringResource(R.string.library_merged_playlist_placeholder)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -1923,16 +1923,16 @@ fun LibraryScreen(
                         }
                     }
                 ) {
-                    Text("Merge")
+                    Text(stringResource(R.string.library_merge))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { 
+                TextButton(onClick = {
                     showMergePlaylistDialog = false
                     pendingMergePlaylistIds = emptyList()
                     mergePlaylistName = ""
                 }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -2394,7 +2394,7 @@ private fun LibraryTabSwitcherSheet(
                                 contentDescription = null
                             )
                             Spacer(modifier = Modifier.width(10.dp))
-                            Text("Reorder tabs")
+                            Text(stringResource(R.string.library_reorder_tabs))
                         }
                     }
                 }
@@ -2836,7 +2836,7 @@ fun FolderListItem(folder: MusicFolder, onClick: () -> Unit) {
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(folder.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Text("${folder.totalSongCount} Songs", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(R.string.songs_count, folder.totalSongCount), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
@@ -3055,7 +3055,7 @@ fun AlbumGridItemRedesigned(
                             overflow = TextOverflow.Ellipsis
                         )
                         Text(album.artist, style = MaterialTheme.typography.bodySmall, color = onGradientColor.copy(alpha = 0.85f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        Text("${album.songCount} Songs", style = MaterialTheme.typography.bodySmall, color = onGradientColor.copy(alpha = 0.7f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(stringResource(R.string.songs_count, album.songCount), style = MaterialTheme.typography.bodySmall, color = onGradientColor.copy(alpha = 0.7f), maxLines = 1, overflow = TextOverflow.Ellipsis)
                     }
                 }
 
@@ -3148,7 +3148,7 @@ fun ArtistListItem(artist: Artist, onClick: () -> Unit, isLoading: Boolean = fal
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Text(artist.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Text("${artist.songCount} Songs", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.songs_count, artist.songCount), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }

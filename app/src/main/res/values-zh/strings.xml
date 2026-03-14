@@ -204,6 +204,28 @@
     <string name="changelog_section_added">新增</string>
     <string name="changelog_section_changed">变更</string>
     <string name="changelog_section_fixed">修复</string>
+    <string-array name="changelog_060_whats_new">
+        <item>现已支持 Android Auto 车载播放。</item>
+        <item>Wear OS 支持已上线，包括更好的手表到手机播放控制。</item>
+        <item>云集成扩展，包括 Telegram、网易云音乐、QQ 音乐和 Google Drive 改进。</item>
+        <item>最近播放和持久化队列恢复让您的收听会话随时就绪。</item>
+        <item>现已包含备份与恢复 v3 和账户管理工具。</item>
+        <item>歌词功能更智能，支持手动搜索回退和存储改进。</item>
+    </string-array>
+    <string-array name="changelog_060_improvements">
+        <item>启动、库、队列和播放器交互的大幅性能优化。</item>
+        <item>播放器、投屏、歌词、艺术家和流派界面经过重新设计，使用更流畅。</item>
+        <item>导航和搜索流程更可靠，路由处理更安全。</item>
+        <item>改进了音频播放兼容性，支持更多设备和格式。</item>
+        <item>多选工作流扩展到歌曲、专辑和播放列表。</item>
+    </string-array>
+    <string-array name="changelog_060_fixes">
+        <item>队列和随机播放行为现在更稳定和可预测。</item>
+        <item>修复了多个后台播放和投屏边缘情况。</item>
+        <item>修复了睡眠定时器、文件标签导航和专辑艺术家崩溃问题。</item>
+        <item>改进了小部件加载和服务稳定性，减少过热/内存问题。</item>
+        <item>全应用的常规错误修复和 UI 优化。</item>
+    </string-array>
     <string-array name="changelog_050_highlights">
         <item>实现了 10 段均衡器和效果器套件 (功能: @theovilardo)</item>
         <item>添加了 M3U 播放列表导入/导出支持 (功能/修复: @lostf1sh, @theovilardo)</item>
@@ -344,9 +366,7 @@
     <string name="ai_playlist_size_label">歌单数量</string>
     <string name="ai_playlist_min_songs">最少歌曲</string>
     <string name="ai_playlist_max_songs">最多歌曲</string>
-    <string name="ai_playlist_prompt_placeholder">例如：夜晚放松、活力健身...</string>
     <string name="ai_playlist_generating">生成中...</string>
-    <string name="ai_playlist_generate_button">生成歌单</string>
 
     
     <string name="ai_metadata_dialog_title">使用 AI 生成媒体信息</string>
@@ -736,7 +756,6 @@
     <string name="settings_force_palette_regen_title">强制专辑调色板重新生成</string>
     <string name="settings_force_palette_regen_subtitle_empty">未发现有专辑封面的歌曲。</string>
     <string name="settings_force_palette_regen_subtitle">选择一首歌以从头开始重建所有专辑颜色变体。</string>
-    <string name="settings_choose_song">选择歌曲</string>
     <string name="settings_palette_regen_title">选择歌曲</string>
     <string name="settings_diagnostics_title">诊断</string>
     <string name="settings_trigger_crash_title">触发测试崩溃</string>
@@ -1113,6 +1132,12 @@
     <string name="settings_ai_loading_models">正在加载可用模型…</string>
     <string name="settings_ai_models_error">加载模型出错</string>
     <string name="settings_system_prompt_title">系统提示词</string>
+    <string name="settings_ai_prompt_preset_balanced">平衡</string>
+    <string name="settings_ai_prompt_preset_creative">创意</string>
+    <string name="settings_ai_prompt_preset_precise">精确</string>
+    <string name="settings_ai_prompt_balanced_desc">你是音乐播放器应用中的实用 AI 助手。首先构建符合用户请求的播放列表，然后优化流畅度和多样性。优先选择熟悉的曲目，保持较小的探索比例，避免重复的艺术家聚集。</string>
+    <string name="settings_ai_prompt_creative_desc">你是富有创意的播放列表策展人。遵循用户请求，但在符合氛围的前提下添加巧妙的惊喜和深度曲目。保持过渡流畅，多样化艺术家、节奏和时代。</string>
+    <string name="settings_ai_prompt_precise_desc">你是严格的音乐推荐助手。优先精确匹配提示，最小化弱匹配，保持结果与请求的流派、心情和活动一致。返回简洁、确定性的选择，而非新颖性。</string>
 
     <string name="settings_ai_provider_title">AI 提供商</string>
     <string name="settings_ai_provider_subtitle">选择要使用的 AI 服务提供商。</string>
@@ -1629,7 +1654,6 @@
     <string name="telegram_dashboard_title">Telegram 同步</string>
     <string name="telegram_add_channel">添加频道</string>
     <string name="common_songs_count">%d 首歌曲</string>
-    <string name="artist_change_photo">更换照片</string>
     <string name="quick_fill_select_songs">选择歌曲</string>
     <string name="quick_fill_select_a_genre">选择流派</string>
     <string name="quick_fill_selected_genre">流派: %1$s</string>
@@ -1709,7 +1733,6 @@
     <string name="common_error_loading">加载失败</string>
     <string name="common_retry">重试</string>
     <string name="common_unknown_error">未知错误</string>
-    <string name="library_error_loading_songs">加载歌曲失败</string>
     <string name="search_no_recent">暂无最近搜索</string>
     <string name="search_filter_all">全部</string>
     <string name="search_filter_songs">歌曲</string>
@@ -1744,11 +1767,11 @@
     <string name="palette_style_fruit_salad">水果沙拉 (Fruit Salad)</string>
     <string name="palette_style_monochrome">单色 (Monochrome)</string>
 
-    <string name="collage_pattern_cosmic_swirl">宇宙漩涡 (Cosmic Swirl)</string>
-    <string name="collage_pattern_honeycomb_groove">蜂巢律动 (Honeycomb Groove)</string>
-    <string name="collage_pattern_vinyl_stack">黑胶堆栈 (Vinyl Stack)</string>
-    <string name="collage_pattern_pixel_mosaic">像素马赛克 (Pixel Mosaic)</string>
-    <string name="collage_pattern_stardust_scatter">星尘散射 (Stardust Scatter)</string>
+    <string name="collage_pattern_cosmic_swirl">宇宙漩涡</string>
+    <string name="collage_pattern_honeycomb_groove">蜂巢律动</string>
+    <string name="collage_pattern_vinyl_stack">黑胶堆栈</string>
+    <string name="collage_pattern_pixel_mosaic">像素马赛克</string>
+    <string name="collage_pattern_stardust_scatter">星尘散射</string>
     
     <string name="settings_date_pattern">yyyy年M月d日</string>
     <string name="settings_time_pattern">HH:mm</string>
@@ -1805,7 +1828,6 @@
     <string name="album_detail_subtitle">%1$s • %2$d 首歌曲</string>
     <string name="album_sort_songs">排序歌曲</string>
     <string name="album_detail_shuffle_cd">随机播放专辑</string>
-    <string name="library_reorder_tabs">重新排序标签</string>
     <string name="merge_playlists_title">合并播放列表</string>
     <string name="merge_playlists_enter_name">输入合并后的播放列表名称：</string>
     <string name="merge_playlists_placeholder">合并的播放列表</string>
@@ -2007,7 +2029,6 @@
     <string name="library_tabs_description">直接跳转到任何标签或重新排序它们。</string>
     <string name="library_songs_count">%d 首歌曲</string>
     <string name="library_merge_playlists_title">合并播放列表</string>
-    <string name="library_merge_playlists_prompt">输入合并后的播放列表名称：</string>
 
     <!-- Common Actions -->
     <string name="common_confirm">确认</string>
@@ -2342,5 +2363,37 @@
     <string name="song_info_album">专辑</string>
     <string name="song_info_artist">艺术家</string>
     <string name="song_info_path">路径</string>
+
+    <!-- Developer Settings -->
+    <string name="settings_no_songs_with_album_art">未找到带有专辑封面的歌曲。</string>
+    <string name="settings_pick_song_rebuild_palette">选择一首歌曲以从头重建所有专辑调色板。</string>
+    <string name="settings_choose_song">选择歌曲</string>
+
+    <!-- Create Playlist -->
+    <string name="create_playlist_generate_with_ai">使用 AI 生成</string>
+    <string name="ai_playlist_prompt_placeholder">例如：\'适合健身的充满活力的 80 年代摇滚\' 或 \'适合学习的轻松 lo-fi\'</string>
+    <string name="ai_playlist_generate_button">生成播放列表</string>
+
+    <!-- Library Errors -->
+    <string name="library_error_loading_songs">加载歌曲时出错</string>
+    <string name="library_retry">重试</string>
+    <string name="library_no_songs_found">您的音乐库中未找到歌曲。</string>
+    <string name="library_try_rescan">如果您的设备上有音乐，请尝试在设置中重新扫描音乐库。</string>
+
+    <!-- Artist Detail -->
+    <string name="artist_change_photo">更改照片</string>
+    <string name="artist_reset_to_default">重置为默认</string>
+
+    <!-- Folder/Album/Artist Info -->
+    <string name="songs_count">%d 首歌曲</string>
+
+    <!-- Library Actions -->
+    <string name="library_all_files_access_required">需要所有文件访问权限才能浏览文件夹。</string>
+    <string name="library_grant_permission">授予权限</string>
+    <string name="library_merge_playlists">合并播放列表</string>
+    <string name="library_merge_playlists_prompt">输入合并后的播放列表名称：</string>
+    <string name="library_merged_playlist_placeholder">合并的播放列表</string>
+    <string name="library_merge">合并</string>
+    <string name="library_reorder_tabs">重新排序标签页</string>
 
 </resources>

@@ -69,6 +69,7 @@ import androidx.compose.ui.util.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
+import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.model.Artist
 import com.theveloper.pixelplay.data.model.Song
 import com.theveloper.pixelplay.presentation.components.CollapsibleCommonTopBar
@@ -810,7 +811,7 @@ private fun SharedArtistTopBarProbe(
                         onDismissRequest = { showImageMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Change photo") },
+                            text = { Text(stringResource(R.string.artist_change_photo)) },
                             leadingIcon = {
                                 Icon(Icons.Rounded.AddAPhoto, contentDescription = null)
                             },
@@ -821,7 +822,7 @@ private fun SharedArtistTopBarProbe(
                         )
                         if (hasCustomImage) {
                             DropdownMenuItem(
-                                text = { Text("Reset to default") },
+                                text = { Text(stringResource(R.string.artist_reset_to_default)) },
                                 leadingIcon = {
                                     Icon(Icons.Rounded.Delete, contentDescription = null)
                                 },

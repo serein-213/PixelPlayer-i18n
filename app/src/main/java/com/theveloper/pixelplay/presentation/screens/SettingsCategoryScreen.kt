@@ -559,7 +559,7 @@ fun SettingsCategoryScreen(
                                 ThemeSelectorItem(
                                     label = stringResource(R.string.settings_collage_pattern),
                                     description = stringResource(R.string.settings_collage_pattern_description),
-                                    options = CollagePattern.entries.associate { it.storageKey to it.label },
+                                    options = CollagePattern.entries.associate { it.storageKey to stringResource(it.labelRes) },
                                     selectedKey = uiState.collagePattern.storageKey,
                                     onSelectionChanged = { key ->
                                         settingsViewModel.setCollagePattern(CollagePattern.fromStorageKey(key))
@@ -736,15 +736,15 @@ fun SettingsCategoryScreen(
                             SettingsSubsection(title = stringResource(R.string.settings_subsection_queue_transitions)) {
                                 ThemeSelectorItem(
                                     label = stringResource(R.string.settings_crossfade),
-                                    description = "Enable smooth transition between songs.",
-                                    options = mapOf("true" to "Enabled", "false" to "Disabled"),
+                                    description = stringResource(R.string.settings_crossfade_desc),
+                                    options = mapOf("true" to stringResource(R.string.settings_crossfade_enabled), "false" to stringResource(R.string.settings_crossfade_disabled)),
                                     selectedKey = if (uiState.isCrossfadeEnabled) "true" else "false",
                                     onSelectionChanged = { settingsViewModel.setCrossfadeEnabled(it.toBoolean()) },
                                     leadingIcon = { Icon(painterResource(R.drawable.rounded_align_justify_space_even_24), null, tint = MaterialTheme.colorScheme.secondary) }
                                 )
                                 if (uiState.isCrossfadeEnabled) {
                                     SliderSettingsItem(
-                                        label = "Crossfade Duration",
+                                        label = stringResource(R.string.settings_crossfade_duration_label),
                                         value = uiState.crossfadeDuration.toFloat(),
                                         valueRange = 1000f..12000f,
                                         steps= 10,
@@ -968,7 +968,7 @@ fun SettingsCategoryScreen(
                                             tint = MaterialTheme.colorScheme.secondary
                                         )
                                     },
-                                    primaryActionLabel = "Select & Export",
+                                    primaryActionLabel = stringResource(R.string.settings_select_export),
                                     onPrimaryAction = { showExportDataDialog = true },
                                     enabled = !uiState.isDataTransferInProgress
                                 )
@@ -1018,25 +1018,25 @@ fun SettingsCategoryScreen(
                                     title = stringResource(R.string.settings_force_daily_mix_regen),
                                     subtitle = stringResource(R.string.settings_force_daily_mix_regen_subtitle),
                                     icon = { Icon(painterResource(R.drawable.rounded_instant_mix_24), null, tint = MaterialTheme.colorScheme.secondary) },
-                                    primaryActionLabel = "Regenerate Daily Mix",
+                                    primaryActionLabel = stringResource(R.string.settings_regenerate_daily_mix),
                                     onPrimaryAction = { showRegenerateDailyMixDialog = true }
                                 )
                                 ActionSettingsItem(
                                     title = stringResource(R.string.settings_force_stats_regen),
                                     subtitle = stringResource(R.string.settings_force_stats_regen_subtitle),
                                     icon = { Icon(painterResource(R.drawable.rounded_monitoring_24), null, tint = MaterialTheme.colorScheme.secondary) },
-                                    primaryActionLabel = "Regenerate Stats",
+                                    primaryActionLabel = stringResource(R.string.settings_regenerate_stats),
                                     onPrimaryAction = { showRegenerateStatsDialog = true }
                                 )
                                 ActionSettingsItem(
                                     title = stringResource(R.string.settings_force_album_palette_regen),
                                     subtitle = if (songsWithAlbumArt.isEmpty()) {
-                                        "No songs with album art were found."
+                                        stringResource(R.string.settings_no_songs_with_album_art)
                                     } else {
-                                        "Pick a song to rebuild all album color variants from scratch."
+                                        stringResource(R.string.settings_pick_song_rebuild_palette)
                                     },
                                     icon = { Icon(Icons.Outlined.Style, null, tint = MaterialTheme.colorScheme.secondary) },
-                                    primaryActionLabel = "Choose Song",
+                                    primaryActionLabel = stringResource(R.string.settings_choose_song),
                                     onPrimaryAction = { showPaletteRegenerateSheet = true },
                                     enabled = songsWithAlbumArt.isNotEmpty() && !isPaletteRegenerateRunning
                                 )
@@ -1238,7 +1238,7 @@ fun SettingsCategoryScreen(
                         Toast.makeText(context, context.getString(R.string.toast_daily_mix_regen_started), Toast.LENGTH_SHORT).show()
                     }
                 ) {
-                    Text("Regenerate")
+                    Text(stringResource(R.string.settings_regenerate_daily_mix_confirm))
                 }
             },
             dismissButton = { TextButton(onClick = { showRegenerateDailyMixDialog = false }) { Text(stringResource(R.string.cancel)) } }
@@ -1259,7 +1259,7 @@ fun SettingsCategoryScreen(
                         Toast.makeText(context, context.getString(R.string.toast_stats_regen_started), Toast.LENGTH_SHORT).show()
                     }
                 ) {
-                    Text("Regenerate")
+                    Text(stringResource(R.string.settings_regenerate_daily_mix_confirm))
                 }
             },
             dismissButton = { TextButton(onClick = { showRegenerateStatsDialog = false }) { Text(stringResource(R.string.cancel)) } }

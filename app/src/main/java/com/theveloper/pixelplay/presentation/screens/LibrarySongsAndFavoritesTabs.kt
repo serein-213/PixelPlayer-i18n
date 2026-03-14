@@ -43,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -321,7 +322,7 @@ fun LibrarySongsTabPaginated(
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Error loading songs", style = MaterialTheme.typography.titleMedium)
+                    Text(stringResource(R.string.library_error_loading_songs), style = MaterialTheme.typography.titleMedium)
                     Text(
                         error.localizedMessage ?: "Unknown error",
                         style = MaterialTheme.typography.bodySmall,
@@ -329,7 +330,7 @@ fun LibrarySongsTabPaginated(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(onClick = { paginatedSongs.retry() }) {
-                        Text("Retry")
+                        Text(stringResource(R.string.library_retry))
                     }
                 }
             }
@@ -350,9 +351,9 @@ fun LibrarySongsTabPaginated(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(Modifier.height(8.dp))
-                    Text("No songs found in your library.", style = MaterialTheme.typography.titleMedium)
+                    Text(stringResource(R.string.library_no_songs_found), style = MaterialTheme.typography.titleMedium)
                     Text(
-                        "Try rescanning your library in settings if you have music on your device.",
+                        stringResource(R.string.library_try_rescan),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center

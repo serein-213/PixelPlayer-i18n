@@ -28,6 +28,8 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.res.stringResource
+import com.theveloper.pixelplay.R
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -119,7 +121,7 @@ fun AiPlaylistSheet(
                 OutlinedTextField(
                     value = prompt,
                     onValueChange = { prompt = it },
-                    placeholder = { Text("e.g., 'Energizing 80s rock for a workout' or 'Chill lo-fi for studying'") },
+                    placeholder = { Text(stringResource(R.string.ai_playlist_prompt_placeholder)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     minLines = 3,
@@ -165,7 +167,7 @@ fun AiPlaylistSheet(
                 ) {
                     Icon(Icons.Rounded.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(8.dp))
-                    Text("Generate Playlist")
+                    Text(stringResource(R.string.ai_playlist_generate_button))
                 }
             }
             

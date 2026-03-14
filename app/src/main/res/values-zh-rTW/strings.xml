@@ -227,7 +227,6 @@
     <string name="ai_playlist_size_label">歌單數量</string>
     <string name="ai_playlist_min_songs">最少歌曲</string>
     <string name="ai_playlist_max_songs">最多歌曲</string>
-    <string name="ai_playlist_prompt_placeholder">例如：夜晚放鬆、活力健身...</string>
     <string name="ai_playlist_generating">產生中...</string>
     <string name="ai_playlist_generate_button">產生歌單</string>
 
@@ -591,7 +590,6 @@
     <string name="settings_force_palette_regen_title">強制重新產生專輯調色盤</string>
     <string name="settings_force_palette_regen_subtitle_empty">未發現有專輯封面的歌曲。</string>
     <string name="settings_force_palette_regen_subtitle">選擇一首歌以從頭開始重建所有專輯顏色變體。</string>
-    <string name="settings_choose_song">選擇歌曲</string>
     <string name="settings_palette_regen_title">選擇歌曲</string>
     <string name="settings_diagnostics_title">診斷</string>
     <string name="settings_trigger_crash_title">觸發測試性當機</string>
@@ -987,5 +985,36 @@
     <string name="song_info_album">專輯</string>
     <string name="song_info_artist">藝人</string>
     <string name="song_info_path">路徑</string>
+
+    <!-- Developer Settings -->
+    <string name="settings_no_songs_with_album_art">未找到帶有專輯封面的歌曲。</string>
+    <string name="settings_pick_song_rebuild_palette">選擇一首歌曲以從頭重建所有專輯調色盤。</string>
+    <string name="settings_choose_song">選擇歌曲</string>
+
+    <!-- Create Playlist -->
+    <string name="create_playlist_generate_with_ai">使用 AI 生成</string>
+    <string name="ai_playlist_prompt_placeholder">例如：\'適合健身的充滿活力的 80 年代搖滾\' 或 \'適合學習的輕鬆 lo-fi\'</string>
+
+    <!-- Library Errors -->
+    <string name="library_error_loading_songs">載入歌曲時發生錯誤</string>
+    <string name="library_retry">重試</string>
+    <string name="library_no_songs_found">您的音樂庫中未找到歌曲。</string>
+    <string name="library_try_rescan">如果您的裝置上有音樂，請嘗試在設定中重新掃描音樂庫。</string>
+
+    <!-- Artist Detail -->
+    <string name="artist_change_photo">更改照片</string>
+    <string name="artist_reset_to_default">重設為預設</string>
+
+    <!-- Folder/Album/Artist Info -->
+    <string name="songs_count">%d 首歌曲</string>
+
+    <!-- Library Actions -->
+    <string name="library_all_files_access_required">需要所有檔案存取權限才能瀏覽資料夾。</string>
+    <string name="library_grant_permission">授予權限</string>
+    <string name="library_merge_playlists">合併播放清單</string>
+    <string name="library_merge_playlists_prompt">輸入合併後的播放清單名稱：</string>
+    <string name="library_merged_playlist_placeholder">合併的播放清單</string>
+    <string name="library_merge">合併</string>
+    <string name="library_reorder_tabs">重新排序分頁</string>
 
 </resources>
