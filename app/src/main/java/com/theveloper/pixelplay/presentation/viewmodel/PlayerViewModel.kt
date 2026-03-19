@@ -74,6 +74,7 @@ import com.theveloper.pixelplay.data.worker.SyncManager
 import com.theveloper.pixelplay.utils.AppShortcutManager
 import com.theveloper.pixelplay.utils.QueueUtils
 import com.theveloper.pixelplay.utils.MediaItemBuilder
+import com.theveloper.pixelplay.utils.LyricsUtils
 import com.theveloper.pixelplay.utils.StorageType
 import com.theveloper.pixelplay.utils.StorageUtils
 import com.theveloper.pixelplay.utils.ZipShareHelper
@@ -149,7 +150,7 @@ private data class AiUiSnapshot(
 
 @UnstableApi
 @SuppressLint("LogNotTimber")
-@OptIn(coil.annotation.ExperimentalCoilApi::class)
+@OptIn(coil.annotation.ExperimentalCoilApi::class, ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -634,6 +635,52 @@ class PlayerViewModel @Inject constructor(
         lyricsStateHolder.messageEvents
             .onEach { msg: String -> _toastEvents.emit(msg) }
             .launchIn(viewModelScope)
+
+        viewModelScope.launch {
+            stablePlayerState
+                .map { it.currentSong?.id }
+                .distinctUntilChanged()
+                .flatMapLatest { songId ->
+                    if (songId.isNullOrBlank()) flowOf(null)
+                    else musicRepository.getSong(songId)
+                }
+                .collect { repositorySong ->
+                    val currentState = playbackStateHolder.stablePlayerState.value
+                    val currentSong = currentState.currentSong ?: return@collect
+                    if (repositorySong == null || repositorySong.id != currentSong.id) {
+                        return@collect
+                    }
+
+                    val hydratedSong = currentSong.withRepositoryHydration(repositorySong)
+                    val persistedLyrics = parsePersistedLyrics(hydratedSong.lyrics)
+                    val shouldApplyPersistedLyrics = currentState.lyrics == null && persistedLyrics != null
+                    val shouldRefreshSong = hydratedSong != currentSong
+                    val shouldReloadLyrics =
+                        !shouldApplyPersistedLyrics &&
+                            currentState.lyrics == null &&
+                            hydratedSong.improvesLyricsLookupComparedTo(currentSong)
+
+                    if (shouldApplyPersistedLyrics || shouldReloadLyrics) {
+                        lyricsStateHolder.cancelLoading()
+                    }
+
+                    if (shouldRefreshSong || shouldApplyPersistedLyrics) {
+                        updateSongInStates(
+                            updatedSong = hydratedSong,
+                            newLyrics = if (shouldApplyPersistedLyrics) persistedLyrics else null,
+                            isLoadingLyrics = if (shouldApplyPersistedLyrics) false else null
+                        )
+
+                        if (_selectedSongForInfo.value?.id == hydratedSong.id) {
+                            _selectedSongForInfo.value = hydratedSong
+                        }
+                    }
+
+                    if (shouldReloadLyrics) {
+                        lyricsStateHolder.loadLyricsForSong(hydratedSong, lyricsSourcePreference.value)
+                    }
+                }
+        }
     }
 
     fun setTrackVolume(volume: Float) {
@@ -3742,7 +3789,11 @@ class PlayerViewModel @Inject constructor(
         return aiStateHolder.generateAiMetadata(song, fields)
     }
 
-    private fun updateSongInStates(updatedSong: Song, newLyrics: Lyrics? = null) {
+    private fun updateSongInStates(
+        updatedSong: Song,
+        newLyrics: Lyrics? = null,
+        isLoadingLyrics: Boolean? = null
+    ) {
         // Update the queue first
         val currentQueue = _playerUiState.value.currentPlaybackQueue
         val songIndex = currentQueue.indexOfFirst { it.id == updatedSong.id }
@@ -3759,7 +3810,8 @@ class PlayerViewModel @Inject constructor(
             val finalLyrics = newLyrics ?: state.lyrics
             state.copy(
                 currentSong = updatedSong,
-                lyrics = if (state.currentSong?.id == updatedSong.id) finalLyrics else state.lyrics
+                lyrics = if (state.currentSong?.id == updatedSong.id) finalLyrics else state.lyrics,
+                isLoadingLyrics = isLoadingLyrics ?: state.isLoadingLyrics
             )
         }
     }
@@ -3950,5 +4002,30 @@ class PlayerViewModel @Inject constructor(
         viewModelScope.launch {
             userPreferencesRepository.addCustomGenre(genre, iconResId)
         }
+    }
+}
+
+internal fun Song.withRepositoryHydration(repositorySong: Song): Song {
+    if (id != repositorySong.id) return this
+
+    return repositorySong.copy(
+        contentUriString = repositorySong.contentUriString.ifBlank { contentUriString },
+        albumArtUriString = repositorySong.albumArtUriString ?: albumArtUriString,
+        duration = repositorySong.duration.takeIf { it > 0L } ?: duration,
+        lyrics = repositorySong.lyrics ?: lyrics
+    )
+}
+
+internal fun Song.improvesLyricsLookupComparedTo(previousSong: Song): Boolean {
+    return (previousSong.lyrics.isNullOrBlank() && !lyrics.isNullOrBlank()) ||
+        (previousSong.path.isBlank() && path.isNotBlank()) ||
+        (previousSong.contentUriString.isBlank() && contentUriString.isNotBlank())
+}
+
+internal fun parsePersistedLyrics(rawLyrics: String?): Lyrics? {
+    val normalizedLyrics = rawLyrics?.trim()?.takeIf { it.isNotBlank() } ?: return null
+    val parsedLyrics = LyricsUtils.parseLyrics(normalizedLyrics)
+    return parsedLyrics.takeIf {
+        !it.synced.isNullOrEmpty() || !it.plain.isNullOrEmpty()
     }
 }

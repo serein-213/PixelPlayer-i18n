@@ -777,6 +777,16 @@ class LyricsRepositoryImpl @Inject constructor(
      * Load embedded lyrics from audio file metadata
      */
     private suspend fun loadLyricsFromStorage(song: Song): Lyrics? = withContext(Dispatchers.IO) {
+        song.lyrics
+            ?.trim()
+            ?.takeIf { it.isNotBlank() }
+            ?.let { rawLyrics ->
+                val parsedLyrics = LyricsUtils.parseLyrics(rawLyrics)
+                if (parsedLyrics.isValid()) {
+                    return@withContext parsedLyrics.copy(areFromRemote = false)
+                }
+            }
+
         // First check database for persisted lyrics (was user-imported or cached)
         val persisted = lyricsDao.getLyrics(song.id.toLong())
         if (persisted != null && !persisted.content.isBlank()) {

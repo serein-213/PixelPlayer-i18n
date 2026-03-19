@@ -37,6 +37,12 @@ class MediaMapper @Inject constructor(
         val albumId = -1L
         val duration = extras?.getLong(MediaItemBuilder.EXTERNAL_EXTRA_DURATION) ?: 0L
         val dateAdded = extras?.getLong(MediaItemBuilder.EXTERNAL_EXTRA_DATE_ADDED) ?: System.currentTimeMillis()
+        val filePath = extras?.getString(MediaItemBuilder.EXTERNAL_EXTRA_FILE_PATH)
+            ?.takeIf { it.isNotBlank() }
+            ?: mediaItem.localConfiguration?.uri
+                ?.takeIf { it.scheme.equals("file", ignoreCase = true) }
+                ?.path
+                .orEmpty()
         val id = mediaItem.mediaId
 
         // Note: This creates a partial Song object. 
@@ -48,7 +54,7 @@ class MediaMapper @Inject constructor(
             artistId = -1L, // unknown from just MediaItem typically
             album = album,
             albumId = albumId,
-            path = "", // local path unknown from URI usually
+            path = filePath,
             contentUriString = contentUri,
             albumArtUriString = metadata.artworkUri?.toString(),
             duration = duration,
