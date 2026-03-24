@@ -27,6 +27,7 @@
     <string name="search">Search</string>
     <string name="searching_lyrics">Searching for lyrics…</string>
     <string name="lyrics_embedded_already_available">Embedded lyrics already found. Online fetch skipped.</string>
+    <string name="local_lrc_already_available">Local (.lrc) lyrics already found. Online fetch skipped.</string>
     <string name="fetch_lyrics_show_options_title">Show lyric options</string>
     <string name="fetch_lyrics_show_options_subtitle">Always open the picker instead of auto-applying the first match</string>
     <string name="error">Error</string>

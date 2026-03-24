@@ -458,7 +458,7 @@ class PlayerViewModel @Inject constructor(
     val lyricsSourcePreference: StateFlow<LyricsSourcePreference> = userPreferencesRepository.lyricsSourcePreferenceFlow
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Eagerly,
             initialValue = LyricsSourcePreference.EMBEDDED_FIRST
         )
 
@@ -3824,7 +3824,7 @@ class PlayerViewModel @Inject constructor(
      */
     fun fetchLyricsForCurrentSong(forcePickResults: Boolean = false) {
         val currentSong = stablePlayerState.value.currentSong ?: return
-        lyricsStateHolder.fetchLyricsForSong(currentSong, forcePickResults) { resId ->
+        lyricsStateHolder.fetchLyricsForSong(currentSong, forcePickResults, lyricsSourcePreference.value) { resId ->
             context.getString(resId)
         }
     }
