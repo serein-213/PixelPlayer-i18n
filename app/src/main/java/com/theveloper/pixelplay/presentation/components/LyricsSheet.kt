@@ -1165,7 +1165,7 @@ fun LyricLineRow(
     val baseModifier = if (useAnimatedLyrics && !immersiveMode) {
         when (lyricsAlignment) {
             "center" -> modifier.padding(horizontal = 36.dp)
-            "right" -> modifier.padding(start = 36.dp, end = 36.dp)
+            "right" -> modifier.padding(start = 36.dp)
             else -> modifier.padding(end = 36.dp)
         }
     } else {
