@@ -103,9 +103,10 @@ object AudioMetadataReader {
                     null
                 }
 
-                // Fallback: if TagLib couldn't read title OR artist, try JAudioTagger.
-                // This handles files with non-standard ID3 frames (e.g. 48kHz MP3s from ffmpeg).
-                val fallback = if (title == null || artist == null) {
+                // Fallback: TagLib sometimes parses core tags but misses APIC/other ID3 frames
+                // on some MP3s. If essential fields or requested artwork are missing, try
+                // JAudioTagger before giving up so we preserve full metadata when possible.
+                val fallback = if (title == null || artist == null || (readArtwork && artwork == null)) {
                     Log.w(TAG, "TagLib incomplete for ${file.name}, trying JAudioTagger fallback...")
                     readWithJAudioTagger(file)
                 } else null
@@ -134,7 +135,7 @@ object AudioMetadataReader {
 
     /**
      * Fallback reader using JAudioTagger for files where TagLib can't map ID3 frames.
-     * Only called when TagLib fails to read both title and artist.
+     * Called when TagLib leaves key metadata or requested artwork unresolved.
      */
     private fun readWithJAudioTagger(file: File): AudioMetadata? {
         return try {

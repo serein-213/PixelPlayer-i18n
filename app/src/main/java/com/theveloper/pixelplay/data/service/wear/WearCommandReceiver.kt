@@ -56,6 +56,7 @@ import com.theveloper.pixelplay.shared.WearTransferProgress
 import com.theveloper.pixelplay.shared.WearTransferRequest
 import com.theveloper.pixelplay.shared.WearVolumeCommand
 import com.theveloper.pixelplay.shared.WearVolumeState
+import com.theveloper.pixelplay.utils.AlbumArtUtils
 import com.theveloper.pixelplay.utils.MediaItemBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -1657,7 +1658,7 @@ class WearCommandReceiver : WearableListenerService() {
     private fun decodeBoundedBitmapFromUri(uriString: String, maxDimension: Int): Bitmap? {
         val uri = uriString.toUri()
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        contentResolver.openInputStream(uri)?.use { stream ->
+        AlbumArtUtils.openArtworkInputStream(this, uri)?.use { stream ->
             BitmapFactory.decodeStream(stream, null, bounds)
         } ?: return null
 
@@ -1679,7 +1680,7 @@ class WearCommandReceiver : WearableListenerService() {
             inMutable = false
         }
 
-        return contentResolver.openInputStream(uri)?.use { stream ->
+        return AlbumArtUtils.openArtworkInputStream(this, uri)?.use { stream ->
             BitmapFactory.decodeStream(stream, null, decodeOptions)
         }
     }
@@ -1718,7 +1719,7 @@ class WearCommandReceiver : WearableListenerService() {
             ?.takeIf { it.isNotBlank() }
             ?.let { uriString ->
                 runCatching {
-                    contentResolver.openInputStream(uriString.toUri())?.use { input ->
+                    AlbumArtUtils.openArtworkInputStream(this, uriString.toUri())?.use { input ->
                         BitmapFactory.decodeStream(
                             input,
                             null,

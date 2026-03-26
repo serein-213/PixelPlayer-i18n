@@ -19,6 +19,7 @@ import com.theveloper.pixelplay.shared.WearDataPaths
 import com.theveloper.pixelplay.shared.WearThemePalette
 import com.theveloper.pixelplay.shared.WearTransferMetadata
 import com.theveloper.pixelplay.shared.WearTransferProgress
+import com.theveloper.pixelplay.utils.AlbumArtUtils
 import javax.inject.Singleton
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -357,7 +358,7 @@ class PhoneDirectWatchTransferCoordinator @Inject constructor(
     private fun decodeBoundedBitmapFromUri(uriString: String, maxDimension: Int): Bitmap? {
         val uri = uriString.toUri()
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        contentResolver.openInputStream(uri)?.use { stream ->
+        AlbumArtUtils.openArtworkInputStream(application, uri)?.use { stream ->
             BitmapFactory.decodeStream(stream, null, bounds)
         } ?: return null
 
@@ -379,7 +380,7 @@ class PhoneDirectWatchTransferCoordinator @Inject constructor(
             inMutable = false
         }
 
-        return contentResolver.openInputStream(uri)?.use { stream ->
+        return AlbumArtUtils.openArtworkInputStream(application, uri)?.use { stream ->
             BitmapFactory.decodeStream(stream, null, decodeOptions)
         }
     }
@@ -418,7 +419,7 @@ class PhoneDirectWatchTransferCoordinator @Inject constructor(
             ?.takeIf { it.isNotBlank() }
             ?.let { uriString ->
                 runCatching {
-                    contentResolver.openInputStream(uriString.toUri())?.use { input ->
+                    AlbumArtUtils.openArtworkInputStream(application, uriString.toUri())?.use { input ->
                         BitmapFactory.decodeStream(
                             input,
                             null,
