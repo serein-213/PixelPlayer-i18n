@@ -274,7 +274,6 @@ fun SearchScreen(
                                         },
                                         modifier = Modifier
                                             .size(48.dp)
-                                            .padding(end = 10.dp)
                                             .clip(CircleShape)
                                             .background(
                                                 MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
@@ -343,9 +342,9 @@ fun SearchScreen(
                         FlowRow(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 8.dp),
+                                .padding(vertical = 8.dp, horizontal = 8.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                            verticalArrangement = Arrangement.spacedBy(0.dp)
                         ) {
                             SearchFilterChip(SearchFilterType.ALL, currentFilter, playerViewModel)
                             SearchFilterChip(SearchFilterType.SONGS, currentFilter, playerViewModel)
@@ -366,6 +365,7 @@ fun SearchScreen(
                             } else {
                                 SearchResultsList(
                                     results = searchResults,
+                                    searchQuery = searchQuery,
                                     playerViewModel = playerViewModel,
                                     onItemSelected = {
                                         if (searchQuery.isNotBlank()) {
@@ -607,6 +607,7 @@ fun EmptySearchResults(searchQuery: String, colorScheme: ColorScheme) {
 @Composable
 fun SearchResultsList(
     results: List<SearchResultItem>,
+    searchQuery: String,
     playerViewModel: PlayerViewModel,
     onItemSelected: () -> Unit,
     currentPlayingSongId: String?,
@@ -630,12 +631,40 @@ fun SearchResultsList(
         return
     }
 
-    val groupedResults = results.groupBy { item ->
-        when (item) {
-            is SearchResultItem.SongItem -> SearchFilterType.SONGS
-            is SearchResultItem.AlbumItem -> SearchFilterType.ALBUMS
-            is SearchResultItem.ArtistItem -> SearchFilterType.ARTISTS
-            is SearchResultItem.PlaylistItem -> SearchFilterType.PLAYLISTS
+    val groupedResults = remember(results) {
+        results.groupBy { item ->
+            when (item) {
+                is SearchResultItem.SongItem -> SearchFilterType.SONGS
+                is SearchResultItem.AlbumItem -> SearchFilterType.ALBUMS
+                is SearchResultItem.ArtistItem -> SearchFilterType.ARTISTS
+                is SearchResultItem.PlaylistItem -> SearchFilterType.PLAYLISTS
+            }
+        }
+    }
+    val songResultsQueue = remember(groupedResults) {
+        buildList {
+            groupedResults[SearchFilterType.SONGS]
+                ?.forEach { item ->
+                    val song = (item as? SearchResultItem.SongItem)?.song ?: return@forEach
+                    add(song)
+                }
+        }
+    }
+    val searchQueueName = remember(searchQuery) {
+        searchQuery.trim()
+            .takeIf { it.isNotEmpty() }
+            ?.let { "Search: $it" }
+            ?: "Search Results"
+    }
+    val onSongResultClick = remember(playerViewModel, onItemSelected, songResultsQueue, searchQueueName) {
+        { song: Song ->
+            val playbackQueue = if (songResultsQueue.any { it.id == song.id }) {
+                songResultsQueue
+            } else {
+                listOf(song)
+            }
+            playerViewModel.showAndPlaySong(song, playbackQueue, searchQueueName)
+            onItemSelected()
         }
     }
 
@@ -688,18 +717,12 @@ fun SearchResultsList(
                     Box(modifier = Modifier.padding(bottom = 12.dp)) {
                         when (item) {
                             is SearchResultItem.SongItem -> {
-                                val rememberedOnClick = remember(item.song, playerViewModel, onItemSelected) {
-                                    {
-                                        playerViewModel.showAndPlaySong(item.song)
-                                        onItemSelected()
-                                    }
-                                }
                                 EnhancedSongListItem(
                                     song = item.song,
                                     isPlaying = isPlaying,
                                     isCurrentSong = currentPlayingSongId == item.song.id,
                                     onMoreOptionsClick = onSongMoreOptionsClick,
-                                    onClick = rememberedOnClick
+                                    onClick = { onSongResultClick(item.song) }
                                 )
                             }
 
